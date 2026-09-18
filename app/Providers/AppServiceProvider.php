@@ -28,10 +28,35 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
-            $programs = Program::all();
-            $researches = Research::all();
-            $news = News::orderBy('date', 'desc')->get();
-            $galleries = Gallery::all();
+            $programQuery = Program::query();
+            if (request()->routeIs('program') && request('search')) {
+                $search = request('search');
+                $programQuery->where('title', 'like', "%{$search}%")->orWhere('description', 'like', "%{$search}%");
+            }
+            $programs = $programQuery->get();
+
+            $researchQuery = Research::query();
+            if (request()->routeIs('research') && request('search')) {
+                $search = request('search');
+                $researchQuery->where('title', 'like', "%{$search}%")->orWhere('description', 'like', "%{$search}%");
+            }
+            $researches = $researchQuery->get();
+
+            $newsQuery = News::orderBy('date', 'desc');
+            if (request()->routeIs('news') && request('search')) {
+                $search = request('search');
+                $newsQuery->where('title', 'like', "%{$search}%")
+                          ->orWhere('description', 'like', "%{$search}%")
+                          ->orWhere('category', 'like', "%{$search}%");
+            }
+            $news = $newsQuery->get();
+
+            $galleryQuery = Gallery::query();
+            if (request()->routeIs('gallery') && request('search')) {
+                $search = request('search');
+                $galleryQuery->where('title', 'like', "%{$search}%")->orWhere('description', 'like', "%{$search}%");
+            }
+            $galleries = $galleryQuery->get();
 
             $getHomeSelection = function($collection) {
                 if ($collection->count() <= 4) return $collection;

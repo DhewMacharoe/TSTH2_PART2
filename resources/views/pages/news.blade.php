@@ -25,6 +25,14 @@
         <!-- Content Area -->
         <section style="padding: 5rem 0; background: var(--color-background);" x-data="{ open: false, activeItem: {} }">
             <div class="container">
+                <!-- Search Bar -->
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <form action="{{ route('news') }}" method="GET" style="display: flex; justify-content: center; max-width: 500px; margin: 0 auto;">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari berita..." style="flex-grow: 1; padding: 1rem 1.5rem; border-radius: 30px 0 0 30px; border: 1px solid #ccc; font-size: 1rem; outline: none;">
+                        <button type="submit" style="padding: 1rem 2rem; background: var(--color-primary); color: white; border: none; border-radius: 0 30px 30px 0; font-weight: bold; cursor: pointer; font-size: 1rem;">Cari</button>
+                    </form>
+                </div>
+
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">
                     @forelse($news as $item)
                     <div @click="activeItem = {{ json_encode($item) }}; activeItem.formatted_date = '{{ $item->date ? \Carbon\Carbon::parse($item->date)->translatedFormat('d F Y') : '-' }}'; open = true" style="background: {{ $loop->iteration % 2 == 1 ? '#164E3F' : '#9C7A26' }}; color: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s; cursor: pointer;" class="hover:scale-105">
@@ -44,24 +52,24 @@
             </div>
 
             <!-- Detail Modal -->
-            <div x-show="open" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" style="display: none;">
-                <div class="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden m-4" @click.away="open = false">
-                    <div class="p-4 border-b flex justify-between items-center bg-gray-50">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-bold text-primary uppercase" x-text="activeItem.category"></span>
-                            <h3 class="text-xl font-bold text-gray-900" x-text="activeItem.title"></h3>
+            <div x-show="open" style="position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: none;">
+                <div style="background-color: white; border-radius: 1rem; width: 100%; max-width: 800px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); overflow: hidden; margin: 1rem;" @click.away="open = false">
+                    <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: flex-start; background-color: #f9fafb;">
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-size: 0.85rem; font-weight: bold; color: var(--color-primary); text-transform: uppercase; margin-bottom: 0.25rem;" x-text="activeItem.category"></span>
+                            <h3 style="font-size: 1.25rem; font-weight: bold; color: #111827; margin: 0; font-family: var(--font-heading);" x-text="activeItem.title"></h3>
                         </div>
-                        <button @click="open = false" class="text-gray-500 hover:text-red-500 font-bold text-xl">&times;</button>
+                        <button @click="open = false" style="background: none; border: none; color: #6b7280; font-size: 1.5rem; font-weight: bold; cursor: pointer; line-height: 1;">&times;</button>
                     </div>
-                    <div class="p-6 overflow-y-auto custom-scrollbar">
+                    <div style="padding: 1.5rem; overflow-y: auto; flex-grow: 1;">
                         <template x-if="activeItem.image_path">
-                            <img :src="`/storage/${activeItem.image_path}`" class="w-full rounded-xl mb-6 shadow-md object-cover" style="max-height: 400px;">
+                            <img :src="`/storage/${activeItem.image_path}`" style="width: 100%; border-radius: 0.75rem; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); object-fit: contain; max-height: 400px; display: block; margin-left: auto; margin-right: auto;">
                         </template>
                         <template x-if="!activeItem.image_path">
-                            <img src="{{ asset('assets/default_hero.jpg') }}" class="w-full rounded-xl mb-6 shadow-md object-cover" style="max-height: 400px;">
+                            <img src="{{ asset('assets/default_hero.jpg') }}" style="width: 100%; border-radius: 0.75rem; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); object-fit: contain; max-height: 400px; display: block; margin-left: auto; margin-right: auto;">
                         </template>
-                        <span class="text-gray-500 text-sm mb-4 block" x-text="activeItem.formatted_date"></span>
-                        <div class="text-gray-700 leading-relaxed whitespace-pre-wrap text-lg" x-text="activeItem.description"></div>
+                        <span style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem; display: block;" x-text="activeItem.formatted_date"></span>
+                        <div style="color: #374151; line-height: 1.8; white-space: pre-wrap; font-size: 1.1rem; text-align: left;" x-text="activeItem.description"></div>
                     </div>
                 </div>
             </div>
