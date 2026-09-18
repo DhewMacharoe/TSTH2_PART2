@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $programs = Program::all();
             $researches = Research::all();
-            $news = News::all();
+            $news = News::orderBy('date', 'desc')->get();
             $galleries = Gallery::all();
 
             $getHomeSelection = function($collection) {

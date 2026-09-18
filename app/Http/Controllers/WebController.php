@@ -21,17 +21,27 @@ class WebController extends Controller
         return view('web_management.home', compact('contents', 'aboutBullets', 'homeBackgrounds'));
     }
 
-    public function program()
+    public function program(Request $request)
     {
         $contents = Content::all()->keyBy('key');
-        $programs = Program::all();
+        $query = Program::query();
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+        }
+        $programs = $query->get();
         return view('web_management.program', compact('contents', 'programs'));
     }
 
-    public function research()
+    public function research(Request $request)
     {
         $contents = Content::all()->keyBy('key');
-        $researches = Research::all();
+        $query = Research::query();
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+        }
+        $researches = $query->get();
         return view('web_management.research', compact('contents', 'researches'));
     }
 
@@ -41,17 +51,28 @@ class WebController extends Controller
         return view('web_management.katalog', compact('contents'));
     }
 
-    public function news()
+    public function news(Request $request)
     {
         $contents = Content::all()->keyBy('key');
-        $news = News::all();
+        $query = News::orderBy('date', 'desc');
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%')
+                  ->orWhere('category', 'like', '%' . $request->search . '%');
+        }
+        $news = $query->get();
         return view('web_management.news', compact('contents', 'news'));
     }
 
-    public function gallery()
+    public function gallery(Request $request)
     {
         $contents = Content::all()->keyBy('key');
-        $galleries = Gallery::all();
+        $query = Gallery::query();
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+        }
+        $galleries = $query->get();
         return view('web_management.gallery', compact('contents', 'galleries'));
     }
 
@@ -99,12 +120,18 @@ class WebController extends Controller
     }
 
     public function storeProgram(Request $request) {
-        Program::create($request->validate(['title' => 'required', 'description' => 'required']));
+        $data = $request->validate(['title' => 'required', 'description' => 'required', 'image_path' => 'nullable|image']);
+        if ($request->hasFile('image_path')) $data['image_path'] = $request->file('image_path')->store('contents', 'public');
+        Program::create($data);
         return back()->with('success', 'Program ditambahkan!');
     }
     public function updateProgram(Request $request, $id) {
         $program = Program::findOrFail($id);
-        $program->update($request->validate(['title' => 'required', 'description' => 'required']));
+        $data = $request->validate(['title' => 'required', 'description' => 'required', 'image_path' => 'nullable|image']);
+        if ($request->hasFile('image_path')) {
+            $data['image_path'] = $request->file('image_path')->store('contents', 'public');
+        }
+        $program->update($data);
         return back()->with('success', 'Program diperbarui!');
     }
     public function destroyProgram($id) {

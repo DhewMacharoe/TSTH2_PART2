@@ -34,10 +34,15 @@
     </form>
 
     <div class="bg-white rounded-[2rem] p-8 md:p-10 mb-8 shadow-sm border border-gray-100" x-data="{ open: false, editOpen: false, detailOpen: false, activeItem: {} }">
-        <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-gray-100 pb-4 gap-4">
             <h2 class="text-xl font-bold text-gray-900">Daftar Berita</h2>
-            <button @click="open = true" class="bg-primary text-white font-bold py-2 px-4 rounded-lg text-sm">+ Tambah
-                Berita</button>
+            <div class="flex gap-2 w-full md:w-auto">
+                <form action="{{ route('web.management.news') }}" method="GET" class="flex flex-1 md:w-64">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari berita..." class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary text-sm">
+                    <button type="submit" class="bg-gray-800 text-white px-3 py-2 rounded-lg ml-2 text-sm hover:bg-gray-900">Cari</button>
+                </form>
+                <button @click="open = true" class="bg-primary text-white font-bold py-2 px-4 rounded-lg text-sm shrink-0">+ Tambah Berita</button>
+            </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -64,7 +69,7 @@
                             </td>
                             <td class="p-4 font-bold text-accent">{{ $item->category }}</td>
                             <td class="p-4 font-bold text-gray-800">{{ $item->title }}</td>
-                            <td class="p-4 text-sm">{{ $item->date }}</td>
+                            <td class="p-4 text-sm">{{ $item->date ? \Carbon\Carbon::parse($item->date)->translatedFormat('d F Y') : '-' }}</td>
                             <td class="p-4 text-right">
                                 <div class="flex justify-end gap-2">
                                     <button @click="activeItem = {{ json_encode($item) }}; detailOpen = true" class="text-blue-500 hover:bg-blue-50 p-2 rounded-lg font-bold text-sm">Detail</button>
@@ -101,8 +106,8 @@
                         <div><label class="block font-bold mb-2">Deskripsi</label>
                             <textarea name="description" class="w-full p-3 border-2 rounded-xl h-[100px]" required></textarea>
                         </div>
-                        <div><label class="block font-bold mb-2">Tanggal (String)</label><input type="text"
-                                name="date" class="w-full p-3 border-2 rounded-xl" placeholder="Misal: 12 Agustus 2026">
+                        <div><label class="block font-bold mb-2">Tanggal</label><input type="date"
+                                name="date" class="w-full p-3 border-2 rounded-xl" required>
                         </div>
                         <div><label class="block font-bold mb-2">Gambar Cover</label><input type="file" name="image_path"
                                 class="w-full p-3 border-2 rounded-xl" accept="image/*"></div>
@@ -129,7 +134,7 @@
                         <div><label class="block font-bold mb-2">Deskripsi</label>
                             <textarea name="description" x-model="activeItem.description" class="w-full p-3 border-2 rounded-xl h-[100px]" required></textarea>
                         </div>
-                        <div><label class="block font-bold mb-2">Tanggal (String)</label><input type="text" name="date" x-model="activeItem.date" class="w-full p-3 border-2 rounded-xl"></div>
+                        <div><label class="block font-bold mb-2">Tanggal</label><input type="date" name="date" x-model="activeItem.date" class="w-full p-3 border-2 rounded-xl" required></div>
                         <div><label class="block font-bold mb-2">Gambar Cover (Opsional)</label><input type="file" name="image_path" class="w-full p-3 border-2 rounded-xl" accept="image/*"></div>
                     </div>
                     <div class="flex justify-end gap-3 mt-6">

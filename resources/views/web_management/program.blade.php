@@ -43,10 +43,15 @@
 
     <!-- Daftar Program -->
     <div class="bg-white rounded-[2rem] p-8 md:p-10 mb-8 shadow-sm border border-gray-100" x-data="{ open: false, editOpen: false, detailOpen: false, activeItem: {} }">
-        <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-gray-100 pb-4 gap-4">
             <h2 class="text-xl font-bold text-gray-900">Daftar Program</h2>
-            <button @click="open = true" class="bg-primary text-white font-bold py-2 px-4 rounded-lg text-sm">+ Tambah
-                Program</button>
+            <div class="flex gap-2 w-full md:w-auto">
+                <form action="{{ route('web.management.program') }}" method="GET" class="flex flex-1 md:w-64">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari program..." class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary text-sm">
+                    <button type="submit" class="bg-gray-800 text-white px-3 py-2 rounded-lg ml-2 text-sm hover:bg-gray-900">Cari</button>
+                </form>
+                <button @click="open = true" class="bg-primary text-white font-bold py-2 px-4 rounded-lg text-sm shrink-0">+ Tambah Program</button>
+            </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -54,6 +59,7 @@
                 <thead>
                     <tr class="bg-gray-50 border-y border-gray-200">
 
+                        <th class="p-4 font-bold text-gray-600">Gambar</th>
                         <th class="p-4 font-bold text-gray-600">Judul</th>
                         <th class="p-4 font-bold text-gray-600">Deskripsi</th>
                         <th class="p-4 font-bold text-gray-600 text-right">Aksi</th>
@@ -62,9 +68,16 @@
                 <tbody>
                     @forelse($programs as $item)
                         <tr class="border-b border-gray-100 hover:bg-gray-50/50">
-
+                            <td class="p-4">
+                                @if ($item->image_path)
+                                    <img src="{{ asset('storage/' . $item->image_path) }}"
+                                        class="w-16 h-10 object-cover rounded shadow-sm">
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td class="p-4 font-bold text-gray-800">{{ $item->title }}</td>
-                            <td class="p-4 text-sm text-gray-600">{{ $item->description }}</td>
+                            <td class="p-4 text-sm text-gray-600">{{ Str::limit($item->description, 50) }}</td>
                             <td class="p-4 text-right">
                                 <div class="flex justify-end gap-2">
                                     <button @click="activeItem = {{ json_encode($item) }}; detailOpen = true" class="text-blue-500 hover:bg-blue-50 p-2 rounded-lg font-bold text-sm">Detail</button>
@@ -92,9 +105,9 @@
             style="display: none;">
             <div class="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl" @click.away="open = false">
                 <h3 class="text-lg font-bold mb-4">Tambah Program Baru</h3>
-                <form action="{{ route('web.management.programs.store') }}" method="POST">
+                <form action="{{ route('web.management.programs.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <div class="space-y-4">
+                    <div class="space-y-4 max-h-[60vh] overflow-y-auto px-1 custom-scrollbar">
                         <div>
                             <label class="block font-bold text-gray-700 mb-2">Judul Program</label>
                             <input type="text" name="title" class="w-full p-3 border-2 rounded-xl" required>
@@ -103,6 +116,8 @@
                             <label class="block font-bold text-gray-700 mb-2">Deskripsi</label>
                             <textarea name="description" class="w-full p-3 border-2 rounded-xl h-[100px]" required></textarea>
                         </div>
+                        <div><label class="block font-bold text-gray-700 mb-2">Gambar Program (Opsional)</label><input type="file" name="image_path"
+                                class="w-full p-3 border-2 rounded-xl" accept="image/*"></div>
                     </div>
                     <div class="flex justify-end gap-3 mt-6">
                         <button type="button" @click="open = false"
@@ -118,9 +133,9 @@
         <div x-show="editOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" style="display: none;">
             <div class="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl" @click.away="editOpen = false">
                 <h3 class="text-lg font-bold mb-4">Edit Program</h3>
-                <form :action="`/web-management/programs/${activeItem.id}`" method="POST">
+                <form :action="`/web-management/programs/${activeItem.id}`" method="POST" enctype="multipart/form-data">
                     @csrf @method('PUT')
-                    <div class="space-y-4">
+                    <div class="space-y-4 max-h-[60vh] overflow-y-auto px-1 custom-scrollbar">
                         <div>
                             <label class="block font-bold text-gray-700 mb-2">Judul Program</label>
                             <input type="text" name="title" x-model="activeItem.title" class="w-full p-3 border-2 rounded-xl" required>
@@ -129,6 +144,7 @@
                             <label class="block font-bold text-gray-700 mb-2">Deskripsi</label>
                             <textarea name="description" x-model="activeItem.description" class="w-full p-3 border-2 rounded-xl h-[100px]" required></textarea>
                         </div>
+                        <div><label class="block font-bold text-gray-700 mb-2">Ganti Gambar (Opsional)</label><input type="file" name="image_path" class="w-full p-3 border-2 rounded-xl" accept="image/*"></div>
                     </div>
                     <div class="flex justify-end gap-3 mt-6">
                         <button type="button" @click="editOpen = false" class="px-5 py-2.5 text-gray-600 font-bold hover:bg-gray-100 rounded-xl">Batal</button>
@@ -142,7 +158,10 @@
         <div x-show="detailOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" style="display: none;">
             <div class="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl" @click.away="detailOpen = false">
                 <h3 class="text-lg font-bold mb-4 border-b pb-2">Detail Program</h3>
-                <div class="space-y-4 text-gray-700">
+                <div class="space-y-4 text-gray-700 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                    <template x-if="activeItem.image_path">
+                        <img :src="`/storage/${activeItem.image_path}`" class="w-full h-48 object-cover rounded-xl mb-4">
+                    </template>
                     <div>
                         <strong class="block text-gray-900">Judul:</strong>
                         <p x-text="activeItem.title"></p>

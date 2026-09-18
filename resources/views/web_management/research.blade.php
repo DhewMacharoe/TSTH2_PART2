@@ -41,10 +41,15 @@
     </form>
 
     <div class="bg-white rounded-[2rem] p-8 md:p-10 mb-8 shadow-sm border border-gray-100" x-data="{ open: false, editOpen: false, detailOpen: false, activeItem: {} }">
-        <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-gray-100 pb-4 gap-4">
             <h2 class="text-xl font-bold text-gray-900">Daftar Fasilitas / Riset </h2>
-            <button @click="open = true" class="bg-primary text-white font-bold py-2 px-4 rounded-lg text-sm">+ Tambah
-                Riset</button>
+            <div class="flex gap-2 w-full md:w-auto">
+                <form action="{{ route('web.management.research') }}" method="GET" class="flex flex-1 md:w-64">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari riset..." class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary text-sm">
+                    <button type="submit" class="bg-gray-800 text-white px-3 py-2 rounded-lg ml-2 text-sm hover:bg-gray-900">Cari</button>
+                </form>
+                <button @click="open = true" class="bg-primary text-white font-bold py-2 px-4 rounded-lg text-sm shrink-0">+ Tambah Riset</button>
+            </div>
         </div>
 
         <div class="overflow-x-auto">

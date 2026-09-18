@@ -18,31 +18,31 @@ class DummyContentSeeder extends Seeder
                 'category' => 'Kunjungan',
                 'title' => 'Kunjungan Delegasi UGM ke TSTH2',
                 'description' => 'Universitas Gadjah Mada (UGM) melakukan kunjungan resmi ke TSTH2 untuk membahas potensi kerja sama riset dan pengembangan teknologi pertanian modern.',
-                'date' => '31 Agustus 2026',
+                'date' => '2026-08-31',
             ],
             [
                 'category' => 'Pertanian',
                 'title' => 'Panen Tomat Berhasil di Kawasan TSTH2',
                 'description' => 'Kegiatan panen tomat yang melimpah sukses dilakukan. Ini merupakan bukti nyata dari hasil riset budidaya hortikultura presisi di lingkungan terpadu.',
-                'date' => '13 Januari 2026',
+                'date' => '2026-01-13',
             ],
             [
                 'category' => 'Pertanian',
                 'title' => 'Panen Bawang Putih di Parsingguran',
                 'description' => 'Tim TSTH2 merayakan keberhasilan panen komoditas bawang putih di lahan Parsingguran, membuktikan kecocokan iklim setempat untuk varietas unggulan.',
-                'date' => '24 Februari 2026',
+                'date' => '2026-02-24',
             ],
             [
                 'category' => 'Kunjungan',
                 'title' => 'Kunjungan Tim China untuk Riset Global',
                 'description' => 'Tim peneliti dari China mengunjungi fasilitas TSTH2 dalam rangka studi banding dan perluasan jaringan riset inovasi global.',
-                'date' => '28 Juli 2026',
+                'date' => '2026-07-28',
             ],
             [
                 'category' => 'Pendidikan',
                 'title' => 'Pelatihan Standar ISO untuk Staf TSTH2',
                 'description' => 'Untuk meningkatkan kualitas layanan dan standar operasional berkelas dunia, seluruh jajaran staf TSTH2 mengikuti program pelatihan sertifikasi ISO.',
-                'date' => '6-7 Februari 2026',
+                'date' => '2026-02-06',
             ],
         ];
 

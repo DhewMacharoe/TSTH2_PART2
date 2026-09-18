@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Program extends Model
 {
-    protected $fillable = ['icon', 'title', 'description'];
+    protected $fillable = ['icon', 'title', 'description', 'image_path'];
 }
