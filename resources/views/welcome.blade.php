@@ -101,9 +101,15 @@
             <h2 class="section-title text-center animate-on-scroll">Program Unggulan</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
                 @foreach($homePrograms as $item)
-                <div class="chunk-card animate-on-scroll" style="background: {{ $loop->iteration % 2 == 1 ? '#164E3F' : '#9C7A26' }}; color: white; border: none; padding: 2rem;">
-                    <h3 style="font-family: var(--font-heading); margin-bottom: 1rem; color: white;">{{ $item->title }}</h3>
-                    <p style="color: rgba(255,255,255,0.9); line-height: 1.6;">{{ Str::limit($item->description, 100) }}</p>
+                <div class="chunk-card animate-on-scroll" style="background: {{ $loop->iteration % 2 == 1 ? '#164E3F' : '#9C7A26' }}; color: white; border: none; padding: 0; overflow: hidden;">
+                    @if($item->image_path)
+                        <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" style="width: 100%; height: 200px; object-fit: cover;">
+                    @endif
+                    <div style="padding: 2rem;">
+                        <h3 style="font-family: var(--font-heading); margin-bottom: 1rem; color: white;">{{ $item->title }}</h3>
+                        <p style="color: rgba(255,255,255,0.9); line-height: 1.6;">{{ Str::limit($item->description, 100) }}</p>
+                        <button class="btn-lihat-detail" style="margin-top: 1.5rem; background: none; border: none; color: #f1c40f; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; padding: 0;" data-img-src="{{ $item->image_path ? asset('storage/' . $item->image_path) : '' }}" data-title="{{ $item->title }}" data-desc="{{ $item->description }}">Lihat Detail <span style="font-size: 1.2rem;">&rarr;</span></button>
+                    </div>
                 </div>
                 @endforeach
             </div>
