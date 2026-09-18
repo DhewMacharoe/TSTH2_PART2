@@ -46,7 +46,18 @@ jobs:
           **/.git*/**
           **/.github/**
           node_modules/**
+          resources/css/**
+          resources/js/**
+          tests/**
+          storage/framework/cache/**
+          storage/framework/views/**
+          storage/framework/sessions/**
+          storage/logs/**
           .env.example
           README.md
           phpunit.xml
-          tests/**
+          package.json
+          package-lock.json
+          vite.config.js
+          tailwind.config.js
+          postcss.config.js
