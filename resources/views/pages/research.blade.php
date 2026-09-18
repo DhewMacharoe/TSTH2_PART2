@@ -52,8 +52,9 @@
             </div>
 
             <!-- Detail Modal -->
-            <div x-show="open" style="position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: none;">
-                <div style="background-color: white; border-radius: 1rem; width: 100%; max-width: 800px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); overflow: hidden; margin: 1rem;" @click.away="open = false">
+            <div x-show="open" style="position: fixed; inset: 0; z-index: 9999; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: none;">
+                <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 1rem;">
+                    <div style="background-color: white; border-radius: 1rem; width: 100%; max-width: 800px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); overflow: hidden;" @click.away="open = false">
                     <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; background-color: #f9fafb;">
                         <h3 style="font-size: 1.25rem; font-weight: bold; color: #111827; margin: 0; font-family: var(--font-heading);" x-text="activeItem.title"></h3>
                         <button @click="open = false" style="background: none; border: none; color: #6b7280; font-size: 1.5rem; font-weight: bold; cursor: pointer; line-height: 1;">&times;</button>
