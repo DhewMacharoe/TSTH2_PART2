@@ -54,15 +54,19 @@ Route::middleware(['auth', 'role:web_admin'])->group(function () {
     Route::delete('/web-management/about-bullets/{id}', [WebController::class, 'destroyAboutBullet'])->name('web.management.about.destroy');
 
     Route::post('/web-management/programs', [WebController::class, 'storeProgram'])->name('web.management.programs.store');
+    Route::put('/web-management/programs/{id}', [WebController::class, 'updateProgram'])->name('web.management.programs.update');
     Route::delete('/web-management/programs/{id}', [WebController::class, 'destroyProgram'])->name('web.management.programs.destroy');
 
     Route::post('/web-management/researches', [WebController::class, 'storeResearch'])->name('web.management.researches.store');
+    Route::put('/web-management/researches/{id}', [WebController::class, 'updateResearch'])->name('web.management.researches.update');
     Route::delete('/web-management/researches/{id}', [WebController::class, 'destroyResearch'])->name('web.management.researches.destroy');
 
     Route::post('/web-management/news', [WebController::class, 'storeNews'])->name('web.management.news.store');
+    Route::put('/web-management/news/{id}', [WebController::class, 'updateNews'])->name('web.management.news.update');
     Route::delete('/web-management/news/{id}', [WebController::class, 'destroyNews'])->name('web.management.news.destroy');
 
     Route::post('/web-management/galleries', [WebController::class, 'storeGallery'])->name('web.management.galleries.store');
+    Route::put('/web-management/galleries/{id}', [WebController::class, 'updateGallery'])->name('web.management.galleries.update');
     Route::delete('/web-management/galleries/{id}', [WebController::class, 'destroyGallery'])->name('web.management.galleries.destroy');
 
 });

@@ -82,6 +82,7 @@ jobs:
           storage/framework/views/**
           storage/framework/sessions/**
           storage/logs/**
+          .env
           .env.example
           README.md
           phpunit.xml

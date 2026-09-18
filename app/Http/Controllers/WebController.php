@@ -102,6 +102,11 @@ class WebController extends Controller
         Program::create($request->validate(['title' => 'required', 'description' => 'required']));
         return back()->with('success', 'Program ditambahkan!');
     }
+    public function updateProgram(Request $request, $id) {
+        $program = Program::findOrFail($id);
+        $program->update($request->validate(['title' => 'required', 'description' => 'required']));
+        return back()->with('success', 'Program diperbarui!');
+    }
     public function destroyProgram($id) {
         Program::findOrFail($id)->delete();
         return back()->with('success', 'Program dihapus!');
@@ -112,6 +117,15 @@ class WebController extends Controller
         if ($request->hasFile('image_path')) $data['image_path'] = $request->file('image_path')->store('contents', 'public');
         Research::create($data);
         return back()->with('success', 'Penelitian ditambahkan!');
+    }
+    public function updateResearch(Request $request, $id) {
+        $research = Research::findOrFail($id);
+        $data = $request->validate(['title' => 'required', 'description' => 'required', 'image_path' => 'nullable|image']);
+        if ($request->hasFile('image_path')) {
+            $data['image_path'] = $request->file('image_path')->store('contents', 'public');
+        }
+        $research->update($data);
+        return back()->with('success', 'Penelitian diperbarui!');
     }
     public function destroyResearch($id) {
         Research::findOrFail($id)->delete();
@@ -124,6 +138,15 @@ class WebController extends Controller
         News::create($data);
         return back()->with('success', 'Berita ditambahkan!');
     }
+    public function updateNews(Request $request, $id) {
+        $news = News::findOrFail($id);
+        $data = $request->validate(['category' => 'required', 'title' => 'required', 'description' => 'required', 'date' => 'nullable', 'image_path' => 'nullable|image']);
+        if ($request->hasFile('image_path')) {
+            $data['image_path'] = $request->file('image_path')->store('contents', 'public');
+        }
+        $news->update($data);
+        return back()->with('success', 'Berita diperbarui!');
+    }
     public function destroyNews($id) {
         News::findOrFail($id)->delete();
         return back()->with('success', 'Berita dihapus!');
@@ -134,6 +157,15 @@ class WebController extends Controller
         if ($request->hasFile('image_path')) $data['image_path'] = $request->file('image_path')->store('contents', 'public');
         Gallery::create($data);
         return back()->with('success', 'Galeri ditambahkan!');
+    }
+    public function updateGallery(Request $request, $id) {
+        $gallery = Gallery::findOrFail($id);
+        $data = $request->validate(['title' => 'required', 'description' => 'nullable', 'image_path' => 'nullable|image']);
+        if ($request->hasFile('image_path')) {
+            $data['image_path'] = $request->file('image_path')->store('contents', 'public');
+        }
+        $gallery->update($data);
+        return back()->with('success', 'Galeri diperbarui!');
     }
     public function destroyGallery($id) {
         Gallery::findOrFail($id)->delete();
