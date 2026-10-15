@@ -26,16 +26,6 @@
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>International Link</h4>
-                <ul>
-                    <li><a href="javascript:void(0)">Japan Research Alliance</a></li>
-                    <li><a href="javascript:void(0)">China Biotech Exchange</a></li>
-                    <li><a href="javascript:void(0)">Germany Phyto-Lab Standards</a></li>
-                    <li><a href="javascript:void(0)">Netherlands Horticulture Co.</a></li>
-                    <li><a href="javascript:void(0)">USA Genomic Consortium</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
                 <h4>Sekretariat & Hubungi Kami</h4>
                 <ul style="color: #cbd5e1; font-size: 0.9rem;">
                     <li style="margin-bottom: 0.5rem; display: flex; gap: 0.5rem;">
