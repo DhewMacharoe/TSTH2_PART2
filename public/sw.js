@@ -1,9 +1,14 @@
 // Service Worker TSTH2 PWA
-const CACHE_NAME = 'tsth2-cache-v2';
+const CACHE_NAME = 'tsth2-cache-v3';
 const STATIC_ASSETS = [
     '/',
     '/manifest.json',
     '/assets/logo.png',
+    '/assets/icon-192.png',
+    '/assets/icon-512.png',
+    '/assets/icon-maskable-192.png',
+    '/assets/icon-maskable-512.png',
+    '/assets/apple-touch-icon.png',
     '/css/index.css',
     '/css/landing.css'
 ];
@@ -13,9 +18,14 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
-                return cache.addAll(STATIC_ASSETS).catch(err => {
-                    console.warn('Gagal caching sebagian aset statis saat install:', err);
-                });
+                // Gunakan Promise.allSettled agar jika salah satu aset gagal, install SW tetap sukses
+                return Promise.allSettled(
+                    STATIC_ASSETS.map(url => 
+                        cache.add(url).catch(err => {
+                            console.warn('Gagal caching aset:', url, err);
+                        })
+                    )
+                );
             })
             .then(() => self.skipWaiting())
     );
@@ -77,4 +87,3 @@ self.addEventListener('fetch', event => {
         );
     }
 });
-
