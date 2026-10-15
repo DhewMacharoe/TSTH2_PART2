@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
+class Plant extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'category_id', 
+        'location_type',
+        'population',
+        'name', 
+        'slug', 
+        'latin_name', 
+        'family',
+        'ordo',              
+        'genus',             
+        'botanist',
+        'benefits',
+        'origin',
+        'origin_distribution',  
+        'description_short', 
+        'description_full', 
+        'image',
+        'image_gallery',
+        'is_active'
+    ];
+
+    protected $casts = [
+        'population' => 'integer',
+        'is_active' => 'boolean',
+        'image_gallery' => 'array',
+    ];
+
+    // Relasi: 1 Plant milik 1 Category
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    // Scope: filter hanya yang aktif
+    public function scopeActive($query)
+    {
+        return $this->where('is_active', true);
+    }
+
+    // Scope: pencarian
+    public function scopeSearch($query, $term)
+    {
+        $term = Str::lower(trim($term));
+
+        return $query->where(function ($q) use ($term) {
+            $q->where('name', 'LIKE', "%{$term}%")
+              ->orWhere('latin_name', 'LIKE', "%{$term}%")
+              ->orWhere('family', 'LIKE', "%{$term}%")
+              ->orWhere('ordo', 'LIKE', "%{$term}%")
+              ->orWhere('genus', 'LIKE', "%{$term}%")
+              ->orWhere('benefits', 'LIKE', "%{$term}%")
+              ->orWhere('description_short', 'LIKE', "%{$term}%")
+              ->orWhere('description_full', 'LIKE', "%{$term}%")
+              ->orWhere('origin', 'LIKE', "%{$term}%")
+              ->orWhere('origin_distribution', 'LIKE', "%{$term}%")
+              ->orWhere('location_type', 'LIKE', "%{$term}%")
+              ->orWhereHas('category', function ($categoryQuery) use ($term) {
+                  $categoryQuery->where('name', 'LIKE', "%{$term}%")
+                      ->orWhere('slug', 'LIKE', "%{$term}%");
+              });
+
+            if ($term === 'outdoor' || $term === 'koleksi') {
+                $q->orWhere('location_type', 'collection');
+            }
+
+            if (in_array($term, ['aktif', 'active'], true)) {
+                $q->orWhere('is_active', true);
+            } elseif (in_array($term, ['nonaktif', 'inactive'], true)) {
+                $q->orWhere('is_active', false);
+            }
+        });
+    }
+
+    // Gunakan slug untuk URL (bukan id)
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+}

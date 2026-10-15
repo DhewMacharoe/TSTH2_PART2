@@ -16,6 +16,12 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             BarangSeeder::class,
             ContentSeeder::class,
+            CategorySeeder::class,
+            PlantSeeder::class,
+            TsthidDatabaseSeeder::class,
+            BeritaSeeder::class,
+            GaleriSeeder::class,
+            PenelitianSeeder::class,
         ]);
 
     }

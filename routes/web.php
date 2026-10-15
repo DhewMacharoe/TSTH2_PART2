@@ -1,127 +1,153 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RequestController;
-use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\Admin\ProfilController;
+use App\Http\Controllers\Admin\PermintaanController;
+use App\Http\Controllers\Admin\PermintaanStatusController;
+use App\Http\Controllers\Admin\PermintaanChatController;
+use App\Http\Controllers\Admin\SatuanController;
+use App\Http\Controllers\Admin\GudangController;
+use App\Http\Controllers\Admin\GudangBatchController;
+use App\Http\Controllers\Admin\DasborController;
+use App\Http\Controllers\Admin\WebController;
+use App\Http\Controllers\Admin\WebCrudController;
+use App\Http\Controllers\Admin\AdminPlantController;
+use App\Http\Controllers\Admin\AdminCategoryController;
+use App\Http\Controllers\PlantController;
+use App\Http\Controllers\Pengunjung\BeritaController;
+use App\Http\Controllers\Pengunjung\PublicController;
 use Illuminate\Support\Facades\Route;
-use App\Support\NewsArticles;
+use App\Support\BeritaArticles;
 
+// ═══════════════════════════════════════════════
 // Public Pages
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
-Route::get('/program', function () { return view('pages.program'); })->name('program');
-Route::get('/research', function () { return view('pages.research'); })->name('research');
-Route::get('/news', function () { return view('pages.news'); })->name('news');
-Route::get('/news/{slug}', function (string $slug) {
-    $article = NewsArticles::find($slug);
+// ═══════════════════════════════════════════════
+Route::get('/', [PublicController::class, 'home'])->name('home');
+Route::get('/profil-tsth2', [PublicController::class, 'profil'])->name('profil-public');
+Route::get('/layanan', [PublicController::class, 'layanan'])->name('layanan');
+Route::get('/penelitian', [PublicController::class, 'penelitian'])->name('penelitian');
+Route::get('/berita', [BeritaController::class, 'index'])->name('berita');
+Route::get('/berita/{slug}', function (string $slug) {
+    $article = BeritaArticles::find($slug);
     abort_if(!$article, 404);
     if (!is_file(public_path($article['image'])) && isset($article['fallback_image'])) {
         $article['image'] = $article['fallback_image'];
     }
-    return view('pages.news-show', compact('article'));
-})->name('news.show');
-Route::get('/gallery', function () { return view('pages.gallery'); })->name('gallery');
+    return view('pengunjung.berita-show', compact('article'));
+})->name('berita.show');
+Route::get('/galeri', [PublicController::class, 'galeri'])->name('galeri');
 
-Route::get('/katalog-tanaman', function () {
-    return view('pages.katalog');
-})->name('katalog');
+// ═══════════════════════════════════════════════
+// Katalog Tanaman (Public)
+// ═══════════════════════════════════════════════
+Route::get('/katalog-tanaman', [PlantController::class, 'index'])->name('katalog');
+Route::get('/katalog-tanaman/koleksi', [PlantController::class, 'collection'])->name('collection');
+Route::get('/katalog-tanaman/tanaman/{plant:slug}', [PlantController::class, 'show'])->name('plant.show');
 
-// Dashboard (Breeze Default)
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// ═══════════════════════════════════════════════
+// Dashboard
+// ═══════════════════════════════════════════════
+Route::get('/dasbor', [DasborController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dasbor');
 
-use App\Http\Controllers\WebController;
+// ═══════════════════════════════════════════════
+// Web Management (web_admin only)
+// ═══════════════════════════════════════════════
 
-// Web Management Routes
 Route::middleware(['auth', 'role:web_admin'])->group(function () {
-    Route::get('/web-management/home', [WebController::class, 'home'])->name('web.management.home');
-    Route::get('/web-management/program', [WebController::class, 'program'])->name('web.management.program');
-    Route::get('/web-management/research', [WebController::class, 'research'])->name('web.management.research');
-    Route::get('/web-management/katalog', [WebController::class, 'katalog'])->name('web.management.katalog');
-    Route::get('/web-management/news', [WebController::class, 'news'])->name('web.management.news');
-    Route::get('/web-management/gallery', [WebController::class, 'gallery'])->name('web.management.gallery');
-    Route::get('/web-management/layout', [WebController::class, 'layout'])->name('web.management.layout');
-    Route::put('/web-management', [WebController::class, 'update'])->name('web.management.update');
+    Route::get('/web-management/home',     [WebController::class, 'home'])->name('web.management.home');
+    Route::get('/web-management/penelitian', [WebController::class, 'penelitian'])->name('web.management.penelitian');
+    Route::get('/web-management/katalog',  [WebController::class, 'katalog'])->name('web.management.katalog');
+    Route::get('/web-management/berita',     [WebController::class, 'berita'])->name('web.management.berita');
+    Route::get('/web-management/galeri',  [WebController::class, 'galeri'])->name('web.management.galeri');
+    Route::get('/web-management/layout',   [WebController::class, 'layout'])->name('web.management.layout');
+    Route::put('/web-management',          [WebController::class, 'update'])->name('web.management.update');
 
-    // Dynamic CMS Routes
-    Route::post('/web-management/home-backgrounds', [WebController::class, 'storeHomeBackground'])->name('web.management.home_bg.store');
-    Route::delete('/web-management/home-backgrounds/{id}', [WebController::class, 'destroyHomeBackground'])->name('web.management.home_bg.destroy');
+    // Admin Katalog Tanaman
+    Route::resource('admin/plants', AdminPlantController::class)->except(['show'])->names('admin.plants');
+    Route::resource('admin/categories', AdminCategoryController::class)->except(['create', 'show', 'destroy'])->names('admin.categories');
 
-    Route::post('/web-management/about-bullets', [WebController::class, 'storeAboutBullet'])->name('web.management.about.store');
-    Route::delete('/web-management/about-bullets/{id}', [WebController::class, 'destroyAboutBullet'])->name('web.management.about.destroy');
-
-    Route::post('/web-management/programs', [WebController::class, 'storeProgram'])->name('web.management.programs.store');
-    Route::put('/web-management/programs/{id}', [WebController::class, 'updateProgram'])->name('web.management.programs.update');
-    Route::delete('/web-management/programs/{id}', [WebController::class, 'destroyProgram'])->name('web.management.programs.destroy');
-
-    Route::post('/web-management/researches', [WebController::class, 'storeResearch'])->name('web.management.researches.store');
-    Route::put('/web-management/researches/{id}', [WebController::class, 'updateResearch'])->name('web.management.researches.update');
-    Route::delete('/web-management/researches/{id}', [WebController::class, 'destroyResearch'])->name('web.management.researches.destroy');
-
-    Route::post('/web-management/news', [WebController::class, 'storeNews'])->name('web.management.news.store');
-    Route::put('/web-management/news/{id}', [WebController::class, 'updateNews'])->name('web.management.news.update');
-    Route::delete('/web-management/news/{id}', [WebController::class, 'destroyNews'])->name('web.management.news.destroy');
-
-    Route::post('/web-management/galleries', [WebController::class, 'storeGallery'])->name('web.management.galleries.store');
-    Route::put('/web-management/galleries/{id}', [WebController::class, 'updateGallery'])->name('web.management.galleries.update');
-    Route::delete('/web-management/galleries/{id}', [WebController::class, 'destroyGallery'])->name('web.management.galleries.destroy');
-
+    Route::post('/web-management/home-backgrounds',       [WebCrudController::class, 'storeLatarBeranda'])->name('web.management.home_bg.store');
+    Route::delete('/web-management/home-backgrounds/{id}',[WebCrudController::class, 'destroyLatarBeranda'])->name('web.management.home_bg.destroy');
+    Route::post('/web-management/about-bullets',          [WebCrudController::class, 'storePoinTentang'])->name('web.management.about.store');
+    Route::delete('/web-management/about-bullets/{id}',   [WebCrudController::class, 'destroyPoinTentang'])->name('web.management.about.destroy');
+    Route::post('/web-management/penelitian',             [WebCrudController::class, 'storePenelitian'])->name('web.management.penelitian.store');
+    Route::put('/web-management/penelitian/{id}',         [WebCrudController::class, 'updatePenelitian'])->name('web.management.penelitian.update');
+    Route::delete('/web-management/penelitian/{id}',      [WebCrudController::class, 'destroyPenelitian'])->name('web.management.penelitian.destroy');
+    Route::post('/web-management/berita',                  [WebCrudController::class, 'storeBerita'])->name('web.management.berita.store');
+    Route::put('/web-management/berita/{id}',              [WebCrudController::class, 'updateBerita'])->name('web.management.berita.update');
+    Route::delete('/web-management/berita/{id}',           [WebCrudController::class, 'destroyBerita'])->name('web.management.berita.destroy');
+    
+    // Galeri CRUD & Hapus Foto Satuan
+    Route::post('/web-management/galeri',                  [WebCrudController::class, 'storeGaleri'])->name('web.management.galeri.store');
+    Route::put('/web-management/galeri/{id}',              [WebCrudController::class, 'updateGaleri'])->name('web.management.galeri.update');
+    Route::delete('/web-management/galeri/{id}',           [WebCrudController::class, 'destroyGaleri'])->name('web.management.galeri.destroy');
+    Route::delete('/web-management/galeri/{id}/photo/{index}', [WebCrudController::class, 'destroyPhoto'])->name('web.management.galeri.destroyPhoto');
 });
 
-// Warehouse Routes (Mutations - PIC Only)
-Route::middleware(['auth', 'role:pic_warehouse'])->group(function () {
-    Route::get('/warehouse/create', [WarehouseController::class, 'create'])->name('warehouse.create');
-    Route::post('/warehouse', [WarehouseController::class, 'store'])->name('warehouse.store');
-    Route::get('/warehouse/{id}/edit', [WarehouseController::class, 'edit'])->name('warehouse.edit');
-    Route::put('/warehouse/{id}', [WarehouseController::class, 'update'])->name('warehouse.update');
-    Route::delete('/warehouse/{id}', [WarehouseController::class, 'destroy'])->name('warehouse.destroy');
-    Route::post('/warehouse/{id}/batch', [WarehouseController::class, 'addBatch'])->name('warehouse.batch.store');
-    Route::delete('/warehouse/batch/{batch_id}', [WarehouseController::class, 'destroyBatch'])->name('warehouse.batch.destroy');
+// ═══════════════════════════════════════════════
+// Warehouse — PIC Gudang only (mutations)
+// ═══════════════════════════════════════════════
+Route::middleware(['auth', 'role:pic_gudang'])->group(function () {
+    // --- Master Satuan Barang ---
+    Route::get('/gudang/satuan',        [SatuanController::class, 'index'])->name('satuan.index');
+    Route::post('/gudang/satuan',       [SatuanController::class, 'store'])->name('satuan.store');
+    Route::delete('/gudang/satuan/{id}',[SatuanController::class, 'destroy'])->name('satuan.destroy');
+
+    // --- Konversi Satuan ---
+    Route::post('/gudang/satuan/konversi',       [SatuanController::class, 'storeKonversi'])->name('satuan.konversi.store');
+    Route::delete('/gudang/satuan/konversi/{id}',[SatuanController::class, 'destroyKonversi'])->name('satuan.konversi.destroy');
+
+    // --- Barang CRUD ---
+    Route::get('/gudang/create',              [GudangController::class, 'create'])->name('gudang.create');
+    Route::post('/gudang',                    [GudangController::class, 'store'])->name('gudang.store');
+    Route::get('/gudang/{id}/edit',         [GudangController::class, 'edit'])->name('gudang.edit');
+    Route::put('/gudang/{id}',                [GudangController::class, 'update'])->name('gudang.update');
+    Route::delete('/gudang/{id}',             [GudangController::class, 'destroy'])->name('gudang.destroy');
+
+    // --- Batch ---
+    Route::post('/gudang/{id}/batch',          [GudangBatchController::class, 'addBatch'])->name('gudang.batch.store');
+    Route::post('/gudang/batch/{batch_no}/item', [GudangBatchController::class, 'addItemToBatch'])->name('gudang.batch.item.store');
+    Route::delete('/gudang/batch/{batch_id}',    [GudangBatchController::class, 'destroyBatch'])->name('gudang.batch.destroy');
+    Route::delete('/gudang/batch-item/{item_id}',[GudangBatchController::class, 'destroyBatchItem'])->name('gudang.batch.item.destroy');
 });
 
-// Warehouse Routes (View & Export - PIC, Warehouse & Agronom)
-Route::middleware(['auth', 'role:pic_warehouse,warehouse,agronom'])->group(function () {
-    Route::get('/warehouse', [WarehouseController::class, 'index'])->name('warehouse');
-    Route::get('/warehouse/export', [WarehouseController::class, 'export'])->name('warehouse.export');
-    Route::get('/warehouse/{id}', [WarehouseController::class, 'show'])->name('warehouse.show');
-});
-
-use App\Http\Controllers\DivisionChatController;
-
-// Division Chat Routes (PIC & Warehouse)
-Route::middleware(['auth', 'role:pic_warehouse,warehouse'])->group(function () {
-    Route::get('/division-chat', [DivisionChatController::class, 'index'])->name('division-chat.index');
-    Route::post('/division-chat', [DivisionChatController::class, 'store'])->name('division-chat.store');
-    Route::post('/division-chat/read', [DivisionChatController::class, 'markAsRead'])->name('division-chat.read');
-    Route::get('/division-chat/unread', [DivisionChatController::class, 'unreadCount'])->name('division-chat.unread');
-});
-
-// Permintaan Barang Routes
+// ═══════════════════════════════════════════════
+// Warehouse — semua user auth (view only)
+// ═══════════════════════════════════════════════
 Route::middleware(['auth'])->group(function () {
-    Route::get('/request', [RequestController::class, 'index'])->name('request.index');
-    Route::post('/request', [RequestController::class, 'store'])->name('request.store');
-    Route::put('/request/{id}/status', [RequestController::class, 'updateStatus'])->name('request.status.update');
-    Route::put('/request/{id}/assign', [RequestController::class, 'assign'])->name('request.assign');
-    Route::get('/request/{id}/chat', [RequestController::class, 'getChat'])->name('request.chat.get');
-    Route::post('/request/{id}/chat', [RequestController::class, 'storeChat'])->name('request.chat.store');
-    Route::get('/request/{id}/status', function() { return redirect()->route('request.index'); });
+    Route::get('/gudang',        [GudangController::class, 'index'])->name('gudang');
+    Route::get('/gudang/export', [GudangController::class, 'export'])->name('gudang.export');
+    Route::get('/api/satuan/{kategori}', [SatuanController::class, 'byKategori'])->name('satuan.by.kategori');
+    Route::get('/gudang/{id}',   [GudangController::class, 'show'])->name('gudang.show');
 });
 
-// Logbook Karyawan (Semua kecuali web_admin)
-Route::middleware(['auth', 'role:pic_warehouse,warehouse,agronom,pimpinan'])->group(function () {
-    Route::get('/logbook', function() {
-        return view('logbook.index');
-    })->name('logbook');
+// ═══════════════════════════════════════════════
+// Permintaan Barang (semua user auth)
+// ═══════════════════════════════════════════════
+Route::middleware(['auth'])->group(function () {
+    Route::get('/permintaan',        [PermintaanController::class, 'index'])->name('permintaan.index');
+    Route::get('/permintaan/create', [PermintaanController::class, 'create'])->name('permintaan.create');
+    Route::post('/permintaan',       [PermintaanController::class, 'store'])->name('permintaan.store');
+    Route::put('/permintaan/{id}/status', [PermintaanStatusController::class, 'updateStatus'])->name('permintaan.status.update');
+    Route::get('/permintaan/{id}/chat',   [PermintaanChatController::class, 'getChat'])->name('permintaan.chat.get');
+    Route::post('/permintaan/{id}/chat',  [PermintaanChatController::class, 'storeChat'])->name('permintaan.chat.store');
 });
 
-// Profile Routes (Breeze Default)
+// ═══════════════════════════════════════════════
+// Logbook Karyawan
+// ═══════════════════════════════════════════════
+Route::middleware(['auth', 'role:pic_gudang,agronom,pimpinan'])->group(function () {
+    Route::get('/catatan', fn() => view('catatan.index'))->name('catatan');
+});
+
+// ═══════════════════════════════════════════════
+// Profile (Breeze)
+// ═══════════════════════════════════════════════
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profil',    [ProfilController::class, 'edit'])->name('profil.edit');
+    Route::patch('/profil',  [ProfilController::class, 'update'])->name('profil.update');
+    Route::delete('/profil', [ProfilController::class, 'destroy'])->name('profil.destroy');
 });
 
 require __DIR__.'/auth.php';

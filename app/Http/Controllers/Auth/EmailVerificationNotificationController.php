@@ -11,13 +11,13 @@ class EmailVerificationNotificationController extends Controller
     /**
      * Send a new email verification notification.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $permintaan): RedirectResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard', absolute: false));
+        if ($permintaan->user()->hasVerifiedEmail()) {
+            return redirect()->intended(route('dasbor', absolute: false));
         }
 
-        $request->user()->sendEmailVerificationNotification();
+        $permintaan->user()->sendEmailVerificationNotification();
 
         return back()->with('status', 'verification-link-sent');
     }

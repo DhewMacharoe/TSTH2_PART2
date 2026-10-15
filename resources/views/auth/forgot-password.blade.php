@@ -2,22 +2,26 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Lupa Sandi - TSTH2</title>
+    @include('partials.pwa-head')
     <style>
+        * { box-sizing: border-box; }
         body { 
             background-color: #054439;
             font-family: Arial, Helvetica, sans-serif; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            height: 100vh; 
+            min-height: 100vh; 
             margin: 0; 
+            padding: 1rem;
+            overflow-x: hidden;
         }
         .login-card { 
             background: white; 
-            padding: 40px; 
-            border-radius: 8px; 
+            padding: 2rem 1.5rem; 
+            border-radius: 16px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
             width: 100%; 
             max-width: 400px; 

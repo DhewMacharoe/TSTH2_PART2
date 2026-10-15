@@ -24,28 +24,28 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * Handle an incoming registration request.
+     * Handle an incoming registration permintaan.
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $permintaan): RedirectResponse
     {
-        $request->validate([
+        $permintaan->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $permintaan->name,
+            'email' => $permintaan->email,
+            'password' => Hash::make($permintaan->password),
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('dasbor', absolute: false));
     }
 }

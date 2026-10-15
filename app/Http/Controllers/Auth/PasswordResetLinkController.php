@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class PasswordResetLinkController extends Controller
 {
     /**
-     * Display the password reset link request view.
+     * Display the password reset link permintaan view.
      */
     public function create(): View
     {
@@ -20,13 +20,13 @@ class PasswordResetLinkController extends Controller
     }
 
     /**
-     * Handle an incoming password reset link request.
+     * Handle an incoming password reset link permintaan.
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $permintaan): RedirectResponse
     {
-        $request->validate([
+        $permintaan->validate([
             'email' => ['required', 'email'],
         ]);
 
@@ -34,12 +34,12 @@ class PasswordResetLinkController extends Controller
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
         $status = Password::sendResetLink(
-            $request->only('email')
+            $permintaan->only('email')
         );
 
         return $status == Password::RESET_LINK_SENT
                     ? back()->with('status', __($status))
-                    : back()->withInput($request->only('email'))
+                    : back()->withInput($permintaan->only('email'))
                         ->withErrors(['email' => __($status)]);
     }
 }

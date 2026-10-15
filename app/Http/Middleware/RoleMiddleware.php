@@ -9,11 +9,11 @@ use Symfony\Component\HttpFoundation\Response;
 class RoleMiddleware
 {
     /**
-     * Handle an incoming request.
+     * Handle an incoming permintaan.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, ...$roles): Response
+    public function handle(Request $permintaan, Closure $next, ...$roles): Response
     {
         if (!auth()->check()) {
             abort(403, 'Harap login terlebih dahulu.');
@@ -23,6 +23,6 @@ class RoleMiddleware
             abort(403, 'Anda tidak memiliki hak akses ke halaman ini.');
         }
 
-        return $next($request);
+        return $next($permintaan);
     }
 }

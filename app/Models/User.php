@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'divisi',
     ];
 
     /**
@@ -46,5 +47,34 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // ─── Role Helpers ────────────────────────────────────────────────────────
+
+    public function isPicGudang(): bool
+    {
+        return $this->role === 'pic_gudang';
+    }
+
+    public function isWebAdmin(): bool
+    {
+        return $this->role === 'web_admin';
+    }
+
+    /**
+     * Requester adalah siapapun yang bisa membuat permintaan barang:
+     * semua role kecuali web_admin.
+     */
+    public function isRequester(): bool
+    {
+        return !$this->isWebAdmin();
+    }
+
+    /**
+     * Apakah user dapat mengakses menu gudang (gudang inventory).
+     */
+    public function canAccessGudang(): bool
+    {
+        return in_array($this->role, ['pic_gudang', 'web_admin', 'agronom', 'pimpinan']);
     }
 }

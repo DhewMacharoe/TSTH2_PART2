@@ -23,3 +23,8 @@
     @apply bg-accent hover:bg-accent-light text-white font-bold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition-all;
   }
 }
+
+@layer utilities {
+  .text-xs-sm { @apply text-xs sm:text-sm; }
+  .truncate-2 { @apply line-clamp-2; }
+}

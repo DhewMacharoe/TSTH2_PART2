@@ -3,6 +3,11 @@ import forms from '@tailwindcss/forms';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+    // tambahkan breakpoint ekstra untuk smartwatch & mobile kecil
+    screens: {
+        xs: '320px', // smartwatch & small mobile
+        ...defaultTheme.screens,
+    },
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
@@ -37,7 +42,7 @@ export default {
                     light: '#e6c584',
                     dark: '#9a7e4a',
                 },
-            }
+            },
         },
     },
 

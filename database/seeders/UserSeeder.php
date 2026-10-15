@@ -11,44 +11,39 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Web Admin
-        User::create([
+        User::updateOrCreate(['email' => 'web@tsth2.id'], [
             'name' => 'Andi Setiawan',
-            'email' => 'webadmin@tsth2.id',
             'password' => Hash::make('password'),
             'role' => 'web_admin',
         ]);
 
         // PIC Warehouse (Admin Gudang)
-        User::create([
+        User::updateOrCreate(['email' => 'pic@tsth2.id'], [
             'name' => 'Budi Santoso',
-            'email' => 'pic@tsth2.id',
             'password' => Hash::make('password'),
-            'role' => 'pic_warehouse',
+            'role' => 'pic_gudang',
             'divisi' => 'gudang',
         ]);
 
         // Staf Warehouse
-        User::create([
+        User::updateOrCreate(['email' => 'wh@tsth2.id'], [
             'name' => 'Cahyo Utomo',
-            'email' => 'staffgudang@tsth2.id',
             'password' => Hash::make('password'),
             'role' => 'warehouse',
             'divisi' => 'gudang',
         ]);
 
         // Staf Lapangan
-        User::create([
+        User::updateOrCreate(['email' => 'agro@tsth2.id'], [
             'name' => 'Dedi Irawan',
-            'email' => 'stafflapangan@tsth2.id',
             'password' => Hash::make('password'),
             'role' => 'agronom',
             'divisi' => 'lapangan',
         ]);
 
         // Pimpinan (Direktur/Manajer)
-        User::create([
+        User::updateOrCreate(['email' => 'dir@tsth2.id'], [
             'name' => 'Eko Prasetyo',
-            'email' => 'pimpinan@tsth2.id',
             'password' => Hash::make('password'),
             'role' => 'pimpinan',
         ]);

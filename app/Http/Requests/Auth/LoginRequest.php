@@ -13,7 +13,7 @@ use Illuminate\Validation\ValidationException;
 class LoginRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Determine if the user is authorized to make this permintaan.
      */
     public function authorize(): bool
     {
@@ -21,7 +21,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Get the validation rules that apply to the permintaan.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
@@ -34,7 +34,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Attempt to authenticate the request's credentials.
+     * Attempt to authenticate the permintaan's credentials.
      *
      * @throws ValidationException
      */
@@ -54,7 +54,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Ensure the login request is not rate limited.
+     * Ensure the login permintaan is not rate limited.
      *
      * @throws ValidationException
      */
@@ -77,7 +77,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the rate limiting throttle key for the request.
+     * Get the rate limiting throttle key for the permintaan.
      */
     public function throttleKey(): string
     {

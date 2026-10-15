@@ -4,13 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
-use App\Models\Content;
-use App\Models\HomeBackground;
-use App\Models\AboutBullet;
-use App\Models\Program;
-use App\Models\Research;
-use App\Models\News;
-use App\Models\Gallery;
+use App\Models\Konten;
+use App\Models\Penelitian;
+use App\Models\Berita;
+use App\Models\GaleriAlbum;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,60 +25,68 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
-            $programQuery = Program::query();
-            if (request()->routeIs('program') && request('search')) {
+            // ── Penelitian ────────────────────────────────────
+            $penelitianQuery = Penelitian::query();
+            if (request()->routeIs('penelitian') && request('search')) {
                 $search = request('search');
-                $programQuery->where('title', 'like', "%{$search}%")->orWhere('description', 'like', "%{$search}%");
+                $penelitianQuery->where('title', 'like', "%{$search}%")
+                                ->orWhere('description', 'like', "%{$search}%");
             }
-            $programs = $programQuery->get();
+            $penelitianes = $penelitianQuery->get();
 
-            $researchQuery = Research::query();
-            if (request()->routeIs('research') && request('search')) {
+            // ── Berita Publik (hanya published) ───────────────
+            $beritaQuery = Berita::published()->orderBy('date', 'desc');
+            if (request()->routeIs('berita') && request('search')) {
                 $search = request('search');
-                $researchQuery->where('title', 'like', "%{$search}%")->orWhere('description', 'like', "%{$search}%");
+                $beritaQuery->where('title', 'like', "%{$search}%")
+                            ->orWhere('description', 'like', "%{$search}%")
+                            ->orWhere('category', 'like', "%{$search}%");
             }
-            $researches = $researchQuery->get();
+            $berita = $beritaQuery->get();
 
-            $newsQuery = News::orderBy('date', 'desc');
-            if (request()->routeIs('news') && request('search')) {
+            // ── Berita Admin (published + draft) ──────────────
+            $allBeritaQuery = Berita::orderBy('date', 'desc');
+            if (request()->routeIs('web.management.berita') && request('search')) {
                 $search = request('search');
-                $newsQuery->where('title', 'like', "%{$search}%")
-                          ->orWhere('description', 'like', "%{$search}%")
-                          ->orWhere('category', 'like', "%{$search}%");
+                $allBeritaQuery->where('title', 'like', "%{$search}%")
+                               ->orWhere('description', 'like', "%{$search}%")
+                               ->orWhere('category', 'like', "%{$search}%");
             }
-            $news = $newsQuery->get();
+            $allBerita = $allBeritaQuery->get();
 
-            $galleryQuery = Gallery::query();
-            if (request()->routeIs('gallery') && request('search')) {
+            // ── Galeri ────────────────────────────────────────
+            $galeriQuery = GaleriAlbum::query();
+            if ((request()->routeIs('galeri') || request()->routeIs('web.management.galeri')) && request('search')) {
                 $search = request('search');
-                $galleryQuery->where('title', 'like', "%{$search}%")->orWhere('description', 'like', "%{$search}%");
+                $galeriQuery->where('title', 'like', "%{$search}%")
+                            ->orWhere('description', 'like', "%{$search}%");
             }
-            $galleries = $galleryQuery->get();
+            $galeri = $galeriQuery->latest()->get();
 
-            $getHomeSelection = function($collection) {
+            // ── Helper: pilih 4 item representatif ───────────
+            $getHomeSelection = function ($collection) {
                 if ($collection->count() <= 4) return $collection;
                 $sorted = $collection->sortBy('id')->values();
-                $count = $sorted->count();
-                $mid = (int) floor($count / 2);
+                $count  = $sorted->count();
+                $mid    = (int) floor($count / 2);
                 return collect([
-                    $sorted->last(), // terbaru
-                    $sorted->get($mid), // tengah 1
+                    $sorted->last(),        // terbaru
+                    $sorted->get($mid),     // tengah 1
                     $sorted->get($mid - 1), // tengah 2
-                    $sorted->first() // terlama
+                    $sorted->first()        // terlama
                 ]);
             };
 
-            $view->with('contents', Content::all()->keyBy('key'))
-                 ->with('homeBackgrounds', HomeBackground::all())
-                 ->with('aboutBullets', AboutBullet::all())
-                 ->with('programs', $programs)
-                 ->with('researches', $researches)
-                 ->with('news', $news)
-                 ->with('galleries', $galleries)
-                 ->with('homePrograms', $getHomeSelection($programs))
-                 ->with('homeResearches', $getHomeSelection($researches))
-                 ->with('homeNews', $getHomeSelection($news))
-                 ->with('homeGalleries', $getHomeSelection($galleries));
+            $view->with('konten',            Konten::all()->keyBy('key'))
+                 ->with('homeBackgrounds',   Konten::where('section', 'home_background')->get())
+                 ->with('aboutBullets',      Konten::where('section', 'about_bullet')->get())
+                 ->with('penelitianes',      $penelitianes)
+                 ->with('berita',            $berita)      // publik: published only
+                 ->with('allBerita',         $allBerita)   // admin: semua termasuk draft
+                 ->with('galeri',            $galeri)
+                 ->with('homePenelitianes',  $getHomeSelection($penelitianes))
+                 ->with('homeBerita',        $getHomeSelection($berita))
+                 ->with('homeGalleries',     $getHomeSelection($galeri));
         });
     }
 }

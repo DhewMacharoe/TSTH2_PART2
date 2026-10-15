@@ -1,0 +1,147 @@
+PANDUAN LOKASI FOTO UNTUK SELURUH HALAMAN TSTH2
+================================================
+
+Berikut adalah panduan lengkap seluruh item yang berada di seeder `DriveDokumentasiSeeder.php`. 
+Seluruh data *image_path* / fotonya di database saat ini **KOSONG**, sehingga Anda harus mengisinya nanti atau mengupload ulang dari Admin Panel website Anda (jika ada). 
+
+Jika Anda ingin mengisi `image_path`-nya langsung di seeder atau menaruh filenya di folder `public` Laravel, berikut adalah daftar seluruh lokasi yang perlu Anda persiapkan:
+
+------------------------------------------------
+1. HALAMAN HOME (Tabel `contents` & `home_backgrounds`)
+------------------------------------------------
+(Gunakan foto yang relevan untuk memperindah halaman Home)
+
+- Banner Latar Belakang Home 1
+  Saran Lokasi: contents/home_hero_1.jpg
+- Banner Latar Belakang Home 2
+  Saran Lokasi: contents/home_hero_2.jpg
+- Foto Bagian "Tentang TSTH2" (home_about_bg)
+  Saran Lokasi: contents/visi_misi.jpg
+- Foto Direktur / Pimpinan (home_director)
+  Saran Lokasi: contents/foto_direktur.jpg
+- Foto Banner Halaman Program (program_hero_bg)
+  Saran Lokasi: contents/banner_program.jpg
+- Foto Banner Halaman Riset (research_hero_bg)
+  Saran Lokasi: contents/banner_riset.jpg
+
+
+------------------------------------------------
+2. HALAMAN PROGRAM (Tabel `programs`)
+------------------------------------------------
+(Gunakan foto ilustrasi program)
+
+- Kolaborasi Industri Herbal
+  Saran Lokasi: programs/kolaborasi_industri.jpg
+- Edukasi Petani Lokal
+  Saran Lokasi: programs/edukasi_petani.jpg
+- Konservasi Tanaman Endemik
+  Saran Lokasi: programs/konservasi_endemik.jpg
+
+
+------------------------------------------------
+3. HALAMAN RESEARCH / PENELITIAN (Tabel `researches`)
+------------------------------------------------
+(Menggunakan folder asli dari Google Drive Anda)
+
+- Foto Tanaman di SH_10-11 Maret 2026
+  Lokasi Seharusnya: Foto Tanaman di SH_10-11 Maret 2026/A/IMG_8292.JPG
+- Dokumentasi Pemasangan Pancang di Lahan Kopi_6 Mei 2026
+  Lokasi Seharusnya: Dokumentasi Pemasangan Pancang di Lahan Kopi_6 Mei 2026/IMG_9435.JPG
+- Dokumentasi Genolab
+  Lokasi Seharusnya: Dokumentasi Genolab/[Nama_Foto_Aslinya].jpg
+
+
+------------------------------------------------
+4. HALAMAN NEWS / BERITA (Tabel `news`)
+------------------------------------------------
+(Menggunakan folder asli dari Google Drive Anda)
+
+- Kunjungan Tim China 28 Juli 2026
+  Lokasi Seharusnya: Kunjungan Tim China 28 Juli 2026/IMG_3458.JPG
+- Dokumentasi Rapat_08 Juli 2026
+  Lokasi Seharusnya: Dokumentasi Rapat_08 Juli 2026/IMG_2272.JPG
+- Dokumentasi Rapat Kerja 9-10 Februari 2026
+  Lokasi Seharusnya: Dokumentasi Rapat Kerja 9-10 Februari 2026/IMG_7404.JPG
+- Dokumentasi Pelatihan ISO 6-7 Februari 2026
+  Lokasi Seharusnya: Dokumentasi Pelatihan ISO 6-7 Februari 2026/IMG_6921.JPG
+- Dokumentasi Panen Tomat 13 Januari 2026
+  Lokasi Seharusnya: Dokumentasi Panen Tomat 13 Januari 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Panen Bawang Putih di Parsingguran 24 Februari 2026
+  Lokasi Seharusnya: Dokumentasi Panen Bawang Putih di Parsingguran 24 Februari 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kunjungan UGM_31 Agustus 2026
+  Lokasi Seharusnya: Dokumentasi Kunjungan UGM_31 Agustus 2026/IMG_4350.JPG
+- Dokumentasi Kunjungan tim Taiwan_08 Juli 2026
+  Lokasi Seharusnya: Dokumentasi Kunjungan tim Taiwan_08 Juli 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kunjungan Tamu dari Belanda_20April2026
+  Lokasi Seharusnya: Dokumentasi Kunjungan Tamu dari Belanda_20April2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kunjungan SUD_28 Agustus 2026
+  Lokasi Seharusnya: Dokumentasi Kunjungan SUD_28 Agustus 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kunjungan Koordinator Bidang Pangan 6 Februari 2026
+  Lokasi Seharusnya: Dokumentasi Kunjungan Koordinator Bidang Pangan 6 Februari 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kunjungan Ketua DEN dan Pak Martias 27 Juli 2026
+  Lokasi Seharusnya: Dokumentasi Kunjungan Ketua DEN dan Pak Martias 27 Juli 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kunjungan Kalbe_05 Mei 2026
+  Lokasi Seharusnya: Dokumentasi Kunjungan Kalbe_05 Mei 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi FGD 26 Agustus 2025
+  Lokasi Seharusnya: Dokumentasi FGD 26 Agustus 2025/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Acara 17-an_18 Agustus 2026
+  Lokasi Seharusnya: Dokumentasi Acara 17-an_18 Agustus 2026/[Nama_Foto_Aslinya].jpg
+
+
+------------------------------------------------
+5. HALAMAN GALLERY (Tabel `galleries`)
+------------------------------------------------
+(Menggunakan folder asli dari Google Drive Anda)
+
+- Video 24 April 2026
+  Lokasi Seharusnya: Video 24 April 2026/[Nama_Foto_Aslinya].jpg
+- Video
+  Lokasi Seharusnya: Video/[Nama_Foto_Aslinya].jpg
+- Foto Drone_SH_23 Juni 2026
+  Lokasi Seharusnya: Foto Drone_SH_23 Juni 2026/DJI_20260623090315_0019_D.JPG
+- Foto & Video Lebaran_12 Maret 2026
+  Lokasi Seharusnya: Foto & Video Lebaran_12 Maret 2026/IMG_8375.JPG
+- Dokumentasi TSTH2
+  Lokasi Seharusnya: Dokumentasi TSTH2/Riset Lapangan/IMG_9082.JPG
+- Dokumentasi kunjungan_24 Januari 2026
+  Lokasi Seharusnya: Dokumentasi kunjungan_24 Januari 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kunjungan Ketua DEN 10 Juli 2026
+  Lokasi Seharusnya: Dokumentasi Kunjungan Ketua DEN 10 Juli 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kunjungan Ketua DEN 01 April 2026
+  Lokasi Seharusnya: Dokumentasi Kunjungan Ketua DEN 01 April 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kunjungan China_13 Mei 2026
+  Lokasi Seharusnya: Dokumentasi Kunjungan China_13 Mei 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kunjungan 18 Juni 2026
+  Lokasi Seharusnya: Dokumentasi Kunjungan 18 Juni 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kegiatan 28 Oktober 2025
+  Lokasi Seharusnya: Dokumentasi Kegiatan 28 Oktober 2025/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kegiatan 22 Oktober 2025
+  Lokasi Seharusnya: Dokumentasi Kegiatan 22 Oktober 2025/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kegiatan 20 November 2025
+  Lokasi Seharusnya: Dokumentasi Kegiatan 20 November 2025/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kegiatan 19 Agustus
+  Lokasi Seharusnya: Dokumentasi Kegiatan 19 Agustus/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kegiatan 17 Oktober 2025
+  Lokasi Seharusnya: Dokumentasi Kegiatan 17 Oktober 2025/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kegiatan 17 Desember 2025
+  Lokasi Seharusnya: Dokumentasi Kegiatan 17 Desember 2025/[Nama.Foto_Aslinya].jpg
+- Dokumentasi Kegiatan 11 Februari 2026
+  Lokasi Seharusnya: Dokumentasi Kegiatan 11 Februari 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi Kamera_SH_23 Juni 2026
+  Lokasi Seharusnya: Dokumentasi Kamera_SH_23 Juni 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi 30 Januari 2026
+  Lokasi Seharusnya: Dokumentasi 30 Januari 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi 21 April 2026
+  Lokasi Seharusnya: Dokumentasi 21 April 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi 14 April 2026
+  Lokasi Seharusnya: Dokumentasi 14 April 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi 12-13 Mei 2026
+  Lokasi Seharusnya: Dokumentasi 12-13 Mei 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi 03 Juni 2026
+  Lokasi Seharusnya: Dokumentasi 03 Juni 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi 3 Februari 2026
+  Lokasi Seharusnya: Dokumentasi 3 Februari 2026/[Nama_Foto_Aslinya].jpg
+- Dokumentasi 01 April 2026
+  Lokasi Seharusnya: Dokumentasi 01 April 2026/[Nama_Foto_Aslinya].jpg
+
+-- Selesai --
