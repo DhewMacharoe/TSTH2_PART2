@@ -35,10 +35,6 @@
 
         <div class="container">
             <div class="hero-content">
-                <div class="hero-badge">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <span>Taman Sains Teknologi Herbal dan Hortikultura</span>
-                </div>
                 <h1>{{ $konten['home_hero_title']->value ?? 'Inovasi Herbal & Hortikultura Indonesia' }}</h1>
                 <p>{{ $konten['home_hero_desc']->value ?? 'Pusat riset nasional yang diprakarsai oleh Pemerintah Indonesia di bawah Kementerian Pendidikan Tinggi, Sains, dan Teknologi, berkolaborasi dengan Institut Teknologi Del.' }}</p>
                 <div class="hero-actions">
@@ -67,51 +63,6 @@
         </div>
     </section>
     @endif
-
-    <!-- ════════════════════════════════════
-         EXECUTIVE METRICS BANNER
-         ════════════════════════════════════ -->
-    <div class="container stats-banner">
-        <div class="stats-grid">
-            <div class="stat-item animate-on-scroll">
-                <div class="stat-icon-box">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 2v7.5M14 2v7.5M8.5 2h7M14 9.5a4.5 4.5 0 1 1-4.5 4.5V9.5h4.5zM4.5 22h15"/></svg>
-                </div>
-                <div class="stat-info">
-                    <h4>50+ Projects</h4>
-                    <p>Riset &amp; Konservasi Plasma Nutfah</p>
-                </div>
-            </div>
-            <div class="stat-item animate-on-scroll" style="--icon-bg: #fffbeb; --icon-color: #9C7A26; --icon-border: rgba(156,122,38,0.2);">
-                <div class="stat-icon-box" style="background: #fffbeb; color: #9C7A26; border-color: rgba(156,122,38,0.2);">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22v-9"/><path d="M12 13C7 13 4 8 4 3c5 0 8 3 8 8z"/><path d="M12 13c5 0 8-5 8-10-5 0-8 3-8 8z"/></svg>
-                </div>
-                <div class="stat-info">
-                    <h4>100+ Spesies</h4>
-                    <p>Varietas Endemik Dataran Tinggi</p>
-                </div>
-            </div>
-            <div class="stat-item animate-on-scroll">
-                <div class="stat-icon-box">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                </div>
-                <div class="stat-info">
-                    <h4>ISO 17025</h4>
-                    <p>Genolab &amp; Distilasi Presisi</p>
-                </div>
-            </div>
-            <div class="stat-item animate-on-scroll" style="border-right: none;">
-                <div class="stat-icon-box" style="background: #fffbeb; color: #9C7A26; border-color: rgba(156,122,38,0.2);">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                </div>
-                <div class="stat-info">
-                    <h4>Global Network</h4>
-                    <p>Kerja Sama Riset Internasional</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- ════════════════════════════════════
          ABOUT SECTION
          ════════════════════════════════════ -->
