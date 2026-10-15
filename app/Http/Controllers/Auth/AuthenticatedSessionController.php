@@ -28,7 +28,12 @@ class AuthenticatedSessionController extends Controller
 
         $permintaan->session()->regenerate();
 
-        return redirect()->intended(route('dasbor', absolute: false));
+        $user = $permintaan->user();
+        $intended = $user->role === 'web_admin'
+            ? route('web.management.home', absolute: false)
+            : route('dasbor', absolute: false);
+
+        return redirect()->intended($intended);
     }
 
     /**

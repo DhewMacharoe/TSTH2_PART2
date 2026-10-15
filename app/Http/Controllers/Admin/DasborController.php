@@ -16,10 +16,53 @@ class DasborController extends Controller
     {
         $user = auth()->user();
 
-        // 1. Barang di Gudang (Total Barang & Total Stok)
-        $totalBarang = Barang::count();
-        $totalStok = BarangBatch::sum('stok');
-        $kategoriStats = Barang::select('kategori', DB::raw('count(*) as total'))->groupBy('kategori')->pluck('total', 'kategori');
+        // web_admin tidak perlu dashboard — langsung ke Web Management
+        if ($user->role === 'web_admin') {
+            return redirect()->route('web.management.home');
+        }
+
+        // 1. Barang di Gudang – tidak perlu untuk web_admin
+        $totalBarang = 0;
+        $totalStok = 0;
+        $kategoriStats = [];
+        $totalRusak = 0;
+        $totalExpired = 0;
+
+        if ($user->role !== 'web_admin') {
+            $totalBarang = Barang::count();
+            $totalStok = BarangBatch::sum('stok');
+            $kategoriStats = Barang::select('kategori', DB::raw('count(*) as total'))->groupBy('kategori')->pluck('total', 'kategori');
+
+            // 3. Barang Rusak / Expired (hanya untuk PIC Gudang)
+            if ($user->role === 'pic_gudang') {
+                $batches = BarangBatch::all();
+                foreach($batches as $batch) {
+                    $isExpired = false;
+                    if ($batch->tanggal_kadaluarsa && \Carbon\Carbon::parse($batch->tanggal_kadaluarsa)->endOfDay()->isPast()) {
+                        $isExpired = true;
+                    }
+
+                    $details = is_array($batch->stok_detail) ? $batch->stok_detail : json_decode($batch->stok_detail ?? '[]', true);
+
+                    if (empty($details)) {
+                        if (in_array($batch->kondisi, ['Rusak', 'Rusak/Menggumpal'])) {
+                            $totalRusak += $batch->stok;
+                        } elseif ($isExpired) {
+                            $totalExpired += $batch->stok;
+                        }
+                    } else {
+                        foreach ($details as $item) {
+                            $subStok = $item['stok'] ?? 0;
+                            if (in_array($item['kondisi'] ?? '', ['Rusak', 'Rusak/Menggumpal'])) {
+                                $totalRusak += $subStok;
+                            } elseif ($isExpired) {
+                                $totalExpired += $subStok;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         // 2. Permintaan Barang (Beragam Status)
         $permintaanQuery = PermintaanBarang::query();
@@ -27,7 +70,7 @@ class DasborController extends Controller
             $permintaanQuery->where('user_id', $user->id);
         }
         $permintaans = $permintaanQuery->get();
-        
+
         $permintaanStats = [
             'Menunggu Approval' => $permintaans->where('status', 'Menunggu Approval')->count(),
             'Menunggu Pengambilan' => $permintaans->where('status', 'Menunggu Pengambilan')->count(),
@@ -35,39 +78,7 @@ class DasborController extends Controller
             'Selesai' => $permintaans->whereIn('status', ['Selesai', 'Barang Dikembalikan'])->count(),
         ];
 
-        // 3. Barang Rusak / Expired (Only for PIC Gudang and Web Admin)
-        $totalRusak = 0;
-        $totalExpired = 0;
-        if (in_array($user->role, ['pic_gudang', 'web_admin'])) {
-            $batches = BarangBatch::all();
-            foreach($batches as $batch) {
-                $isExpired = false;
-                if ($batch->tanggal_kadaluarsa && \Carbon\Carbon::parse($batch->tanggal_kadaluarsa)->endOfDay()->isPast()) {
-                    $isExpired = true;
-                }
-                
-                $details = is_array($batch->stok_detail) ? $batch->stok_detail : json_decode($batch->stok_detail ?? '[]', true);
-                
-                if (empty($details)) {
-                    if (in_array($batch->kondisi, ['Rusak', 'Rusak/Menggumpal'])) {
-                        $totalRusak += $batch->stok;
-                    } elseif ($isExpired) {
-                        $totalExpired += $batch->stok;
-                    }
-                } else {
-                    foreach ($details as $item) {
-                        $subStok = $item['stok'] ?? 0;
-                        if (in_array($item['kondisi'] ?? '', ['Rusak', 'Rusak/Menggumpal'])) {
-                            $totalRusak += $subStok;
-                        } elseif ($isExpired) {
-                            $totalExpired += $subStok;
-                        }
-                    }
-                }
-            }
-        }
-
-        // 4. Slide Presentasi (Fitur & Kesimpulan)
+        // 3. Slide Presentasi (Fitur & Kesimpulan)
         $fiturPengembangan = [
             [
                 'judul' => 'Sistem Inventaris & Tracking Stok',

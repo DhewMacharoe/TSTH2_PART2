@@ -35,8 +35,9 @@
 </div>
 
 <!-- Stats and Charts -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-    <!-- Storage Stats -->
+<div class="grid grid-cols-1 {{ auth()->user()->role !== 'web_admin' ? 'lg:grid-cols-2' : '' }} gap-6 mb-8">
+    @if(auth()->user()->role !== 'web_admin')
+    <!-- Storage Stats (disembunyikan untuk web_admin) -->
     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full">
         <h3 class="text-lg font-bold text-gray-900 mb-6">Status Gudang</h3>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -48,7 +49,7 @@
                 <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Total Stok Unit</span>
                 <strong class="text-3xl text-primary">{{ number_format($totalStok) }}</strong>
             </div>
-            @if(in_array(auth()->user()->role, ['pic_gudang', 'web_admin']))
+            @if(in_array(auth()->user()->role, ['pic_gudang']))
             <div class="p-4 bg-orange-50 rounded-xl border border-orange-100 text-center flex flex-col justify-center">
                 <span class="block text-xs font-bold text-orange-500 uppercase tracking-wider mb-1">Stok Rusak</span>
                 <strong class="text-3xl text-orange-600">{{ number_format($totalRusak ?? 0) }}</strong>
@@ -63,6 +64,7 @@
             <canvas id="kategoriChart"></canvas>
         </div>
     </div>
+    @endif
 
     <!-- Request Stats -->
     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full">
@@ -85,7 +87,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Kategori Chart
+    @if(auth()->user()->role !== 'web_admin')
+    // Kategori Chart (hanya untuk non web_admin)
     const katData = @json($kategoriStats);
     if(Object.keys(katData).length > 0) {
         new Chart(document.getElementById('kategoriChart'), {
@@ -109,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    @endif
 
     // Request Chart
     const reqData = @json($permintaanStats);

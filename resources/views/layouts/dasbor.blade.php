@@ -53,10 +53,12 @@
         <nav class="flex-1 px-4 py-6 space-y-4 overflow-y-auto custom-scrollbar">
             <p class="px-4 text-xs font-bold text-white/40 uppercase tracking-widest mb-2 mt-4">Menu Utama</p>
             
+            @if(auth()->user()->role !== 'web_admin')
             <a href="{{ route('dasbor') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('dasbor') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
                 <span class="text-xl">📊</span>
                 <span>Dashboard</span>
             </a>
+            @endif
             
             @if(in_array(auth()->user()->role, ['pic_gudang', 'agronom', 'pimpinan']))
             <p class="px-4 text-xs font-bold text-white/40 uppercase tracking-widest mb-2 mt-4">Inventory</p>
@@ -185,10 +187,12 @@
 
     <!-- Mobile Bottom Navigation (Visible only on lg and below) -->
     <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-gray-100 flex items-center justify-around z-50 h-16 pb-safe">
+        @if(auth()->user()->role !== 'web_admin')
         <a href="{{ route('dasbor') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 {{ request()->routeIs('dasbor') ? 'text-accent' : 'text-gray-400 hover:text-gray-600' }}">
             <span class="text-xl {{ request()->routeIs('dasbor') ? 'scale-110 drop-shadow-sm' : '' }} transition-transform">📊</span>
             <span class="text-[10px] font-bold">Dashboard</span>
         </a>
+        @endif
         
         @if(in_array(auth()->user()->role, ['pic_gudang', 'agronom', 'pimpinan']))
         <a href="{{ route('gudang') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 {{ request()->routeIs('gudang') || request()->routeIs('gudang.show') ? 'text-accent' : 'text-gray-400 hover:text-gray-600' }}">
