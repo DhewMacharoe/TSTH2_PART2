@@ -15,14 +15,14 @@
         <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
         <div class="relative z-10">
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-accent/20 text-accent border border-accent/30 mb-3">
-                <span>🏠</span> Manajemen Halaman Beranda
+                <span class="material-symbols-rounded text-sm">home</span> Manajemen Halaman Beranda
             </span>
             <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Pengaturan Halaman Beranda</h1>
             <p class="text-white/70 text-sm mt-1 max-w-xl">Ubah teks pembuka, latar belakang gambar hero, profil instansi, serta kutipan sambutan direktur dengan mudah.</p>
         </div>
         <div class="relative z-10 shrink-0">
             <a href="{{ route('home') }}" target="_blank" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-5 py-2.5 rounded-xl text-xs font-bold backdrop-blur-sm transition-all hover:scale-105 shadow-sm">
-                <span>🌐</span> Pratinjau Beranda
+                <span class="material-symbols-rounded text-sm">language</span> Pratinjau Beranda
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
             </a>
         </div>
@@ -30,7 +30,9 @@
 
     @if (session('success'))
         <div class="bg-emerald-50 text-emerald-800 p-4 rounded-2xl mb-8 font-semibold border border-emerald-200/80 flex items-center gap-3 shadow-sm animate-fade-in">
-            <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shrink-0">✓</div>
+            <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                <span class="material-symbols-rounded text-base">check</span>
+            </div>
             <div class="text-sm">{{ session('success') }}</div>
         </div>
     @endif
@@ -43,9 +45,11 @@
             <!-- 1. BAGIAN HERO (LAYAR PERTAMA) -->
             <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3 border-b border-gray-100 pb-5 mb-6">
-                    <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-extrabold text-xl shadow-inner">🎯</div>
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center shadow-inner">
+                        <span class="material-symbols-rounded text-xl">flag</span>
+                    </div>
                     <div>
-                        <h2 class="text-lg font-extrabold text-gray-900">Bagian Hero (Layar Pembuka)</h2>
+                        <h2 class="text-lg font-extrabold text-gray-900">Layar Pembuka</h2>
                         <p class="text-xs text-gray-500">Teks besar dan pengantar yang pertama kali dilihat pengunjung saat membuka website.</p>
                     </div>
                 </div>
@@ -81,9 +85,11 @@
             <!-- 2. BAGIAN TENTANG KAMI -->
             <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3 border-b border-gray-100 pb-5 mb-6">
-                    <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center font-extrabold text-xl shadow-inner">🏛️</div>
+                    <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center shadow-inner">
+                        <span class="material-symbols-rounded text-xl">account_balance</span>
+                    </div>
                     <div>
-                        <h2 class="text-lg font-extrabold text-gray-900">Tentang TSTH2 (Profil & Sekilas Mengenal)</h2>
+                        <h2 class="text-lg font-extrabold text-gray-900">Tentang TSTH2</h2>
                         <p class="text-xs text-gray-500">Informasi profil umum instansi yang ditampilkan di seksi kedua beranda.</p>
                     </div>
                 </div>
@@ -125,9 +131,11 @@
             <!-- 3. BAGIAN PENGANTAR PENELITIAN -->
             <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3 border-b border-gray-100 pb-5 mb-6">
-                    <div class="w-10 h-10 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center font-extrabold text-xl shadow-inner">🔬</div>
+                    <div class="w-10 h-10 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center shadow-inner">
+                        <span class="material-symbols-rounded text-xl">biotech</span>
+                    </div>
                     <div>
-                        <h2 class="text-lg font-extrabold text-gray-900">Pengantar Fasilitas & Penelitian di Beranda</h2>
+                        <h2 class="text-lg font-extrabold text-gray-900"> Penelitian</h2>
                         <p class="text-xs text-gray-500">Teks pengantar untuk bagian preview riset yang ada di beranda.</p>
                     </div>
                 </div>
@@ -153,7 +161,9 @@
             <!-- 4. BAGIAN SAMBUTAN DIREKTUR -->
             <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3 border-b border-gray-100 pb-5 mb-6">
-                    <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center font-extrabold text-xl shadow-inner">👤</div>
+                    <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center shadow-inner">
+                        <span class="material-symbols-rounded text-xl">person</span>
+                    </div>
                     <div>
                         <h2 class="text-lg font-extrabold text-gray-900">Sambutan & Profil Direktur / Pimpinan</h2>
                         <p class="text-xs text-gray-500">Pesan resmi, kutipan inspiratif, dan foto pimpinan instansi.</p>
@@ -211,6 +221,376 @@
                 </div>
             </div>
 
+            <!-- WAKIL DIREKTUR -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 border-b border-gray-100 pb-5 mb-6">
+                    <div class="w-10 h-10 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center shadow-inner">
+                        <span class="material-symbols-rounded text-xl">person</span>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-extrabold text-gray-900">Profil Wakil Direktur</h2>
+                        <p class="text-xs text-gray-500">Data wakil direktur / pimpinan kedua instansi.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Nama Lengkap Wakil Direktur &amp; Gelar</label>
+                        <input type="text" name="home_vice_director_name"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm font-semibold bg-gray-50/50 hover:bg-white"
+                            placeholder="Contoh: Dr. Ir. Wakil Direktur, M.Sc."
+                            value="{{ optional($konten['home_vice_director_name'] ?? null)->value ?? '' }}">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Jabatan Resmi</label>
+                        <input type="text" name="home_vice_director_title"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm font-semibold bg-gray-50/50 hover:bg-white"
+                            placeholder="Contoh: Wakil Direktur TSTH2"
+                            value="{{ optional($konten['home_vice_director_title'] ?? null)->value ?? '' }}">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Kutipan Singkat (Quote)</label>
+                        <textarea name="home_vice_director_quote" rows="4"
+                            class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm leading-relaxed bg-gray-50/50 hover:bg-white italic resize-none"
+                            placeholder="Kutipan inspiratif wakil direktur...">{{ optional($konten['home_vice_director_quote'] ?? null)->value ?? '' }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Deskripsi / Sambutan</label>
+                        <textarea name="home_vice_director_desc" rows="4"
+                            class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm leading-relaxed bg-gray-50/50 hover:bg-white resize-none"
+                            placeholder="Uraian singkat profil wakil direktur...">{{ optional($konten['home_vice_director_desc'] ?? null)->value ?? '' }}</textarea>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Foto Resmi Wakil Direktur</label>
+                        <div class="p-5 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50/50 hover:bg-white transition-colors flex flex-col sm:flex-row items-center gap-6">
+                            @if (isset($konten['home_vice_director']) && $konten['home_vice_director']->image_path)
+                                <div class="shrink-0 text-center">
+                                    <img src="{{ asset('storage/' . $konten['home_vice_director']->image_path) }}"
+                                        class="h-32 w-24 object-cover object-top rounded-2xl shadow-md border-2 border-white ring-2 ring-primary/20">
+                                    <span class="text-[10px] text-gray-400 mt-1.5 block font-semibold">Foto Saat Ini</span>
+                                </div>
+                            @endif
+                            <div class="flex-1 text-center sm:text-left">
+                                <input type="file" name="home_vice_director" class="w-full text-xs text-gray-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gray-900 file:text-white hover:file:bg-black cursor-pointer" accept="image/*">
+                                <p class="text-xs text-gray-400 mt-2">Foto potret formal, rasio 3:4. Kosongkan jika tidak ingin mengubah foto.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. BAGIAN  KONTEN BERANDA (RISET, BERITA, & GALERI) -->
+            @php
+                $rawSelPenelitian = $konten['home_selected_penelitian']->value ?? '[]';
+                $decodedPenelitian = json_decode($rawSelPenelitian, true);
+                $selectedPenelitianIds = is_array($decodedPenelitian) ? array_map('intval', $decodedPenelitian) : [];
+
+                $rawSelBerita = $konten['home_selected_berita']->value ?? '[]';
+                $decodedBerita = json_decode($rawSelBerita, true);
+                $selectedBeritaIds = is_array($decodedBerita) ? array_map('intval', $decodedBerita) : [];
+
+                $rawSelGaleri = $konten['home_selected_galeri']->value ?? '[]';
+                $decodedGaleri = json_decode($rawSelGaleri, true);
+                $selectedGaleriIds = is_array($decodedGaleri) ? array_map('intval', $decodedGaleri) : [];
+
+                $allPenelitianIds = ($allPenelitian ?? collect([]))->pluck('id')->all();
+                $allBeritaIds = ($allBerita ?? collect([]))->pluck('id')->all();
+                $allGaleriIds = ($allGaleri ?? collect([]))->pluck('id')->all();
+            @endphp
+
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+                 x-data="{
+                     activeCurTab: 'penelitian',
+                     selectedPenelitian: {{ json_encode($selectedPenelitianIds) }},
+                     selectedBerita: {{ json_encode($selectedBeritaIds) }},
+                     selectedGaleri: {{ json_encode($selectedGaleriIds) }},
+                     allPenelitianIds: {{ json_encode($allPenelitianIds) }},
+                     allBeritaIds: {{ json_encode($allBeritaIds) }},
+                     allGaleriIds: {{ json_encode($allGaleriIds) }},
+                     toggleSelect(field, id) {
+                         let idx = this[field].indexOf(id);
+                         if (idx > -1) {
+                             this[field].splice(idx, 1);
+                         } else {
+                             if (this[field].length >= 6) {
+                                 alert('Maksimal 6 item terpilih! Batalkan salah satu pilihan yang ada terlebih dahulu.');
+                                 return;
+                             }
+                             this[field].push(id);
+                         }
+                     },
+                     resetSelection(field) {
+                         this[field] = [];
+                     },
+                     selectTop6(field, allIds) {
+                         this[field] = allIds.slice(0, 6);
+                     }
+                 }">
+                
+                <input type="hidden" name="home_selected_penelitian" :value="JSON.stringify(selectedPenelitian)">
+                <input type="hidden" name="home_selected_berita" :value="JSON.stringify(selectedBerita)">
+                <input type="hidden" name="home_selected_galeri" :value="JSON.stringify(selectedGaleri)">
+
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100 pb-5 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center shadow-inner">
+                            <span class="material-symbols-rounded text-xl">view_carousel</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-lg font-extrabold text-gray-900">Konten Beranda Publik</h2>
+                                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full">Maks. 6 Item per Bagian</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-0.5">Tentukan konten riset, berita, dan galeri yang ditampilkan di beranda depan. Klik kartu untuk memilih / membatalkan.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nav Tabs -->
+                <div class="flex flex-wrap gap-2 p-1.5 bg-gray-100/80 rounded-2xl mb-6">
+                    <button type="button" @click="activeCurTab = 'penelitian'"
+                            :class="activeCurTab === 'penelitian' ? 'bg-white text-emerald-900 shadow-sm font-bold' : 'text-gray-600 hover:text-gray-900 font-semibold'"
+                            class="flex-1 min-w-[140px] px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition-all">
+                        <span class="material-symbols-rounded text-sm">science</span>
+                        <span>Fasilitas & Riset</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold"
+                              :class="selectedPenelitian.length > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-200 text-gray-600'"
+                              x-text="selectedPenelitian.length + ' / 6'"></span>
+                    </button>
+
+                    <button type="button" @click="activeCurTab = 'berita'"
+                            :class="activeCurTab === 'berita' ? 'bg-white text-emerald-900 shadow-sm font-bold' : 'text-gray-600 hover:text-gray-900 font-semibold'"
+                            class="flex-1 min-w-[140px] px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition-all">
+                        <span class="material-symbols-rounded text-sm">newspaper</span>
+                        <span>Berita & Artikel</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold"
+                              :class="selectedBerita.length > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-200 text-gray-600'"
+                              x-text="selectedBerita.length + ' / 6'"></span>
+                    </button>
+
+                    <button type="button" @click="activeCurTab = 'galeri'"
+                            :class="activeCurTab === 'galeri' ? 'bg-white text-emerald-900 shadow-sm font-bold' : 'text-gray-600 hover:text-gray-900 font-semibold'"
+                            class="flex-1 min-w-[140px] px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition-all">
+                        <span class="material-symbols-rounded text-sm">photo_library</span>
+                        <span>Galeri Dokumentasi</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold"
+                              :class="selectedGaleri.length > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-200 text-gray-600'"
+                              x-text="selectedGaleri.length + ' / 6'"></span>
+                    </button>
+                </div>
+
+                <!-- TAB 1: PENELITIAN -->
+                <div x-show="activeCurTab === 'penelitian'" class="space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100">
+                        <div class="text-xs text-emerald-900">
+                            <span class="font-bold">Info Riset di Beranda:</span>
+                            <span x-show="selectedPenelitian.length === 0" class="text-emerald-700">Belum ada riset spesifik yang dipilih. Sistem otomatis menampilkan <strong>6 riset terbaru</strong>.</span>
+                            <span x-show="selectedPenelitian.length > 0" class="text-emerald-700">Menampilkan <strong x-text="selectedPenelitian.length"></strong> riset terpilih di beranda.</span>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button type="button" @click="selectTop6('selectedPenelitian', allPenelitianIds)"
+                                    class="px-3 py-1.5 bg-white hover:bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold transition">
+                                Pilih 6 Terbaru
+                            </button>
+                            <button type="button" @click="resetSelection('selectedPenelitian')"
+                                    class="px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-600 border border-gray-200 rounded-lg text-xs font-semibold transition">
+                                Kosongkan (Otomatis)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[520px] overflow-y-auto p-1">
+                        @forelse($allPenelitian ?? [] as $item)
+                            <div @click="toggleSelect('selectedPenelitian', {{ $item->id }})"
+                                 :class="selectedPenelitian.includes({{ $item->id }}) 
+                                     ? 'border-2 border-emerald-500 bg-emerald-50/40 shadow-sm ring-2 ring-emerald-500/20' 
+                                     : 'border border-gray-200 bg-white hover:border-gray-300'"
+                                 class="cursor-pointer rounded-2xl p-3.5 transition-all flex flex-col justify-between group relative select-none">
+                                <div>
+                                    <div class="relative w-full h-32 rounded-xl overflow-hidden mb-3 bg-gray-100 border border-gray-100">
+                                        <img src="{{ $item->image_path ? asset('storage/' . $item->image_path) : asset('assets/default_hero.jpg') }}" 
+                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        <div class="absolute top-2 right-2">
+                                            <span x-show="selectedPenelitian.includes({{ $item->id }})"
+                                                  class="inline-flex items-center gap-1 bg-emerald-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow">
+                                                <span class="material-symbols-rounded text-xs">check</span>
+                                                <span x-text="'Tampil #' + (selectedPenelitian.indexOf({{ $item->id }}) + 1)"></span>
+                                            </span>
+                                            <span x-show="!selectedPenelitian.includes({{ $item->id }})"
+                                                  class="inline-flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white/90 text-[10px] font-semibold px-2 py-0.5 rounded-full opacity-80 group-hover:opacity-100">
+                                                Pilih
+                                            </span>
+                                        </div>
+                                        @if($item->code)
+                                            <span class="absolute bottom-2 left-2 bg-black/70 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
+                                                {{ $item->code }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <h4 class="text-xs font-bold text-gray-900 group-hover:text-primary transition-colors line-clamp-2 mb-1">
+                                        {{ $item->title }}
+                                    </h4>
+                                    <p class="text-[11px] text-gray-500 line-clamp-2 leading-relaxed">
+                                        {{ $item->description }}
+                                    </p>
+                                </div>
+                                <div class="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between text-[10px] text-gray-400 font-medium">
+                                    <span>{{ $item->field ?? $item->facility ?? 'Riset' }}</span>
+                                    <span class="font-mono text-gray-300">ID: {{ $item->id }}</span>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-span-full py-12 text-center text-xs text-gray-400">
+                                Belum ada data penelitian yang tersimpan.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- TAB 2: BERITA -->
+                <div x-show="activeCurTab === 'berita'" class="space-y-4" style="display: none;">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-blue-50/50 p-4 rounded-2xl border border-blue-100">
+                        <div class="text-xs text-blue-900">
+                            <span class="font-bold">Info Berita di Beranda:</span>
+                            <span x-show="selectedBerita.length === 0" class="text-blue-700">Belum ada berita spesifik yang dipilih. Sistem otomatis menampilkan <strong>6 berita terbaru</strong>.</span>
+                            <span x-show="selectedBerita.length > 0" class="text-blue-700">Menampilkan <strong x-text="selectedBerita.length"></strong> berita terpilih di beranda.</span>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button type="button" @click="selectTop6('selectedBerita', allBeritaIds)"
+                                    class="px-3 py-1.5 bg-white hover:bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold transition">
+                                Pilih 6 Terbaru
+                            </button>
+                            <button type="button" @click="resetSelection('selectedBerita')"
+                                    class="px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-600 border border-gray-200 rounded-lg text-xs font-semibold transition">
+                                Kosongkan (Otomatis)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[520px] overflow-y-auto p-1">
+                        @forelse($allBerita ?? [] as $item)
+                            <div @click="toggleSelect('selectedBerita', {{ $item->id }})"
+                                 :class="selectedBerita.includes({{ $item->id }}) 
+                                     ? 'border-2 border-emerald-500 bg-emerald-50/40 shadow-sm ring-2 ring-emerald-500/20' 
+                                     : 'border border-gray-200 bg-white hover:border-gray-300'"
+                                 class="cursor-pointer rounded-2xl p-3.5 transition-all flex flex-col justify-between group relative select-none">
+                                <div>
+                                    <div class="relative w-full h-32 rounded-xl overflow-hidden mb-3 bg-gray-100 border border-gray-100">
+                                        <img src="{{ $item->image_path ? asset('storage/' . $item->image_path) : asset('assets/default_hero.jpg') }}" 
+                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        <div class="absolute top-2 right-2">
+                                            <span x-show="selectedBerita.includes({{ $item->id }})"
+                                                  class="inline-flex items-center gap-1 bg-emerald-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow">
+                                                <span class="material-symbols-rounded text-xs">check</span>
+                                                <span x-text="'Tampil #' + (selectedBerita.indexOf({{ $item->id }}) + 1)"></span>
+                                            </span>
+                                            <span x-show="!selectedBerita.includes({{ $item->id }})"
+                                                  class="inline-flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white/90 text-[10px] font-semibold px-2 py-0.5 rounded-full opacity-80 group-hover:opacity-100">
+                                                Pilih
+                                            </span>
+                                        </div>
+                                        <span class="absolute bottom-2 left-2 bg-emerald-950/80 backdrop-blur-sm text-white text-[10px] font-semibold px-2 py-0.5 rounded-md">
+                                            {{ $item->category ?? 'Berita' }}
+                                        </span>
+                                    </div>
+                                    <h4 class="text-xs font-bold text-gray-900 group-hover:text-primary transition-colors line-clamp-2 mb-1">
+                                        {{ $item->title }}
+                                    </h4>
+                                    <p class="text-[11px] text-gray-500 line-clamp-2 leading-relaxed">
+                                        {{ $item->description }}
+                                    </p>
+                                </div>
+                                <div class="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between text-[10px] text-gray-400 font-medium">
+                                    <span>{{ $item->date ? date('d M Y', strtotime($item->date)) : '-' }}</span>
+                                    <span class="font-mono text-gray-300">ID: {{ $item->id }}</span>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-span-full py-12 text-center text-xs text-gray-400">
+                                Belum ada data berita yang tersimpan.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- TAB 3: GALERI -->
+                <div x-show="activeCurTab === 'galeri'" class="space-y-4" style="display: none;">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-amber-50/50 p-4 rounded-2xl border border-amber-100">
+                        <div class="text-xs text-amber-900">
+                            <span class="font-bold">Info Galeri di Beranda:</span>
+                            <span x-show="selectedGaleri.length === 0" class="text-amber-700">Belum ada galeri spesifik yang dipilih. Sistem otomatis menampilkan <strong>6 galeri terbaru</strong>.</span>
+                            <span x-show="selectedGaleri.length > 0" class="text-amber-700">Menampilkan <strong x-text="selectedGaleri.length"></strong> galeri terpilih di beranda.</span>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button type="button" @click="selectTop6('selectedGaleri', allGaleriIds)"
+                                    class="px-3 py-1.5 bg-white hover:bg-amber-50 text-amber-700 border border-amber-200 rounded-lg text-xs font-bold transition">
+                                Pilih 6 Terbaru
+                            </button>
+                            <button type="button" @click="resetSelection('selectedGaleri')"
+                                    class="px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-600 border border-gray-200 rounded-lg text-xs font-semibold transition">
+                                Kosongkan (Otomatis)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[520px] overflow-y-auto p-1">
+                        @forelse($allGaleri ?? [] as $item)
+                            @php
+                                $photos = is_array($item->photos) ? $item->photos : [];
+                                $coverPhoto = count($photos) > 0 ? asset('storage/' . $photos[0]) : asset('assets/default_hero.jpg');
+                                $photoCount = count($photos);
+                            @endphp
+                            <div @click="toggleSelect('selectedGaleri', {{ $item->id }})"
+                                 :class="selectedGaleri.includes({{ $item->id }}) 
+                                     ? 'border-2 border-emerald-500 bg-emerald-50/40 shadow-sm ring-2 ring-emerald-500/20' 
+                                     : 'border border-gray-200 bg-white hover:border-gray-300'"
+                                 class="cursor-pointer rounded-2xl p-3.5 transition-all flex flex-col justify-between group relative select-none">
+                                <div>
+                                    <div class="relative w-full h-32 rounded-xl overflow-hidden mb-3 bg-gray-100 border border-gray-100">
+                                        <img src="{{ $coverPhoto }}" 
+                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        <div class="absolute top-2 right-2">
+                                            <span x-show="selectedGaleri.includes({{ $item->id }})"
+                                                  class="inline-flex items-center gap-1 bg-emerald-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow">
+                                                <span class="material-symbols-rounded text-xs">check</span>
+                                                <span x-text="'Tampil #' + (selectedGaleri.indexOf({{ $item->id }}) + 1)"></span>
+                                            </span>
+                                            <span x-show="!selectedGaleri.includes({{ $item->id }})"
+                                                  class="inline-flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white/90 text-[10px] font-semibold px-2 py-0.5 rounded-full opacity-80 group-hover:opacity-100">
+                                                Pilih
+                                            </span>
+                                        </div>
+                                        <span class="absolute bottom-2 left-2 bg-black/70 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1">
+                                            <span class="material-symbols-rounded text-[11px]">photo_camera</span>
+                                            {{ $photoCount }} Foto
+                                        </span>
+                                    </div>
+                                    <h4 class="text-xs font-bold text-gray-900 group-hover:text-primary transition-colors line-clamp-2 mb-1">
+                                        {{ $item->title }}
+                                    </h4>
+                                    <p class="text-[11px] text-gray-500 line-clamp-2 leading-relaxed">
+                                        {{ $item->description }}
+                                    </p>
+                                </div>
+                                <div class="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between text-[10px] text-gray-400 font-medium">
+                                    <span>{{ $item->event_date ? date('d M Y', strtotime($item->event_date)) : '-' }}</span>
+                                    <span class="font-mono text-gray-300">ID: {{ $item->id }}</span>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-span-full py-12 text-center text-xs text-gray-400">
+                                Belum ada album galeri yang tersimpan.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+            </div>
+
             <!-- STICKY ACTION BUTTON BAR -->
             <div class="sticky bottom-6 bg-white/90 backdrop-blur-xl p-4 sm:p-5 rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-200/80 flex flex-col sm:flex-row justify-between items-center gap-4 z-30">
                 <div class="flex items-center gap-2.5 text-xs text-gray-500">
@@ -219,7 +599,7 @@
                 </div>
                 <button type="submit"
                     class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary-900 to-primary-950 hover:from-black hover:to-primary-950 text-white font-bold py-3.5 px-8 rounded-xl shadow-lg shadow-primary-900/20 transition-all hover:scale-[1.02] text-sm">
-                    <span>💾</span> Simpan Konten Beranda
+                    <span class="material-symbols-rounded text-sm">save</span> Simpan Konten Beranda
                 </button>
             </div>
         </div>
@@ -231,8 +611,8 @@
             <div>
                 <div class="flex justify-between items-start mb-6 border-b border-gray-100 pb-4">
                     <div>
-                        <div class="flex items-center gap-2 text-primary font-bold text-sm mb-1">
-                            <span>✨</span> Poin Penting
+                        <div class="flex items-center gap-1.5 text-primary font-bold text-sm mb-1">
+                            <span class="material-symbols-rounded text-base">star</span> Poin Penting
                         </div>
                         <h2 class="text-lg font-extrabold text-gray-900">Daftar Poin Visi / Misi</h2>
                         <p class="text-xs text-gray-400">Poin-poin sorotan yang tampil di bagian profil Tentang Kami.</p>
@@ -282,7 +662,9 @@
                     @click.away="open = false">
                     <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
                         <h3 class="text-base font-extrabold text-gray-900">Tambah Poin Baru</h3>
-                        <button @click="open = false" class="text-gray-400 hover:text-gray-600 text-sm">✕</button>
+                        <button @click="open = false" class="text-gray-400 hover:text-gray-600 text-sm inline-flex items-center justify-center">
+                            <span class="material-symbols-rounded text-base">close</span>
+                        </button>
                     </div>
                     <form action="{{ route('web.management.about.store') }}" method="POST">
                         @csrf
@@ -309,8 +691,8 @@
             <div>
                 <div class="flex justify-between items-start mb-6 border-b border-gray-100 pb-4">
                     <div>
-                        <div class="flex items-center gap-2 text-primary font-bold text-sm mb-1">
-                            <span>🖼️</span> Galeri Slider
+                        <div class="flex items-center gap-1.5 text-primary font-bold text-sm mb-1">
+                            <span class="material-symbols-rounded text-base">photo_library</span> Galeri Slider
                         </div>
                         <h2 class="text-lg font-extrabold text-gray-900">Foto Latar Belakang Hero</h2>
                         <p class="text-xs text-gray-400">Gambar yang bergantian tampil di latar layar pembuka beranda.</p>
@@ -351,7 +733,9 @@
                     @click.away="open = false">
                     <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
                         <h3 class="text-base font-extrabold text-gray-900">Unggah Gambar Latar Hero Baru</h3>
-                        <button @click="open = false" class="text-gray-400 hover:text-gray-600 text-sm">✕</button>
+                        <button @click="open = false" class="text-gray-400 hover:text-gray-600 text-sm inline-flex items-center justify-center">
+                            <span class="material-symbols-rounded text-base">close</span>
+                        </button>
                     </div>
                     <form action="{{ route('web.management.home_bg.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf

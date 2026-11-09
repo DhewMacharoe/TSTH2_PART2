@@ -30,25 +30,78 @@ class WebCrudController extends Controller
     }
 
 
+    protected function parseJsonInput($value) {
+        if (is_array($value)) return array_values(array_filter($value));
+        if (is_string($value) && trim($value) !== '') {
+            $decoded = json_decode($value, true);
+            return json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+        }
+        return null;
+    }
+
     // Penelitian
     public function storePenelitian(Request $permintaan) {
-        $data = $permintaan->validate(['title' => 'required', 'description' => 'required', 'image_path' => 'required|image']);
+        $data = $permintaan->validate([
+            'title'        => 'required',
+            'description'  => 'required',
+            'image_path'   => 'required|image',
+            'code'         => 'nullable|string',
+            'field'        => 'nullable|string',
+            'status_riset' => 'nullable|string',
+            'facility'     => 'nullable|string',
+            'location'     => 'nullable|string',
+            'peneliti'     => 'nullable|string',
+            'tujuan'       => 'nullable|string',
+            'roadmap'      => 'nullable',
+            'params'       => 'nullable',
+            'benchmarks'   => 'nullable',
+            'metrics'      => 'nullable',
+        ]);
         if ($permintaan->hasFile('image_path')) $data['image_path'] = $permintaan->file('image_path')->store('konten', 'public');
+        
+        foreach (['roadmap', 'params', 'benchmarks', 'metrics'] as $jsonField) {
+            if (isset($data[$jsonField])) {
+                $data[$jsonField] = $this->parseJsonInput($data[$jsonField]);
+            }
+        }
+
         Penelitian::create($data);
-        return back()->with('success', 'Penelitian ditambahkan!');
+        return back()->with('success', 'Penelitian berhasil ditambahkan!');
     }
     public function updatePenelitian(Request $permintaan, $id) {
         $penelitian = Penelitian::findOrFail($id);
-        $data = $permintaan->validate(['title' => 'required', 'description' => 'required', 'image_path' => 'nullable|image']);
+        $data = $permintaan->validate([
+            'title'        => 'required',
+            'description'  => 'required',
+            'image_path'   => 'nullable|image',
+            'code'         => 'nullable|string',
+            'field'        => 'nullable|string',
+            'status_riset' => 'nullable|string',
+            'facility'     => 'nullable|string',
+            'location'     => 'nullable|string',
+            'peneliti'     => 'nullable|string',
+            'tujuan'       => 'nullable|string',
+            'roadmap'      => 'nullable',
+            'params'       => 'nullable',
+            'benchmarks'   => 'nullable',
+            'metrics'      => 'nullable',
+        ]);
         if ($permintaan->hasFile('image_path')) {
             $data['image_path'] = $permintaan->file('image_path')->store('konten', 'public');
         }
+
+        foreach (['roadmap', 'params', 'benchmarks', 'metrics'] as $jsonField) {
+            if (array_key_exists($jsonField, $data)) {
+                $data[$jsonField] = $this->parseJsonInput($data[$jsonField]);
+            }
+        }
+
         $penelitian->update($data);
-        return back()->with('success', 'Penelitian diperbarui!');
+        return back()->with('success', 'Penelitian berhasil diperbarui!');
     }
     public function destroyPenelitian($id) {
         Penelitian::findOrFail($id)->delete();
-        return back()->with('success', 'Penelitian dihapus!');
+        return back()->with('success', 'Penelitian berhasil dihapus!');
     }
 
     // Berita
@@ -91,14 +144,14 @@ class WebCrudController extends Controller
         $permintaan->validate([
             'title'        => 'required|string|max:255',
             'description'  => 'nullable|string',
-            'images'       => 'required|array|min:1|max:5',
-            'images.*'     => 'image|mimes:jpeg,png,jpg,webp,gif|max:20480',
+            'images'       => 'required|array|min:1|max:10',
+            'images.*'     => 'file|mimes:jpeg,png,jpg,webp,gif,mp4,webm,ogg,mov,avi,mkv|max:102400',
         ], [
-            'images.max'     => 'Maksimal 5 foto yang dapat diunggah dalam satu album.',
-            'images.min'     => 'Minimal 1 foto harus diunggah.',
-            'images.*.max'   => 'Foto ke-:position maksimal berukuran 20 MB.',
-            'images.*.image' => 'File ke-:position bukan berupa gambar yang valid (harus file foto).',
-            'images.*.mimes' => 'Format file ke-:position tidak didukung. Gunakan format JPG, PNG, WEBP, atau GIF.',
+            'images.max'     => 'Maksimal 10 file media (foto/video) yang dapat diunggah dalam satu album.',
+            'images.min'     => 'Minimal 1 file foto atau video harus diunggah.',
+            'images.*.max'   => 'File ke-:position maksimal berukuran 100 MB.',
+            'images.*.file'  => 'File ke-:position bukan berupa berkas yang valid.',
+            'images.*.mimes' => 'Format file ke-:position tidak didukung. Gunakan format foto (JPG, PNG, WEBP, GIF) atau video (MP4, WEBM, OGG, MOV).',
         ]);
 
         $photoPaths = [];
@@ -115,7 +168,7 @@ class WebCrudController extends Controller
             'photos'      => $photoPaths,
         ]);
 
-        return back()->with('success', 'Galeri berhasil ditambahkan dengan ' . count($photoPaths) . ' foto!');
+        return back()->with('success', 'Galeri berhasil ditambahkan dengan ' . count($photoPaths) . ' file media (foto/video)!');
     }
 
     public function updateGaleri(Request $permintaan, $id) {
@@ -124,22 +177,22 @@ class WebCrudController extends Controller
         $permintaan->validate([
             'title'        => 'required|string|max:255',
             'description'  => 'nullable|string',
-            'images'       => 'nullable|array|max:5',
-            'images.*'     => 'image|mimes:jpeg,png,jpg,webp,gif|max:20480',
+            'images'       => 'nullable|array|max:10',
+            'images.*'     => 'file|mimes:jpeg,png,jpg,webp,gif,mp4,webm,ogg,mov,avi,mkv|max:102400',
         ], [
-            'images.max'     => 'Maksimal 5 foto yang dapat diunggah dalam satu album.',
-            'images.*.max'   => 'Foto ke-:position maksimal berukuran 20 MB.',
-            'images.*.image' => 'File ke-:position bukan berupa gambar yang valid (harus file foto).',
-            'images.*.mimes' => 'Format file ke-:position tidak didukung. Gunakan format JPG, PNG, WEBP, atau GIF.',
+            'images.max'     => 'Maksimal 10 file media (foto/video) yang dapat diunggah dalam satu album.',
+            'images.*.max'   => 'File ke-:position maksimal berukuran 100 MB.',
+            'images.*.file'  => 'File ke-:position bukan berupa berkas yang valid.',
+            'images.*.mimes' => 'Format file ke-:position tidak didukung. Gunakan format foto (JPG, PNG, WEBP, GIF) atau video (MP4, WEBM, OGG, MOV).',
         ]);
 
         $currentPhotos = is_array($album->photos) ? $album->photos : [];
 
-        // Tambah gambar baru jika ada
+        // Tambah file media baru jika ada
         if ($permintaan->hasFile('images')) {
             $newFiles = $permintaan->file('images');
-            if (count($currentPhotos) + count($newFiles) > 5) {
-                return back()->withErrors(['images' => 'Total foto dalam album ini melebihi batas maksimal 5 foto.']);
+            if (count($currentPhotos) + count($newFiles) > 10) {
+                return back()->withErrors(['images' => 'Total media dalam album ini melebihi batas maksimal 10 file.']);
             }
             foreach ($newFiles as $file) {
                 $currentPhotos[] = $file->store('galeri', 'public');

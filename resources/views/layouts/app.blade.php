@@ -13,6 +13,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -31,7 +32,8 @@
             @endisset
 
             <!-- Page Konten -->
-            <main>
+            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                @include('partials.dialog-boxes')
                 {{ $slot ?? '' }}
                 @yield('content')
             </main>

@@ -52,11 +52,21 @@
                 <!-- Left Column -->
                 <div>
                     <div class="flex items-center gap-2 mb-6 pb-2 border-b border-gray-100">
-                        <span class="text-xl">📋</span>
+                        <span class="material-symbols-rounded text-xl text-primary">description</span>
                         <h3 class="text-lg font-bold text-gray-900">Informasi Dasar</h3>
                     </div>
 
                     <div class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2" for="kode_barang">
+                                Kode Barang <span class="text-gray-400 font-normal">(Opsional - Otomatis dibuat sistem jika kosong)</span>
+                            </label>
+                            <input type="text" id="kode_barang" name="kode_barang"
+                                class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-primary focus:border-primary p-3 font-mono font-bold uppercase"
+                                placeholder="Contoh: 1111 (Kategori + Blok + Rak + Urutan, otomatis jika kosong)" value="{{ old('kode_barang') }}">
+                            <p class="text-xs text-gray-400 mt-1">Format cerdas: <code>[1=Pupuk][1=Blok 1][1=Rak 1][1=Barang Ke-1]</code>. Contoh: <strong>1111</strong>.</p>
+                        </div>
+
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2" for="nama_barang">Nama Barang <span
                                     class="text-red-500">*</span></label>
@@ -106,7 +116,7 @@
                 <!-- Right Column -->
                 <div>
                     <div class="flex items-center gap-2 mb-6 pb-2 border-b border-gray-100">
-                        <span class="text-xl">🏢</span>
+                        <span class="material-symbols-rounded text-xl text-primary">domain</span>
                         <h3 class="text-lg font-bold text-gray-900">Penyimpanan & Media</h3>
                     </div>
 
@@ -123,7 +133,7 @@
                             <div class="flex items-center justify-between mb-3">
                                 <label class="block text-sm font-bold text-gray-700">Detail Stok (Multi-Satuan) <span class="text-red-500">*</span></label>
                                 <button type="button" id="btn-add-stok" class="text-xs font-bold text-primary hover:text-primary-light flex items-center gap-1">
-                                    <span>➕</span> Tambah Ukuran
+                                    <span class="material-symbols-rounded text-sm">add</span> Tambah Ukuran
                                 </button>
                             </div>
                             
@@ -158,7 +168,7 @@
                                 <input type="file" id="gambar" name="gambar"
                                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*">
                                 <div class="text-gray-500">
-                                    <span class="text-3xl block mb-2">📸</span>
+                                    <span class="material-symbols-rounded text-4xl block mb-2 text-gray-400">add_a_photo</span>
                                     <span class="text-sm font-bold text-primary">Klik untuk unggah</span> atau seret file ke
                                     sini
                                     <p class="text-xs text-gray-400 mt-1">JPG, PNG, GIF (Maks. 2MB)</p>
@@ -207,7 +217,7 @@
                             <div class="flex items-center justify-between mb-3">
                                 <label class="block text-sm font-bold text-gray-700">Detail Stok (Multi-Satuan) <span class="text-red-500">*</span></label>
                                 <button type="button" id="btn-add-restock-stok" class="text-xs font-bold text-primary hover:text-primary-light flex items-center gap-1">
-                                    <span>➕</span> Tambah Ukuran
+                                    <span class="material-symbols-rounded text-sm">add</span> Tambah Ukuran
                                 </button>
                             </div>
                             

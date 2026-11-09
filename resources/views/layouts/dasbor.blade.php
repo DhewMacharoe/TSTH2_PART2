@@ -12,6 +12,8 @@
     <!-- Fonts & CSS -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=outfit:300,400,500,600,700,800|inter:400,500,600,700" rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
@@ -25,6 +27,10 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         /* Ensure sidebar can scroll on mobile */
         aside#sidebar { -webkit-overflow-scrolling: touch; }
+        /* Material Symbols sizing */
+        .material-symbols-rounded { font-size: 22px; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; flex-shrink: 0; }
+        .nav-icon { font-size: 20px; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .mobile-nav-icon { font-size: 22px; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
     </style>
 </head>
 <body class="text-gray-800 antialiased min-h-screen flex bg-gray-50 overflow-x-hidden">
@@ -55,34 +61,34 @@
                 <p class="px-4 text-[11px] font-bold text-white/40 uppercase tracking-wider mb-2">Konten Website</p>
                 
                 <a href="{{ route('web.management.home') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('web.management.home') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                    <span class="text-xl">🏠</span>
+                    <span class="material-symbols-rounded">home</span>
                     <span>Beranda (Home)</span>
                 </a>
 
                 <a href="{{ route('web.management.penelitian') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('web.management.penelitian*') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                    <span class="text-xl">🔬</span>
+                    <span class="material-symbols-rounded">science</span>
                     <span>Fasilitas & Riset</span>
                 </a>
 
                 <a href="{{ route('web.management.katalog') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('web.management.katalog*') || request()->routeIs('admin.plants*') || request()->routeIs('admin.categories*') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                    <span class="text-xl">🌿</span>
+                    <span class="material-symbols-rounded">eco</span>
                     <span>Katalog Tanaman</span>
                 </a>
 
                 <a href="{{ route('web.management.berita') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('web.management.berita*') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                    <span class="text-xl">📰</span>
-                    <span>Berita & Artikel</span>
+                    <span class="material-symbols-rounded">newspaper</span>
+                    <span>Berita</span>
                 </a>
 
                 <a href="{{ route('web.management.galeri') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('web.management.galeri*') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                    <span class="text-xl">🖼️</span>
+                    <span class="material-symbols-rounded">photo_library</span>
                     <span>Galeri Foto</span>
                 </a>
 
                 <p class="px-4 text-[11px] font-bold text-white/40 uppercase tracking-wider mb-2 mt-6">Pengaturan</p>
 
                 <a href="{{ route('web.management.layout') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('web.management.layout') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                    <span class="text-xl">⚙️</span>
+                    <span class="material-symbols-rounded">settings</span>
                     <span>Header & Footer</span>
                 </a>
 
@@ -90,7 +96,7 @@
                 <div class="pt-4 px-2">
                     <a href="{{ route('home') }}" target="_blank" class="flex items-center justify-between px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/10 transition-all duration-200 group">
                         <div class="flex items-center gap-2.5">
-                            <span class="text-base">🌐</span>
+                            <span class="material-symbols-rounded" style="font-size:18px;">open_in_new</span>
                             <span>Pratinjau Web</span>
                         </div>
                         <svg class="w-4 h-4 opacity-70 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
@@ -99,19 +105,19 @@
             @else
                 <p class="px-4 text-xs font-bold text-white/40 uppercase tracking-widest mb-2 mt-4">Menu Utama</p>
                 <a href="{{ route('dasbor') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('dasbor') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                    <span class="text-xl">📊</span>
+                    <span class="material-symbols-rounded">dashboard</span>
                     <span>Dashboard</span>
                 </a>
                 
                 @if(in_array(auth()->user()->role, ['pic_gudang', 'agronom', 'pimpinan']))
                 <p class="px-4 text-xs font-bold text-white/40 uppercase tracking-widest mb-2 mt-4">Inventory</p>
                 <a href="{{ route('gudang') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('gudang') || request()->routeIs('gudang.show') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                    <span class="text-xl">📦</span>
+                    <span class="material-symbols-rounded">inventory_2</span>
                     <span>Data Barang</span>
                 </a>
                 @if(auth()->user()->role === 'pic_gudang')
                 <a href="{{ route('satuan.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('satuan*') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                    <span class="text-xl">📏</span>
+                    <span class="material-symbols-rounded">straighten</span>
                     <span>Master Satuan</span>
                 </a>
                 @endif
@@ -123,7 +129,7 @@
                 @endphp
                 <a href="{{ route('permintaan.index') }}" class="flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('permintaan*') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
                     <div class="flex items-center gap-3">
-                        <span class="text-xl">🛒</span>
+                        <span class="material-symbols-rounded">shopping_cart</span>
                         <span>Permintaan Barang</span>
                     </div>
                     @if($pendingRequests > 0)
@@ -132,14 +138,25 @@
                 </a>
                 @endif
 
-                @if(in_array(auth()->user()->role, ['pic_gudang', 'agronom', 'pimpinan']))
-                <p class="px-4 text-xs font-bold text-white/40 uppercase tracking-widest mb-2 mt-6">Aktivitas</p>
-                <a href="{{ route('catatan') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('catatan*') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                    <span class="text-xl">📖</span>
-                    <span>Logbook Karyawan</span>
-                </a>
-                @endif
             @endif
+
+            <p class="px-4 text-[11px] font-bold text-white/40 uppercase tracking-wider mb-2 mt-6">Lompat Aplikasi TSTH2</p>
+
+            <a href="{{ config('app.url_gudang', env('URL_GUDANG', 'http://localhost:8002')) }}" target="_blank" class="flex items-center justify-between px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-all font-medium text-sm">
+                <div class="flex items-center gap-2.5">
+                    <span class="material-symbols-rounded" style="font-size:20px;">inventory_2</span>
+                    <span>Sistem Gudang</span>
+                </div>
+                <span class="text-[10px] bg-white/10 text-white/80 px-1.5 py-0.5 rounded font-mono">:8002</span>
+            </a>
+
+            <a href="{{ config('app.url_logbook', env('URL_LOGBOOK', 'http://localhost:8001')) }}" target="_blank" class="flex items-center justify-between px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-all font-medium text-sm">
+                <div class="flex items-center gap-2.5">
+                    <span class="material-symbols-rounded" style="font-size:20px;">assignment</span>
+                    <span>Logbook Karyawan</span>
+                </div>
+                <span class="text-[10px] bg-white/10 text-white/80 px-1.5 py-0.5 rounded font-mono">:8001</span>
+            </a>
         </nav>
 
         <!-- User Profile Bottom -->
@@ -180,17 +197,16 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-4">
-                <a href="{{ route('home') }}" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors text-sm">
-                    <span>🌐</span> <span class="hidden sm:inline">Lihat Web Publik</span>
+            <div class="flex items-center gap-3">
+                <a href="{{ route('home') }}" target="_blank" class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors text-xs sm:text-sm">
+                    <span class="material-symbols-rounded" style="font-size:18px;">open_in_new</span>
+                    <span class="hidden sm:inline">Lihat Web Publik</span>
                 </a>
                 <form method="POST" action="{{ route('logout') }}" class="m-0">
                     @csrf
-                    <button type="submit" class="flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg font-medium transition-colors text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        <span class="hidden sm:inline">Logout</span>
+                    <button type="submit" class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg font-medium transition-colors text-xs sm:text-sm">
+                        <span class="material-symbols-rounded" style="font-size:18px;">logout</span>
+                        <span class="hidden sm:inline">{{ __('site.nav_logout') }}</span>
                     </button>
                 </form>
             </div>
@@ -199,6 +215,7 @@
         <!-- Page Konten -->
         <main class="flex-1 p-4 lg:p-8">
             <div class="max-w-7xl mx-auto">
+                @include('partials.dialog-boxes')
                 @yield('content')
             </div>
         </main>
@@ -213,40 +230,40 @@
     <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-gray-100 flex items-center justify-around z-50 h-16 pb-safe">
         @if(auth()->user()->role === 'web_admin')
             <a href="{{ route('web.management.home') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 {{ request()->routeIs('web.management.home') ? 'text-accent' : 'text-gray-400 hover:text-gray-600' }}">
-                <span class="text-xl {{ request()->routeIs('web.management.home') ? 'scale-110 drop-shadow-sm' : '' }} transition-transform">🏠</span>
+                <span class="mobile-nav-icon material-symbols-rounded">home</span>
                 <span class="text-[10px] font-bold">Beranda</span>
             </a>
             <a href="{{ route('web.management.katalog') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 {{ request()->routeIs('web.management.katalog*') || request()->routeIs('admin.plants*') ? 'text-accent' : 'text-gray-400 hover:text-gray-600' }}">
-                <span class="text-xl {{ request()->routeIs('web.management.katalog*') || request()->routeIs('admin.plants*') ? 'scale-110 drop-shadow-sm' : '' }} transition-transform">🌿</span>
+                <span class="mobile-nav-icon material-symbols-rounded">eco</span>
                 <span class="text-[10px] font-bold">Katalog</span>
             </a>
             <a href="{{ route('web.management.berita') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 {{ request()->routeIs('web.management.berita*') ? 'text-accent' : 'text-gray-400 hover:text-gray-600' }}">
-                <span class="text-xl {{ request()->routeIs('web.management.berita*') ? 'scale-110 drop-shadow-sm' : '' }} transition-transform">📰</span>
+                <span class="mobile-nav-icon material-symbols-rounded">newspaper</span>
                 <span class="text-[10px] font-bold">Berita</span>
             </a>
             <a href="{{ route('web.management.galeri') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 {{ request()->routeIs('web.management.galeri*') ? 'text-accent' : 'text-gray-400 hover:text-gray-600' }}">
-                <span class="text-xl {{ request()->routeIs('web.management.galeri*') ? 'scale-110 drop-shadow-sm' : '' }} transition-transform">🖼️</span>
+                <span class="mobile-nav-icon material-symbols-rounded">photo_library</span>
                 <span class="text-[10px] font-bold">Galeri</span>
             </a>
             <a href="{{ route('profil.edit') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 {{ request()->routeIs('profil*') ? 'text-accent' : 'text-gray-400 hover:text-gray-600' }}">
-                <span class="text-xl {{ request()->routeIs('profil*') ? 'scale-110 drop-shadow-sm' : '' }} transition-transform">👤</span>
+                <span class="mobile-nav-icon material-symbols-rounded">person</span>
                 <span class="text-[10px] font-bold">Profil</span>
             </a>
         @else
             <a href="{{ route('dasbor') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 {{ request()->routeIs('dasbor') ? 'text-accent' : 'text-gray-400 hover:text-gray-600' }}">
-                <span class="text-xl {{ request()->routeIs('dasbor') ? 'scale-110 drop-shadow-sm' : '' }} transition-transform">📊</span>
+                <span class="mobile-nav-icon material-symbols-rounded">dashboard</span>
                 <span class="text-[10px] font-bold">Dashboard</span>
             </a>
             
             @if(in_array(auth()->user()->role, ['pic_gudang', 'agronom', 'pimpinan']))
             <a href="{{ route('gudang') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 {{ request()->routeIs('gudang') || request()->routeIs('gudang.show') ? 'text-accent' : 'text-gray-400 hover:text-gray-600' }}">
-                <span class="text-xl {{ request()->routeIs('gudang') || request()->routeIs('gudang.show') ? 'scale-110 drop-shadow-sm' : '' }} transition-transform">📦</span>
+                <span class="mobile-nav-icon material-symbols-rounded">inventory_2</span>
                 <span class="text-[10px] font-bold">Barang</span>
             </a>
             
             <a href="{{ route('permintaan.index') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 relative {{ request()->routeIs('permintaan*') ? 'text-accent' : 'text-gray-400 hover:text-gray-600' }}">
                 <div class="relative">
-                    <span class="text-xl {{ request()->routeIs('permintaan*') ? 'scale-110 drop-shadow-sm' : '' }} transition-transform block">🛒</span>
+                    <span class="mobile-nav-icon material-symbols-rounded">shopping_cart</span>
                     @php
                         $pendingRequests = 0;
                         if(auth()->user()->role === 'pic_gudang') {
@@ -262,7 +279,7 @@
             @endif
             
             <a href="{{ route('profil.edit') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 {{ request()->routeIs('profil*') ? 'text-accent' : 'text-gray-400 hover:text-gray-600' }}">
-                <span class="text-xl {{ request()->routeIs('profil*') ? 'scale-110 drop-shadow-sm' : '' }} transition-transform">👤</span>
+                <span class="mobile-nav-icon material-symbols-rounded">person</span>
                 <span class="text-[10px] font-bold">Profil</span>
             </a>
         @endif

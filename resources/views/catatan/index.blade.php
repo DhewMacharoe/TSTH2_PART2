@@ -9,7 +9,7 @@
 </div>
 
 <div style="background: white; border-radius: 16px; padding: 4rem; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.02); margin-top: 2rem;">
-    <div style="font-size: 4rem; margin-bottom: 1rem; animation: bounce 2s infinite;">🚧</div>
+    <div style="margin-bottom: 1rem; color: #f59e0b;"><span class="material-symbols-rounded" style="font-size: 4.5rem;">construction</span></div>
     <h2 style="font-family: var(--font-heading); color: var(--color-text-dark); margin-bottom: 1rem;">Halaman Dalam Pengembangan</h2>
     <p style="color: var(--color-text-muted); max-width: 500px; margin: 0 auto; line-height: 1.6;">
         Fitur Logbook Karyawan saat ini sedang dalam tahap pengembangan. Fitur ini akan memungkinkan karyawan untuk mencatat dan melaporkan kegiatan harian mereka.

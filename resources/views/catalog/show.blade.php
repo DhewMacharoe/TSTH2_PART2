@@ -1,12 +1,14 @@
 @extends('layouts.public')
 
-@section('title', $plant->name . ' | Katalog TSTH2')
+@section('title', $plant->name . ' | ' . __('site.plant_page_title_suffix'))
 
 @section('content')
 <div class="mx-auto max-w-6xl px-4 py-8">
     @php
         $catalogRoute = $plant->location_type === 'collection' ? 'collection' : 'katalog';
-        $catalogLabel = $plant->location_type === 'collection' ? 'Koleksi Outdoor' : 'Katalog Greenhouse';
+        $catalogLabel = $plant->location_type === 'collection'
+            ? __('site.catalog_outdoor_label')
+            : __('site.catalog_greenhouse_label');
     @endphp
     
     <!-- Breadcrumb -->
@@ -19,25 +21,26 @@
                     @if ($plant->category)
                         <a href="{{ route($catalogRoute, ['category' => $plant->category->slug]) }}" class="text-[#003f32] transition hover:underline">{{ $plant->category->name }}</a>
                     @else
-                        Tanaman Herbal
+                        {{ __('site.catalog_herbal_default') }}
                     @endif
                 </li>
                 <li aria-hidden="true" class="text-gray-300">/</li>
                 <li aria-current="page" class="max-w-[280px] truncate font-bold text-gray-900">{{ $plant->name }}</li>
             </ol>
         </nav>
-        <button onclick="navigator.share ? navigator.share({title: '{{ $plant->name }}', url: window.location.href}) : alert('Link disalin!')" class="flex items-center gap-1.5 hover:text-gray-900 transition">
+        <button onclick="navigator.share ? navigator.share({title: '{{ $plant->name }}', url: window.location.href}) : alert('Link copied!')"
+                class="flex items-center gap-1.5 hover:text-gray-900 transition">
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
             </svg>
-            Bagikan
+            {{ __('site.plant_share') }}
         </button>
     </div>
 
     <!-- Main Card -->
     <article class="overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100 p-8 sm:p-12">
         
-        <!-- Bagian Atas: Gambar & Info Utama -->
+        <!-- Top Section: Image & Main Info -->
         <div class="mb-12 flex flex-col gap-10 md:flex-row">
             
             @php
@@ -48,23 +51,25 @@
                     <div class="flex snap-x snap-mandatory gap-2 overflow-x-auto rounded-lg scrollbar-none" data-carousel-track>
                     @forelse ($plantImages as $imageIndex => $image)
                         <div class="flex w-full shrink-0 snap-center items-center justify-center overflow-hidden rounded-lg border border-gray-50 bg-gray-50 {{ $imageIndex === 0 ? 'aspect-square' : 'h-80' }}">
-                            <img src="{{ asset('storage/plants/' . $image) }}" alt="{{ $plant->name }} - foto {{ $imageIndex + 1 }}" class="{{ $imageIndex === 0 ? 'h-full w-full object-cover' : 'h-full w-auto max-w-full object-contain' }}">
+                            <img src="{{ asset('storage/plants/' . $image) }}"
+                                 alt="{{ $plant->name }} - {{ __('site.plant_foto_label') }} {{ $imageIndex + 1 }}"
+                                 class="{{ $imageIndex === 0 ? 'h-full w-full object-cover' : 'h-full w-auto max-w-full object-contain' }}">
                         </div>
                     @empty
-                        <div class="flex aspect-square w-full flex-col items-center justify-center rounded-lg border border-gray-100 bg-gray-50 text-gray-400">
-                            <span class="mb-2 text-6xl">🌿</span>
+                        <div class="flex aspect-square w-full flex-col items-center justify-center rounded-lg border border-gray-100 bg-gray-50 text-[#477568]/40">
+                            <span class="material-symbols-rounded text-6xl mb-2">eco</span>
                         </div>
                     @endforelse
                     </div>
                     @if ($plantImages->count() > 1)
-                        <button type="button" class="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg font-bold text-[#003f32] shadow" data-carousel-prev aria-label="Foto sebelumnya">‹</button>
-                        <button type="button" class="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg font-bold text-[#003f32] shadow" data-carousel-next aria-label="Foto berikutnya">›</button>
+                        <button type="button" class="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg font-bold text-[#003f32] shadow" data-carousel-prev aria-label="{{ __('site.plant_foto_prev') }}">‹</button>
+                        <button type="button" class="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg font-bold text-[#003f32] shadow" data-carousel-next aria-label="{{ __('site.plant_foto_next') }}">›</button>
                     @endif
                 </div>
                 @if ($plantImages->count() > 1)
                     <div class="flex items-center justify-center gap-1.5 pt-2" data-carousel-dots>
                         @foreach ($plantImages as $imageIndex => $image)
-                            <button type="button" class="h-1.5 rounded-full transition-all {{ $imageIndex === 0 ? 'w-4 bg-[#003f32]' : 'w-1.5 bg-[#b8c8bd]' }}" data-carousel-dot="{{ $imageIndex }}" aria-label="Lihat foto {{ $imageIndex + 1 }}"></button>
+                            <button type="button" class="h-1.5 rounded-full transition-all {{ $imageIndex === 0 ? 'w-4 bg-[#003f32]' : 'w-1.5 bg-[#b8c8bd]' }}" data-carousel-dot="{{ $imageIndex }}" aria-label="{{ __('site.plant_view_foto') }} {{ $imageIndex + 1 }}"></button>
                         @endforeach
                     </div>
                 @endif
@@ -72,13 +77,13 @@
             
             <div class="flex-1">
                 <span class="mb-4 inline-block rounded-sm bg-[#f0fdf4] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#16a34a]">
-                    {{ $plant->category?->name ?? 'Tanaman Herbal' }}
+                    {{ $plant->category?->name ?? __('site.catalog_herbal_default') }}
                 </span>
                 
                 <h1 class="font-['Montserrat'] text-4xl font-extrabold tracking-tight text-[#000000]">{{ $plant->name }}</h1>
                 <p class="mb-8 mt-1 text-lg italic text-gray-500">{{ $plant->latin_name }}</p>
                 
-                <!-- Tabel Taksonomi (Grid 3 Kolom) -->
+                <!-- Taxonomy Table (3-Column Grid) -->
                 <div class="grid grid-cols-2 gap-x-4 gap-y-6 border-y border-gray-100 py-5 sm:grid-cols-3">
                     <div>
                         <p class="text-[9px] font-bold uppercase tracking-wider text-gray-400">Kingdom</p>
@@ -89,7 +94,7 @@
                         <p class="mt-1 text-sm font-semibold text-gray-800">{{ $plant->ordo ?: '-' }}</p>
                     </div>
                     <div>
-                        <p class="text-[9px] font-bold uppercase tracking-wider text-gray-400">Famili</p>
+                        <p class="text-[9px] font-bold uppercase tracking-wider text-gray-400">{{ __('site.catalog_family_label') }}</p>
                         <p class="mt-1 text-sm font-semibold text-gray-800">{{ $plant->family }}</p>
                     </div>
                     <div>
@@ -104,17 +109,17 @@
             </div>
         </div>
 
-        <!-- Bagian Bawah: Deskripsi, Manfaat, Asal Daerah -->
+        <!-- Bottom Section: Description, Benefits, Origin -->
         <div class="space-y-10">
             <section>
-                <h2 class="mb-4 font-['Montserrat'] text-lg font-bold text-gray-900">Deskripsi</h2>
+                <h2 class="mb-4 font-['Montserrat'] text-lg font-bold text-gray-900">{{ __('site.plant_description_section') }}</h2>
                 <div class="text-[13px] leading-relaxed text-black">
                     {!! nl2br(e($plant->description_full ?: $plant->description_short)) !!}
                 </div>
             </section>
 
             <section>
-                <h2 class="mb-4 font-['Montserrat'] text-lg font-bold text-gray-900">Manfaat</h2>
+                <h2 class="mb-4 font-['Montserrat'] text-lg font-bold text-gray-900">{{ __('site.plant_benefits_section') }}</h2>
                 <ul class="space-y-3 text-[13px] text-black">
                     @if ($plant->benefits)
                         @foreach (explode("\n", str_replace("\r", "", $plant->benefits)) as $manfaat)
@@ -129,21 +134,21 @@
                         @endforeach
                     @else
                         <li class="flex items-start gap-2.5">
-                            <span class="text-gray-400">Data manfaat belum ditambahkan.</span>
+                            <span class="text-gray-400">{{ __('site.plant_no_benefits_data') }}</span>
                         </li>
                     @endif
                 </ul>
             </section>
 
             <section>
-                <h2 class="mb-4 font-['Montserrat'] text-lg font-bold text-gray-900">Asal Daerah & Sebaran Botani</h2>
+                <h2 class="mb-4 font-['Montserrat'] text-lg font-bold text-gray-900">{{ __('site.plant_origin_section') }}</h2>
                 <div class="rounded-xl border border-green-100 bg-[#f0f8f4] p-5 shadow-sm">
                     <div class="text-[13px] leading-relaxed text-gray-700">
                         <p class="font-bold text-[#003f32] mb-1">
-                            Kawasan Asal: {{ $plant->origin ?? 'Data belum tersedia' }}
+                            {{ __('site.plant_origin_label') }}: {{ $plant->origin ?? __('site.plant_origin_not_available') }}
                         </p>
                         <p>
-                            {{ $plant->origin_distribution ?? 'Sebaran botani belum ditambahkan.' }}
+                            {{ $plant->origin_distribution ?? __('site.plant_no_distribution') }}
                         </p>
                     </div>
                 </div>

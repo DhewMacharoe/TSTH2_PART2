@@ -10,7 +10,7 @@
         </a>
         <div class="flex items-center gap-4">
             <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Edit Barang</h1>
-            <span class="px-3 py-1 bg-gray-100 text-gray-600 font-mono text-sm rounded-lg font-bold">#INV{{ str_pad($barang->id, 3, '0', STR_PAD_LEFT) }}</span>
+            <span class="px-3 py-1 bg-gray-900 text-white font-mono text-sm rounded-lg font-bold">#{{ $barang->kode_barang }}</span>
         </div>
         <p class="text-gray-500 font-medium mt-1">Perbarui informasi barang yang sudah terdaftar</p>
     </div>
@@ -43,11 +43,17 @@
                 <!-- Left Column -->
                 <div>
                     <div class="flex items-center gap-2 mb-6 pb-2 border-b border-gray-100">
-                        <span class="text-xl">📋</span>
+                        <span class="material-symbols-rounded text-xl text-primary">description</span>
                         <h3 class="text-lg font-bold text-gray-900">Informasi Dasar</h3>
                     </div>
                     
                     <div class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2" for="kode_barang">Kode Barang <span class="text-red-500">*</span></label>
+                            <input type="text" id="kode_barang" name="kode_barang" class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-primary focus:border-primary p-3 font-mono font-bold uppercase" required value="{{ old('kode_barang', $barang->kode_barang) }}">
+                            <p class="text-xs text-gray-400 mt-1">Format: <code>[Kategori][Blok][Rak][Urutan]</code>. Contoh: <strong>1111</strong>.</p>
+                        </div>
+
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2" for="nama_barang">Nama Barang <span class="text-red-500">*</span></label>
                             <input type="text" id="nama_barang" name="nama_barang" class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-primary focus:border-primary p-3 font-medium" required value="{{ old('nama_barang', $barang->nama_barang) }}">
@@ -76,7 +82,7 @@
                 <!-- Right Column -->
                 <div>
                     <div class="flex items-center gap-2 mb-6 pb-2 border-b border-gray-100">
-                        <span class="text-xl">🏢</span>
+                        <span class="material-symbols-rounded text-xl text-primary">domain</span>
                         <h3 class="text-lg font-bold text-gray-900">Penyimpanan & Media</h3>
                     </div>
 

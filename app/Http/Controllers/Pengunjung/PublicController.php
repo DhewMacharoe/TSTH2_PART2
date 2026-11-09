@@ -61,9 +61,21 @@ class PublicController extends Controller
             });
         }
 
-        $penelitianes = $query->latest()->get();
+        $penelitianes = $query->latest()->paginate(9)->withQueryString();
 
         return view('pengunjung.penelitian', compact('konten', 'penelitianes'));
+    }
+
+    /**
+     * Halaman Detail Riset
+     */
+    public function penelitianShow($id)
+    {
+        $konten = Konten::all()->keyBy('key');
+        $item   = Penelitian::findOrFail($id);
+        $terkait = Penelitian::where('id', '!=', $id)->latest()->take(3)->get();
+
+        return view('pengunjung.penelitian-show', compact('konten', 'item', 'terkait'));
     }
 
     /**
@@ -82,8 +94,18 @@ class PublicController extends Controller
             });
         }
 
-        $galeri = $query->get();
+        $galeri = $query->paginate(12)->withQueryString();
 
         return view('pengunjung.galeri', compact('konten', 'galeri'));
+    }
+
+    public function switchLanguage(string $locale)
+    {
+        if (in_array($locale, ['id', 'en'])) {
+            session(['locale' => $locale]);
+            cookie()->queue(cookie('site_pref_lang', $locale, 60 * 24 * 365, '/'));
+        }
+
+        return back();
     }
 }

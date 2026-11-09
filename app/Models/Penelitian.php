@@ -12,5 +12,23 @@ class Penelitian extends Model
         'title',
         'description',
         'image_path',
+        'code',
+        'field',
+        'status_riset',
+        'facility',
+        'location',
+        'peneliti',
+        'tujuan',
+        'roadmap',
+        'params',
+        'benchmarks',
+        'metrics',
+    ];
+
+    protected $casts = [
+        'roadmap'    => 'array',
+        'params'     => 'array',
+        'benchmarks' => 'array',
+        'metrics'    => 'array',
     ];
 }

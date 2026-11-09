@@ -25,7 +25,9 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-6 bg-gradient-to-r from-primary/5 to-accent/5 border-b border-gray-100">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white text-lg shadow-md shadow-primary/20">🛒</div>
+                <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-md shadow-primary/20">
+                    <span class="material-symbols-rounded text-xl">shopping_cart</span>
+                </div>
                 <div>
                     <h2 class="font-bold text-gray-900">Form Permintaan Barang</h2>
                     <p class="text-xs text-gray-500">Permintaan akan dikirim ke PIC Gudang</p>
@@ -35,6 +37,27 @@
 
         <form action="{{ route('permintaan.store') }}" method="POST" class="p-6 space-y-6">
             @csrf
+
+            {{-- Quick Search by Kode Barang --}}
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                <div class="flex items-center justify-between mb-1.5">
+                    <label class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-700">
+                        <span class="material-symbols-rounded text-base text-primary">gps_fixed</span> Tembak Langsung Kode Barang
+                    </label>
+                    <span class="text-[11px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                        Otomatis Pilih Sasaran
+                    </span>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="quick_kode_input" placeholder="Ketik / tempel kode barang, misal: 1111-1 atau 1111..." 
+                           value="{{ $requestedKode ?? old('quick_kode', '') }}"
+                           class="flex-1 px-3.5 py-2 bg-white border border-gray-200 rounded-lg text-sm font-mono font-semibold text-gray-800 focus:ring-primary focus:border-primary">
+                    <button type="button" id="btn_tembak_kode" class="px-4 py-2 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-lg transition-colors">
+                        Tembak Kode
+                    </button>
+                </div>
+                <p id="kode_status_msg" class="text-xs text-gray-500 mt-1.5 font-medium">Format: <code>[Kategori][Blok][Rak][Urutan]-[Batch]</code>. Contoh: <strong>1111-1</strong> (Pupuk, Blok 1 Rak 1, NPK #1, Batch 1).</p>
+            </div>
 
             {{-- Pilih Barang --}}
             <div>
@@ -48,11 +71,12 @@
                     @foreach($barangs as $barang)
                         @php $totalStok = $barang->batches->sum('stok'); @endphp
                         <option value="{{ $barang->id }}"
+                            data-kode="{{ $barang->kode_barang }}"
                             data-kategori="{{ $barang->kategori }}"
                             data-stok="{{ $totalStok }}"
-                            {{ old('barang_id') == $barang->id ? 'selected' : '' }}
+                            {{ old('barang_id', $selectedBarangId ?? null) == $barang->id ? 'selected' : '' }}
                             {{ $totalStok <= 0 ? 'disabled' : '' }}>
-                            {{ $barang->nama_barang }}
+                            [{{ $barang->kode_barang }}] {{ $barang->nama_barang }}
                             @if($barang->merk) ({{ $barang->merk }}) @endif
                             — Stok: {{ $totalStok }}
                             {{ $totalStok <= 0 ? '[HABIS]' : '' }}
@@ -64,7 +88,10 @@
 
             {{-- Info Stok Tersedia + Kondisi FIFO --}}
             <div id="stokInfoBox" class="hidden p-4 bg-blue-50 border border-blue-100 rounded-xl text-sm">
-                <p class="font-bold text-blue-800 mb-2">📦 Stok Tersedia <span id="infoKategori" class="ml-1 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-bold"></span></p>
+                <p class="font-bold text-blue-800 mb-2 flex items-center gap-1.5">
+                    <span class="material-symbols-rounded text-base">inventory_2</span> Stok Tersedia 
+                    <span id="infoKategori" class="ml-1 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-bold"></span>
+                </p>
                 <div id="stokInfoKonten" class="space-y-1 text-blue-700"></div>
             </div>
 
@@ -111,7 +138,9 @@
                     <span>→</span>
                     <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full font-semibold">Jadwal Ditetapkan</span>
                     <span>→</span>
-                    <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-full font-semibold">📸 Foto Ambil</span>
+                    <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-full font-semibold inline-flex items-center gap-1">
+                        <span class="material-symbols-rounded text-xs">photo_camera</span> Foto Ambil
+                    </span>
                     <span>→</span>
                     <span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full font-semibold">Selesai</span>
                 </div>
@@ -142,10 +171,12 @@ const kondisiByKategori = @json($kondisiByKategori);
             $isExpired = $batch->tanggal_kadaluarsa && \Carbon\Carbon::parse($batch->tanggal_kadaluarsa)->endOfDay()->isPast();
             if ($isExpired) continue;
 
+            $batchCleanNo = (int) ltrim((string)($batch->batch_no ?? '1'), 'B');
             $details = is_array($batch->stok_detail) ? $batch->stok_detail : json_decode($batch->stok_detail ?? '[]', true);
             if(empty($details)) {
                 if($batch->stok > 0 && \App\Models\SatuanBarang::kondisiPriority($batch->kondisi ?? '') !== 99) {
                     $allDetails->push([
+                        'batch_no'   => $batchCleanNo,
                         'stok'       => $batch->stok,
                         'satuan'     => $batch->satuan ?? '-',
                         'kondisi'    => $batch->kondisi ?? '-',
@@ -156,6 +187,7 @@ const kondisiByKategori = @json($kondisiByKategori);
                 foreach($details as $item) {
                     if(isset($item['stok']) && $item['stok'] > 0 && \App\Models\SatuanBarang::kondisiPriority($item['kondisi'] ?? '') !== 99) {
                         $allDetails->push([
+                            'batch_no'   => $batchCleanNo,
                             'stok'       => $item['stok'],
                             'satuan'     => $item['satuan'] ?? '-',
                             'kondisi'    => $item['kondisi'] ?? '-',
@@ -167,19 +199,23 @@ const kondisiByKategori = @json($kondisiByKategori);
         }
         
         return [
-            'id'       => $b->id,
-            'kategori' => $b->kategori,
-            'batches'  => $allDetails->values(),
+            'id'          => $b->id,
+            'kategori'    => $b->kategori,
+            'kode_barang' => $b->kode_barang,
+            'lokasi_blok' => $b->lokasi_blok,
+            'batches'     => $allDetails->values(),
         ];
     })->keyBy('id');
 @endphp
 const barangData = @json($processedBarangs);
 
+const barangSelect  = document.getElementById('barang_id');
 const satuanSelect  = document.getElementById('satuan_diminta');
 const stokInfoBox   = document.getElementById('stokInfoBox');
 const stokInfoKonten = document.getElementById('stokInfoKonten');
+let targetBatchSelected = @json($targetBatchNumber ?? null);
 
-document.getElementById('barang_id').addEventListener('change', function() {
+barangSelect.addEventListener('change', function() {
     const id = this.value;
     const barang = barangData[id];
 
@@ -208,12 +244,12 @@ document.getElementById('barang_id').addEventListener('change', function() {
         satuanSelect.innerHTML = '<option value="">-- Stok Habis --</option>';
     }
 
-    // Tampilkan info stok dengan FIFO indicator
+    // Tampilkan info stok dengan FIFO indicator & target batch highlight
     document.getElementById('infoKategori').textContent = kategori;
     const batches = barang.batches;
 
     if (batches.length === 0) {
-        stokInfoKonten.innerHTML = '<p class="text-orange-600 font-semibold">⚠️ Semua stok habis.</p>';
+        stokInfoKonten.innerHTML = '<p class="text-orange-600 font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-base">warning</span> Semua stok habis.</p>';
     } else {
         const fifoOrder = [
             'Sudah Terbuka', 'Sisa Sedikit', 'Hampir Habis', 'Bekas Pakai - Perlu Perbaikan',
@@ -228,11 +264,14 @@ document.getElementById('barang_id').addEventListener('change', function() {
 
         stokInfoKonten.innerHTML = sorted.map((b, i) => {
             const isFirst = i === 0;
-            return `<div class="flex items-center gap-3 py-1 border-b border-blue-100 last:border-0">
-                ${isFirst ? '<span class="text-xs bg-blue-600 text-white px-1.5 py-0.5 rounded font-bold">▶</span>' : '<span class="w-[54px]"></span>'}
-                <span class="font-semibold">${b.stok} ${b.satuan.toUpperCase()}</span>
-                <span class="text-xs px-2 py-0.5 bg-blue-100 rounded-full">${b.kondisi}</span>
-                ${b.kadaluarsa ? `<span class="text-xs text-orange-500 ml-auto">Exp: ${b.kadaluarsa}</span>` : ''}
+            const isTargetBatch = targetBatchSelected && b.batch_no === targetBatchSelected;
+            const rowClass = isTargetBatch ? 'bg-emerald-100/70 border border-emerald-300 rounded-lg p-2 my-1' : 'py-1 border-b border-blue-100 last:border-0';
+            
+            return `<div class="flex items-center gap-3 ${rowClass}">
+                ${isTargetBatch ? '<span class="text-xs bg-emerald-700 text-white px-2 py-0.5 rounded font-extrabold shadow-sm animate-pulse inline-flex items-center gap-1"><span class="material-symbols-rounded text-xs">gps_fixed</span> BATCH #' + b.batch_no + '</span>' : (isFirst ? '<span class="text-xs bg-blue-600 text-white px-1.5 py-0.5 rounded font-bold">Prioritas FIFO</span>' : '<span class="text-xs text-gray-500 font-mono">Batch #' + (b.batch_no || (i+1)) + '</span>')}
+                <span class="font-semibold text-gray-900">${b.stok} ${b.satuan.toUpperCase()}</span>
+                <span class="text-xs px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full font-medium">${b.kondisi}</span>
+                ${b.kadaluarsa ? `<span class="text-xs text-orange-600 font-semibold ml-auto">Exp: ${b.kadaluarsa}</span>` : ''}
             </div>`;
         }).join('');
     }
@@ -241,7 +280,7 @@ document.getElementById('barang_id').addEventListener('change', function() {
 });
 
 satuanSelect.addEventListener('change', function() {
-    const id = document.getElementById('barang_id').value;
+    const id = barangSelect.value;
     const barang = barangData[id];
     if (!barang) return;
 
@@ -269,5 +308,72 @@ document.getElementById('jumlah').addEventListener('input', function() {
         this.value = max;
     }
 });
+
+// Tembak Kode Barang Logic (Mendukung 1111 atau 1111-1)
+const quickKodeInput = document.getElementById('quick_kode_input');
+const btnTembakKode = document.getElementById('btn_tembak_kode');
+const kodeStatusMsg = document.getElementById('kode_status_msg');
+
+function tembakKodeBarang(kode) {
+    if (!kode) return;
+    const rawKode = kode.trim();
+    const parts = rawKode.split('-');
+    const cleanBaseKode = parts[0].trim().toUpperCase();
+    const batchTarget = parts[1] ? parseInt(parts[1]) : null;
+    targetBatchSelected = batchTarget;
+
+    let found = false;
+    
+    for (let opt of barangSelect.options) {
+        const optKode = (opt.getAttribute('data-kode') || '').trim().toUpperCase();
+        if (optKode === cleanBaseKode || optKode === rawKode.toUpperCase()) {
+            if (opt.disabled) {
+                kodeStatusMsg.innerHTML = `<span class="text-red-500 font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-base">warning</span> Barang [${cleanBaseKode}] stoknya saat ini sedang habis!</span>`;
+            } else {
+                barangSelect.value = opt.value;
+                barangSelect.dispatchEvent(new Event('change'));
+                
+                // Terjemahkan makna 4 digit kode: [Kategori][Blok][Rak][Urutan]
+                let kategoriName = opt.getAttribute('data-kategori') || 'Kategori';
+                let rawText = opt.textContent.replace(/\[.*?\]/, '').split('—')[0].trim();
+                let breakdown = '';
+                if (cleanBaseKode.length >= 4 && /^\d+$/.test(cleanBaseKode)) {
+                    let dKat  = cleanBaseKode.charAt(0);
+                    let dBlok = cleanBaseKode.charAt(1);
+                    let dRak  = cleanBaseKode.charAt(2);
+                    let dSeq  = cleanBaseKode.substring(3);
+                    breakdown = `<br><span class="text-xs text-emerald-800 font-normal flex items-center gap-1"><span class="material-symbols-rounded text-xs">place</span> Target Terpilih: Kategori ${kategoriName} (Kode: ${dKat}) • Lokasi: Blok ${dBlok}, Rak ${dRak} • Barang: ${rawText} (Item #${dSeq})${batchTarget ? ` • <strong>Batch #${batchTarget}</strong>` : ''}</span>`;
+                }
+
+                kodeStatusMsg.innerHTML = `<span class="text-emerald-700 font-bold flex items-center gap-1"><span class="material-symbols-rounded text-base">check_circle</span> Tepat sasaran! Berhasil memilih [${rawKode}].</span>${breakdown}`;
+            }
+            found = true;
+            break;
+        }
+    }
+    
+    if (!found) {
+        kodeStatusMsg.innerHTML = `<span class="text-rose-500 font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-base">cancel</span> Kode [${rawKode}] tidak ditemukan dalam inventaris.</span>`;
+    }
+}
+
+if (btnTembakKode && quickKodeInput) {
+    btnTembakKode.addEventListener('click', () => tembakKodeBarang(quickKodeInput.value));
+    quickKodeInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            tembakKodeBarang(quickKodeInput.value);
+        }
+    });
+}
+
+// Auto-trigger if already selected on load (e.g. via ?kode= or ?barang_id=)
+const initialKode = @json($requestedKode ?? '');
+if (initialKode) {
+    if (quickKodeInput) quickKodeInput.value = initialKode;
+    tembakKodeBarang(initialKode);
+} else if (barangSelect && barangSelect.value) {
+    barangSelect.dispatchEvent(new Event('change'));
+}
 </script>
 @endpush

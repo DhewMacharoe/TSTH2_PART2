@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Layanan & Laboratorium - TSTH2</title>
+    <title>{{ __('site.services_hero_title') }} - TSTH2</title>
     @include('partials.pwa-head')
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}?v={{ time() }}">
@@ -12,13 +12,12 @@
 <body style="background: #f8faf9;" x-data="{ openModal: false, modalData: {} }">
     @include('partials.navbar')
 
-    <main style="padding-top: 80px;">
+    <main>
         <!-- Executive Hero Banner -->
         <section style="background: linear-gradient(135deg, #0d342a 0%, #164E3F 50%, #1c5e4d 100%); padding: 5.5rem 1rem; text-align: center; color: white; position: relative; overflow: hidden;">
             <div class="container" style="position: relative; z-index: 2;">
-                <span class="hero-badge" style="background: rgba(255,255,255,0.15); color: #fef08a;">Fasilitas Akreditasi Lab</span>
                 <h1 style="font-size: clamp(2.4rem, 4.5vw, 3.5rem); margin-bottom: 1rem; color: white; font-family: var(--font-heading); font-weight: 800;">
-                    Layanan & Laboratorium TSTH2
+                    Layanan &amp; Laboratorium TSTH2
                 </h1>
                 <p style="font-size: 1.15rem; max-width: 800px; margin: 0 auto; color: rgba(241,245,249,0.92); line-height: 1.65;">
                     Penyediaan sarana laboratorium genomik, distilasi minyak atsiri skala pilot, persemaian bibit unggul, serta program riset kolaboratif bagi akademisi, peneliti internasional, dan industri.
@@ -30,7 +29,6 @@
         <section class="section-padding">
             <div class="container">
                 <div class="section-header">
-                    <span class="section-tag">ISO Standard Facilities</span>
                     <h2 class="section-title">Katalog Layanan Riset TSTH2</h2>
                     <p class="section-desc">Layanan laboratorium terpadu dengan standar kepatuhan pengujian ilmiah dan dukungan sensorik IoT presisi.</p>
                 </div>
@@ -43,7 +41,7 @@
                                 <img src="{{ asset('assets/logo.png') }}" alt="TSTH2 Logo">
                                 <div class="poster-logo-text">TAMAN SAINS TEKNOLOGI HERBAL &amp;<br>HORTIKULTURA INDONESIA (TSTH2)</div>
                             </div>
-                            <span class="poster-badge">Genolab Facility</span>
+                            <span class="poster-badge">Laboratorium Genomik</span>
                         </div>
                         <div class="poster-inner-frame">
                             <div>
@@ -51,7 +49,7 @@
                                 <p style="font-size: 0.88rem; color: rgba(255,255,255,0.85); line-height: 1.5; margin: 0;">Layanan sekuensing DNA, karakterisasi genetik plasma nutfah, dan pengujian keaslian varietas tanaman herbal serta hortikultura langka.</p>
                             </div>
                             <div class="poster-image-center">
-                                <img src="{{ asset('assets/default_hero.jpg') }}" alt="Genolab Facility" loading="lazy">
+                                <img src="{{ asset('assets/default_hero.jpg') }}" alt="Laboratorium Genomik" loading="lazy">
                             </div>
                             <div class="poster-pill-tag">
                                 <span>Spesifikasi Layanan &rarr;</span>
@@ -66,7 +64,7 @@
                                 <img src="{{ asset('assets/logo.png') }}" alt="TSTH2 Logo">
                                 <div class="poster-logo-text">TAMAN SAINS TEKNOLOGI HERBAL &amp;<br>HORTIKULTURA INDONESIA (TSTH2)</div>
                             </div>
-                            <span class="poster-badge">Distilasi Pilot Plant</span>
+                            <span class="poster-badge">Distilasi Skala Pilot</span>
                         </div>
                         <div class="poster-inner-frame">
                             <div>
@@ -74,7 +72,7 @@
                                 <p style="font-size: 0.88rem; color: rgba(255,255,255,0.85); line-height: 1.5; margin: 0;">Fasilitas distilasi uap skala pilot untuk pengolahan getah kemenyan, andaliman, dan tanaman aromatik menjadi essential oil bermutu tinggi.</p>
                             </div>
                             <div class="poster-image-center">
-                                <img src="{{ asset('assets/default_hero.jpg') }}" alt="Distilasi Pilot Plant" loading="lazy">
+                                <img src="{{ asset('assets/default_hero.jpg') }}" alt="Distilasi Skala Pilot" loading="lazy">
                             </div>
                             <div class="poster-pill-tag">
                                 <span>Spesifikasi Layanan &rarr;</span>
@@ -89,7 +87,7 @@
                                 <img src="{{ asset('assets/logo.png') }}" alt="TSTH2 Logo">
                                 <div class="poster-logo-text">TAMAN SAINS TEKNOLOGI HERBAL &amp;<br>HORTIKULTURA INDONESIA (TSTH2)</div>
                             </div>
-                            <span class="poster-badge">IoT High-Tech</span>
+                            <span class="poster-badge">Teknologi IoT Presisi</span>
                         </div>
                         <div class="poster-inner-frame">
                             <div>
@@ -135,7 +133,7 @@
                                 <img src="{{ asset('assets/logo.png') }}" alt="TSTH2 Logo">
                                 <div class="poster-logo-text">TAMAN SAINS TEKNOLOGI HERBAL &amp;<br>HORTIKULTURA INDONESIA (TSTH2)</div>
                             </div>
-                            <span class="poster-badge">Academic Exchange</span>
+                            <span class="poster-badge">Pertukaran Akademisi</span>
                         </div>
                         <div class="poster-inner-frame">
                             <div>
@@ -158,7 +156,7 @@
                                 <img src="{{ asset('assets/logo.png') }}" alt="TSTH2 Logo">
                                 <div class="poster-logo-text">TAMAN SAINS TEKNOLOGI HERBAL &amp;<br>HORTIKULTURA INDONESIA (TSTH2)</div>
                             </div>
-                            <span class="poster-badge">Phyto-Pharmacology</span>
+                            <span class="poster-badge">Analisis Fitofarmaka</span>
                         </div>
                         <div class="poster-inner-frame">
                             <div>

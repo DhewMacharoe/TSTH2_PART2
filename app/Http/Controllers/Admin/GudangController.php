@@ -15,7 +15,8 @@ class GudangController extends Controller
 {
     public function index()
     {
-        $barangs = Barang::with('batches')->get();
+        $barangs = Barang::with('batches')->get(); // used for stats
+        $barangsPaginated = Barang::with('batches')->orderBy('nama_barang')->paginate(20)->withQueryString();
 
         $totalBarang   = $barangs->sum(fn($b) => $b->batches->sum('stok'));
         $totalKategori = $barangs->pluck('kategori')->unique()->count();
@@ -29,7 +30,7 @@ class GudangController extends Controller
             $satuanByKategori[$kat] = SatuanBarang::forKategori($kat)->orderBy('nama_satuan')->pluck('nama_satuan')->toArray();
         }
 
-        return view('gudang.gudang', compact('barangs', 'totalBarang', 'totalKategori', 'barangsByCategory', 'barangsByBlock', 'satuanByKategori'));
+        return view('gudang.gudang', compact('barangs', 'barangsPaginated', 'totalBarang', 'totalKategori', 'barangsByCategory', 'barangsByBlock', 'satuanByKategori'));
     }
 
     public function create()
@@ -50,12 +51,13 @@ class GudangController extends Controller
         return view('gudang.gudang_create', compact('existingBarangs', 'satuanByKategori', 'kondisiByKategori'));
     }
 
-    public function store(Request $permintaan)
+    public function store(Request $request)
     {
-        $validated = $permintaan->validate([
+        $validated = $request->validate([
+            'kode_barang'        => 'nullable|string|max:50|unique:barangs,kode_barang',
             'nama_barang' => [
                 'required', 'string', 'max:255',
-                Rule::unique('barangs')->where(fn($query) => empty($permintaan->merk) ? $query->whereNull('merk') : $query->where('merk', $permintaan->merk))
+                Rule::unique('barangs')->where(fn($query) => empty($request->merk) ? $query->whereNull('merk') : $query->where('merk', $request->merk))
             ],
             'merk'               => 'nullable|string|max:255',
             'kategori'           => 'required|string|max:100',
@@ -73,21 +75,25 @@ class GudangController extends Controller
             'nama_barang.unique' => 'Barang dengan nama ini sudah terdaftar di sistem. Silakan cari barang tersebut dan gunakan fitur "Restock" untuk menambah stok.'
         ]);
 
-        if ($permintaan->hasFile('gambar')) {
-            $validated['gambar'] = $permintaan->file('gambar')->store('barangs', 'public');
+        if ($request->hasFile('gambar')) {
+            $validated['gambar'] = $request->file('gambar')->store('barangs', 'public');
         }
 
         $barangData = $validated;
         unset($barangData['tanggal_kedatangan'], $barangData['tanggal_kadaluarsa'], $barangData['stok_jumlah'], $barangData['stok_satuan'], $barangData['stok_kondisi']);
 
+        if (empty($barangData['kode_barang'])) {
+            $barangData['kode_barang'] = Barang::generateKodeBarang($barangData['kategori'], $barangData['lokasi_blok']);
+        }
+
         $barang = Barang::create($barangData);
 
-        if ($permintaan->tanggal_kedatangan && !empty($permintaan->stok_jumlah)) {
+        if ($request->tanggal_kedatangan && !empty($request->stok_jumlah)) {
             $stokDetail  = [];
             $totalStok   = 0;
-            $stokJumlah  = $permintaan->input('stok_jumlah', []);
-            $stokSatuan  = $permintaan->input('stok_satuan', []);
-            $stokKondisi = $permintaan->input('stok_kondisi', []);
+            $stokJumlah  = $request->input('stok_jumlah', []);
+            $stokSatuan  = $request->input('stok_satuan', []);
+            $stokKondisi = $request->input('stok_kondisi', []);
 
             for ($i = 0; $i < count($stokJumlah); $i++) {
                 $stokDetail[] = [
@@ -101,8 +107,8 @@ class GudangController extends Controller
             BarangBatch::create([
                 'barang_id'          => $barang->id,
                 'batch_no'           => BarangBatch::nextBatchNo($barang->id),
-                'tanggal_kedatangan' => $permintaan->tanggal_kedatangan,
-                'tanggal_kadaluarsa' => $permintaan->tanggal_kadaluarsa,
+                'tanggal_kedatangan' => $request->tanggal_kedatangan,
+                'tanggal_kadaluarsa' => $request->tanggal_kadaluarsa,
                 'stok'               => $totalStok,
                 'stok_detail'        => $stokDetail
             ]);
@@ -117,12 +123,13 @@ class GudangController extends Controller
         return view('gudang.gudang_edit', compact('barang'));
     }
 
-    public function update(Request $permintaan, $id)
+    public function update(Request $request, $id)
     {
-        $validated = $permintaan->validate([
+        $validated = $request->validate([
+            'kode_barang' => 'nullable|string|max:50|unique:barangs,kode_barang,' . $id,
             'nama_barang' => [
                 'required', 'string', 'max:255',
-                Rule::unique('barangs')->where(fn($query) => empty($permintaan->merk) ? $query->whereNull('merk') : $query->where('merk', $permintaan->merk))->ignore($id)
+                Rule::unique('barangs')->where(fn($query) => empty($request->merk) ? $query->whereNull('merk') : $query->where('merk', $request->merk))->ignore($id)
             ],
             'merk'        => 'nullable|string|max:255',
             'kategori'    => 'required|string|max:100',
@@ -134,11 +141,11 @@ class GudangController extends Controller
 
         $barang = Barang::findOrFail($id);
 
-        if ($permintaan->hasFile('gambar')) {
+        if ($request->hasFile('gambar')) {
             if ($barang->gambar && Storage::disk('public')->exists($barang->gambar)) {
                 Storage::disk('public')->delete($barang->gambar);
             }
-            $validated['gambar'] = $permintaan->file('gambar')->store('barangs', 'public');
+            $validated['gambar'] = $request->file('gambar')->store('barangs', 'public');
         }
 
         $barang->update($validated);

@@ -31,4 +31,31 @@ class GaleriAlbum extends Model
         $list = $this->photos_list;
         return count($list) > 0 ? $list[0] : null;
     }
+
+    /**
+     * Cek apakah file berupa video berdasarkan ekstensinya
+     */
+    public static function isVideoFile(?string $path): bool
+    {
+        if (!$path) return false;
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        return in_array($extension, ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv']);
+    }
+
+    /**
+     * Hitung jumlah foto & video di dalam album
+     */
+    public function getMediaStatsAttribute(): array
+    {
+        $photos = 0;
+        $videos = 0;
+        foreach ($this->photos_list as $item) {
+            if (self::isVideoFile($item)) {
+                $videos++;
+            } else {
+                $photos++;
+            }
+        }
+        return ['photos' => $photos, 'videos' => $videos, 'total' => count($this->photos_list)];
+    }
 }

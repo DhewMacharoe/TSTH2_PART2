@@ -42,7 +42,10 @@ class PermintaanFifoService
             return back()->with('error', 'Stok tidak mencukupi untuk memenuhi permintaan, termasuk setelah melakukan konversi. Kekurangan: ' . $remaining . ' ' . strtoupper($permintaanedSatuan));
         }
 
-        $updateData = ['status' => PermintaanBarang::STATUS_BARANG_DIAMBIL];
+        $updateData = [
+            'status'               => PermintaanBarang::STATUS_BARANG_DIAMBIL,
+            'tanggal_pengambilan'  => now(),
+        ];
         if ($fotoPath) {
             $updateData['foto_pengambilan'] = $fotoPath;
         }

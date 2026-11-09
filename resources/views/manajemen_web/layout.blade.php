@@ -15,14 +15,14 @@
         <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
         <div class="relative z-10">
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-accent/20 text-accent border border-accent/30 mb-3">
-                <span>⚙️</span> Pengaturan Tampilan Global
+                <span class="material-symbols-rounded text-sm">settings</span> Pengaturan Tampilan Global
             </span>
             <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Header & Footer Website</h1>
             <p class="text-white/70 text-sm mt-1 max-w-xl">Ubah nama dan subjudul di navigasi utama serta informasi alamat, email, dan deskripsi pada bagian bawah (footer).</p>
         </div>
         <div class="relative z-10 shrink-0">
             <a href="{{ route('home') }}" target="_blank" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-5 py-2.5 rounded-xl text-xs font-bold backdrop-blur-sm transition-all hover:scale-105 shadow-sm">
-                <span>🌐</span> Pratinjau Web
+                <span class="material-symbols-rounded text-sm">language</span> Pratinjau Web
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
             </a>
         </div>
@@ -30,7 +30,9 @@
 
     @if(session('success'))
         <div class="bg-emerald-50 text-emerald-800 p-4 rounded-2xl mb-8 font-semibold border border-emerald-200/80 flex items-center gap-3 shadow-sm animate-fade-in">
-            <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shrink-0">✓</div>
+            <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                <span class="material-symbols-rounded text-base">check</span>
+            </div>
             <div class="text-sm">{{ session('success') }}</div>
         </div>
     @endif
@@ -43,7 +45,9 @@
             <!-- 1. KARTU NAVBAR HEADER -->
             <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3 border-b border-gray-100 pb-5 mb-6">
-                    <div class="w-10 h-10 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center font-extrabold text-xl shadow-inner">🧭</div>
+                    <div class="w-10 h-10 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center shadow-inner">
+                        <span class="material-symbols-rounded text-xl">explore</span>
+                    </div>
                     <div>
                         <h2 class="text-lg font-extrabold text-gray-900">Navigasi Atas (Navbar Header)</h2>
                         <p class="text-xs text-gray-500">Teks identitas yang tampil di bagian paling atas setiap halaman pengunjung.</p>
@@ -74,7 +78,9 @@
             <!-- 2. KARTU FOOTER & KONTAK -->
             <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3 border-b border-gray-100 pb-5 mb-6">
-                    <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-extrabold text-xl shadow-inner">🏢</div>
+                    <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center shadow-inner">
+                        <span class="material-symbols-rounded text-xl">domain</span>
+                    </div>
                     <div>
                         <h2 class="text-lg font-extrabold text-gray-900">Bagian Bawah (Footer) & Kontak Resmi</h2>
                         <p class="text-xs text-gray-500">Teks informasi singkat, alamat kantor, dan alamat email resmi untuk dihubungi pengunjung.</p>
@@ -117,7 +123,7 @@
                 </div>
                 <button type="submit" 
                     class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary-900 to-primary-950 hover:from-black hover:to-primary-950 text-white font-bold py-3.5 px-8 rounded-xl shadow-lg shadow-primary-900/20 transition-all hover:scale-[1.02] text-sm">
-                    <span>💾</span> Simpan Header & Footer
+                    <span class="material-symbols-rounded text-sm">save</span> Simpan Header & Footer
                 </button>
             </div>
         </div>

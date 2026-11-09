@@ -11,7 +11,7 @@
 
     @if(session('status') === 'profil-updated' || session('status') === 'password-updated')
         <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center gap-3 text-sm font-semibold shadow-sm animate-fade-in">
-            <span class="text-lg">✅</span>
+            <span class="material-symbols-rounded text-emerald-600 text-lg">check_circle</span>
             <span>Profil berhasil diperbarui.</span>
         </div>
     @endif
@@ -22,7 +22,7 @@
             <div>
                 <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
                     <div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-xl font-bold">
-                        👤
+                        <span class="material-symbols-rounded text-xl">person</span>
                     </div>
                     <div>
                         <h2 class="text-lg font-bold text-gray-900 leading-tight">Informasi Akun</h2>
@@ -69,7 +69,7 @@
             <div>
                 <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
                     <div class="w-10 h-10 rounded-xl bg-accent/15 text-accent-dark flex items-center justify-center text-xl font-bold">
-                        🔒
+                        <span class="material-symbols-rounded text-xl">lock</span>
                     </div>
                     <div>
                         <h2 class="text-lg font-bold text-gray-900 leading-tight">Ubah Kata Sandi</h2>

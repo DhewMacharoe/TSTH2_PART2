@@ -10,9 +10,9 @@
         </a>
         <div class="flex items-center gap-4">
             <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Detail Barang</h1>
-            <span class="px-3 py-1 bg-gray-100 text-gray-600 font-mono text-sm rounded-lg font-bold">#INV{{ str_pad($barang->id, 3, '0', STR_PAD_LEFT) }}</span>
+            <span class="px-3 py-1 bg-gray-900 text-white font-mono text-sm rounded-lg font-bold shadow-sm">#{{ $barang->kode_barang }}</span>
         </div>
-        <p class="text-gray-500 font-medium mt-1">Lihat detail barang dan riwayat batch kedatangan.</p>
+        <p class="text-gray-500 font-medium mt-1">Lihat detail barang, kode unik inventaris, dan riwayat batch kedatangan.</p>
     </div>
 
     <!-- Informasi Barang -->
@@ -23,7 +23,7 @@
                     <img src="{{ asset('storage/' . $barang->gambar) }}" alt="{{ $barang->nama_barang }}" class="w-full h-64 object-cover rounded-xl shadow-sm border border-gray-100">
                 @else
                     <div class="w-full h-64 bg-gray-50 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-200">
-                        <span class="text-gray-400 text-6xl">📦</span>
+                        <span class="material-symbols-rounded" style="font-size:4rem;color:#cbd5e1;">inventory_2</span>
                     </div>
                 @endif
             </div>
@@ -31,16 +31,25 @@
                 <div>
                     <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ $barang->nama_barang }}</h2>
                     <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-sm font-mono font-bold border border-emerald-200">
+                            Kode: {{ $barang->kode_barang }}
+                        </span>
                         <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium border border-gray-200">{{ $barang->kategori }}</span>
                         <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium border border-gray-200">Blok: {{ $barang->lokasi_blok }}</span>
-                        <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium border border-gray-200">Merek: {{ $barang->merk ?? '' }}</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium border border-gray-200">Merek: {{ $barang->merk ?? '-' }}</span>
                     </div>
                 </div>
                 
-                <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <p class="text-sm text-gray-500 font-bold mb-1">Total Stok Saat Ini</p>
                         <p class="text-3xl font-bold text-gray-900">{{ $barang->batches->sum('stok') }}</p>
+                    </div>
+                    <div>
+                        <a href="{{ route('permintaan.create', ['kode' => $barang->kode_barang]) }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-light text-white rounded-xl font-bold text-sm shadow-md shadow-primary/20 transition-all">
+                            <span class="material-symbols-rounded text-base">near_me</span>
+                            <span>Ajukan Permintaan via Kode Ini</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -67,8 +76,14 @@
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
             <div class="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
                 <div>
-                    <h4 class="text-lg font-bold text-gray-900">Batch {{ $batchNo }}</h4>
-                    <p class="text-xs text-gray-500 font-medium">Datang: {{ \Carbon\Carbon::parse($firstBatch->tanggal_kedatangan)->format('d M Y') }}</p>
+                    <div class="flex items-center gap-2">
+                        <h4 class="text-lg font-bold text-gray-900">Batch {{ (int)ltrim($batchNo, 'B') }}</h4>
+                        @php $fullBatchCode = ($barang->kode_barang ?? '0000') . '-' . max(1, (int)ltrim($batchNo, 'B')); @endphp
+                        <a href="{{ route('permintaan.create', ['kode' => $fullBatchCode]) }}" class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-gray-900 hover:bg-primary text-white font-mono text-xs font-bold rounded-md shadow-sm transition-colors" title="Klik untuk ajukan permintaan batch ini">
+                            <span>#{{ $fullBatchCode }}</span>
+                        </a>
+                    </div>
+                    <p class="text-xs text-gray-500 font-medium mt-0.5">Datang: {{ \Carbon\Carbon::parse($firstBatch->tanggal_kedatangan)->format('d M Y') }}</p>
                 </div>
                 @if(in_array(auth()->user()->role, ['pic_gudang', 'web_admin']))
                     <button onclick="openModalItem('{{ $batchNo }}', '{{ \Carbon\Carbon::parse($firstBatch->tanggal_kedatangan)->format('Y-m-d') }}')" class="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg text-xs font-bold transition-colors">
@@ -123,7 +138,7 @@
                                             $isRusak = in_array($batch->kondisi, ['Rusak', 'Rusak/Menggumpal']);
                                         @endphp
                                         <span class="text-xs font-bold px-2 py-1 border rounded-lg {{ $batch->stok == 0 ? 'bg-gray-50 text-gray-400 border-gray-200' : ($isRusak ? 'bg-red-50 text-red-600 border-red-200' : 'bg-gray-50 text-gray-700 border-gray-200') }}">
-                                            @if($isRusak && $batch->stok > 0)⚠️ @endif{{ $batch->kondisi ?? '-' }}
+                                            @if($isRusak && $batch->stok > 0)! @endif{{ $batch->kondisi ?? '-' }}
                                         </span>
                                     </td>
                                     @php
@@ -131,7 +146,7 @@
                                     @endphp
                                     <td class="px-6 py-4 text-xs font-medium">
                                         @if($isExpired)
-                                            <span class="text-red-600 font-bold bg-red-50 px-2 py-1 rounded-md border border-red-100 flex items-center w-max gap-1">⚠️ {{ \Carbon\Carbon::parse($batch->tanggal_kadaluarsa)->format('d M Y') }} (Expired)</span>
+                                            <span class="text-red-600 font-bold bg-red-50 px-2 py-1 rounded-md border border-red-100 flex items-center w-max gap-1">! {{ \Carbon\Carbon::parse($batch->tanggal_kadaluarsa)->format('d M Y') }} (Expired)</span>
                                         @else
                                             <span class="text-gray-500">{{ $batch->tanggal_kadaluarsa ? \Carbon\Carbon::parse($batch->tanggal_kadaluarsa)->format('d M Y') : '-' }}</span>
                                         @endif
@@ -178,7 +193,7 @@
                                                 $isRusakItem = in_array($item['kondisi'] ?? '', ['Rusak', 'Rusak/Menggumpal']);
                                             @endphp
                                             <span class="text-xs font-bold px-2 py-1 border rounded-lg {{ $subStok == 0 ? 'bg-gray-50 text-gray-400 border-gray-200' : ($isRusakItem ? 'bg-red-50 text-red-600 border-red-200' : 'bg-gray-50 text-gray-700 border-gray-200') }}">
-                                                @if($isRusakItem && $subStok > 0)⚠️ @endif{{ $item['kondisi'] ?? '-' }}
+                                                @if($isRusakItem && $subStok > 0)! @endif{{ $item['kondisi'] ?? '-' }}
                                             </span>
                                         </td>
                                         @php
@@ -186,7 +201,10 @@
                                         @endphp
                                         <td class="px-6 py-4 text-xs font-medium">
                                             @if($isExpired)
-                                                <span class="text-red-600 font-bold bg-red-50 px-2 py-1 rounded-md border border-red-100 flex items-center w-max gap-1">⚠️ {{ \Carbon\Carbon::parse($batch->tanggal_kadaluarsa)->format('d M Y') }} (Expired)</span>
+                                                <span class="text-red-600 font-bold bg-red-50 px-2 py-1 rounded-md border border-red-100 flex items-center w-max gap-1">
+                                                    <span class="material-symbols-rounded text-sm">warning</span>
+                                                    <span>{{ \Carbon\Carbon::parse($batch->tanggal_kadaluarsa)->format('d M Y') }} (Expired)</span>
+                                                </span>
                                             @else
                                                 <span class="text-gray-500">{{ $batch->tanggal_kadaluarsa ? \Carbon\Carbon::parse($batch->tanggal_kadaluarsa)->format('d M Y') : '-' }}</span>
                                             @endif
@@ -215,7 +233,7 @@
         </div>
     @empty
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
-            <span class="text-4xl mb-3 block">📭</span>
+            <span class="material-symbols-rounded text-4xl mb-3 block text-gray-400">inbox</span>
             <p class="text-gray-500 font-medium">Belum ada riwayat batch untuk barang ini.</p>
         </div>
     @endforelse

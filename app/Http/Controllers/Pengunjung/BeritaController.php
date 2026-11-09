@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pengunjung;
 use App\Http\Controllers\Controller;
 use App\Models\Berita;
 use App\Models\Konten;
+use App\Support\BeritaArticles;
 use Illuminate\Http\Request;
 
 class BeritaController extends Controller
@@ -27,8 +28,23 @@ class BeritaController extends Controller
             });
         }
 
-        $berita = $query->get();
+        $berita = $query->paginate(9)->withQueryString();
 
         return view('pengunjung.berita', compact('konten', 'berita'));
+    }
+
+    /**
+     * Detail berita publik berdasarkan slug.
+     */
+    public function show(string $slug)
+    {
+        $article = BeritaArticles::find($slug);
+        abort_if(!$article, 404);
+
+        if (!is_file(public_path($article['image'])) && isset($article['fallback_image'])) {
+            $article['image'] = $article['fallback_image'];
+        }
+
+        return view('pengunjung.berita-show', compact('article'));
     }
 }

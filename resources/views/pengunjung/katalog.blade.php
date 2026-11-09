@@ -29,7 +29,7 @@
         }
     </style>
     <div class="coming-soon-container">
-        <div class="icon-wip">🌱</div>
+        <div class="icon-wip" style="color: var(--color-primary);"><span class="material-symbols-rounded" style="font-size: 5rem;">potted_plant</span></div>
         <h2 style="font-size: 2.5rem; color: var(--color-primary-dark); margin-bottom: 1rem; font-family: var(--font-heading);">Halaman Dalam Pengembangan</h2>
         <p style="font-size: 1.1rem; color: var(--color-text-muted); max-width: 600px; line-height: 1.6;">
             Katalog Tanaman TSTH2 (Ensiklopedia Flora) sedang dalam tahap pembangunan sistem. Nantikan koleksi data plasma nutfah herbal terlengkap segera hadir di sini!

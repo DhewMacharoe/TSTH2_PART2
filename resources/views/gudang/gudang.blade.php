@@ -13,20 +13,24 @@
     <!-- Page Header -->
     <div class="mb-8">
         <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight mb-2">Inventory Gudang</h1>
-        <p class="text-gray-500 font-medium">Kelola data dan stok barang di fasilitas Warehouse TSTH2</p>
+        <p class="text-gray-500 font-medium">Kelola data dan stok barang di fasilitas gudang TSTH2</p>
     </div>
 
     <!-- Stats Overview -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow">
-            <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl shadow-inner">📦</div>
+            <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shadow-inner">
+                <span class="material-symbols-rounded" style="font-size:28px;">inventory_2</span>
+            </div>
             <div>
                 <p class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Total Barang</p>
                 <h3 class="text-2xl font-black text-gray-900">{{ number_format($totalBarang ?? 0) }} <span class="text-sm font-medium text-gray-500">Unit</span></h3>
             </div>
         </div>
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow">
-            <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-2xl shadow-inner">📑</div>
+            <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shadow-inner">
+                <span class="material-symbols-rounded" style="font-size:28px;">category</span>
+            </div>
             <div>
                 <p class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Kategori Barang</p>
                 <h3 class="text-2xl font-black text-gray-900">{{ number_format($totalKategori ?? 0) }} <span class="text-sm font-medium text-gray-500">Jenis</span></h3>
@@ -44,7 +48,9 @@
         <div class="p-6 border-b border-gray-100 flex flex-col lg:flex-row items-center justify-between gap-4 bg-gray-50/50">
             <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
                 <div class="relative w-full sm:w-64">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">🔍</span>
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <span class="material-symbols-rounded" style="font-size:18px;">search</span>
+                    </span>
                     <input type="text" id="searchInput" placeholder="Cari barang, kategori..." class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:ring-primary focus:border-primary transition-all text-sm shadow-sm font-medium">
                 </div>
                 <select id="filterKategori" class="w-full sm:w-auto bg-white border-gray-200 text-gray-700 rounded-lg text-sm focus:ring-primary focus:border-primary px-4 py-2.5 shadow-sm font-medium">
@@ -56,11 +62,11 @@
             </div>
             <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto justify-end">
                 <a href="{{ route('gudang.export') }}" class="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-bold shadow-sm">
-                    📥 Export CSV
+                    <span class="material-symbols-rounded" style="font-size:17px;">download</span> Export CSV
                 </a>
                 @if(in_array(auth()->user()->role, ['pic_gudang', 'web_admin']))
                 <a href="{{ route('gudang.create') }}" class="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors text-sm font-bold shadow-md shadow-primary/20">
-                    ➕ Tambah Barang
+                    <span class="material-symbols-rounded" style="font-size:17px;">add</span> Tambah Barang
                 </a>
                 @endif
             </div>
@@ -72,6 +78,7 @@
                 <thead class="hidden md:table-header-group bg-gray-50/80 text-gray-900 font-bold border-b border-gray-200">
                     <tr>
                         <th class="px-6 py-4">Gambar</th>
+                        <th class="px-6 py-4">Kode Barang</th>
                         <th class="px-6 py-4">Nama Barang</th>
                         <th class="px-6 py-4">Merek</th>
                         <th class="px-6 py-4">Kategori</th>
@@ -82,15 +89,23 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody" class="block md:table-row-group divide-y-0 md:divide-y divide-gray-100 space-y-4 md:space-y-0">
-                    @forelse($barangs as $barang)
+                    @forelse($barangsPaginated as $barang)
                     <tr class="block md:table-row bg-white md:bg-transparent rounded-2xl md:rounded-none shadow-sm md:shadow-none border border-gray-100 md:border-none p-4 md:p-0 hover:bg-gray-50/80 transition-colors group">
                         <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none">
                             <span class="md:hidden font-bold text-gray-400 text-xs shrink-0">Gambar</span>
                             @if($barang->gambar)
                                 <img src="{{ asset('storage/' . $barang->gambar) }}" alt="{{ $barang->nama_barang }}" class="w-12 h-12 rounded-lg object-cover shadow-sm border border-gray-100">
                             @else
-                                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 text-xl border border-gray-200">📦</div>
+                                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 border border-gray-200">
+                                    <span class="material-symbols-rounded" style="font-size:22px;">inventory_2</span>
+                                </div>
                             @endif
+                        </td>
+                        <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none">
+                            <span class="md:hidden font-bold text-gray-400 text-xs shrink-0">Kode Barang</span>
+                            <a href="{{ route('permintaan.create', ['kode' => $barang->kode_barang]) }}" class="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-900 hover:bg-primary text-white font-mono text-xs font-bold rounded-md shadow-sm transition-colors" title="Klik untuk langsung ajukan permintaan barang ini">
+                                <span>#{{ $barang->kode_barang }}</span>
+                            </a>
                         </td>
                         <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none text-right md:text-left">
                             <span class="md:hidden font-bold text-gray-400 text-xs shrink-0">Nama Barang</span>
@@ -123,10 +138,10 @@
                                     }
                                 @endphp
                                 @if($hasExpired)
-                                    <span class="mt-1 inline-flex items-center gap-1 px-2 py-0.5 bg-red-50 text-red-600 border border-red-200 rounded text-[10px] font-bold uppercase tracking-wide">⚠️ Ada Batch Expired</span>
+                                    <span class="mt-1 inline-flex items-center gap-1 px-2 py-0.5 bg-red-50 text-red-600 border border-red-200 rounded text-[10px] font-bold uppercase tracking-wide">! Ada Batch Expired</span>
                                 @endif
                                 @if($hasRusak)
-                                    <span class="mt-1 inline-flex items-center gap-1 px-2 py-0.5 bg-red-50 text-red-600 border border-red-200 rounded text-[10px] font-bold uppercase tracking-wide">⚠️ Ada Batch Rusak</span>
+                                    <span class="mt-1 inline-flex items-center gap-1 px-2 py-0.5 bg-red-50 text-red-600 border border-red-200 rounded text-[10px] font-bold uppercase tracking-wide">! Ada Batch Rusak</span>
                                 @endif
                             </div>
                         </td>
@@ -177,8 +192,8 @@
                                 @php
                                     $stokTersedia = $barang->getAvailableTotalStok();
                                 @endphp
-                                <button type="button" onclick="openRequestModal({{ $barang->id }}, '{{ addslashes($barang->nama_barang) }}', {{ $stokTersedia }}, '{{ $barang->kategori }}')" class="px-3 py-1.5 bg-accent/10 text-accent-dark rounded-lg hover:bg-accent/20 transition-colors font-bold text-xs inline-flex items-center gap-1">
-                                    🛒 Request
+                                <button type="button" onclick="openRequestModal({{ $barang->id }}, '{{ addslashes($barang->nama_barang) }}', {{ $stokTersedia }}, '{{ $barang->kategori }}', '{{ $barang->kode_barang }}')" class="px-3 py-1.5 bg-accent/10 text-accent-dark rounded-lg hover:bg-accent/20 transition-colors font-bold text-xs inline-flex items-center gap-1">
+                                    <span class="material-symbols-rounded" style="font-size:14px;">shopping_cart</span> Request
                                 </button>
                             </div>
                             @endif
@@ -193,9 +208,14 @@
             </table>
         </div>
         
-        <!-- Pagination Info -->
-        <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
-            <span class="text-sm text-gray-500 font-medium">Menampilkan <strong class="text-gray-900">{{ count($barangs) }}</strong> data total</span>
+        <!-- Pagination Info & Links -->
+        <div class="px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4 bg-gray-50/50">
+            <span class="text-sm text-gray-500 font-medium">Menampilkan <strong class="text-gray-900">{{ $barangsPaginated->firstItem() ?? 0 }} - {{ $barangsPaginated->lastItem() ?? 0 }}</strong> dari <strong class="text-gray-900">{{ $barangsPaginated->total() }}</strong> barang</span>
+            @if($barangsPaginated->hasPages())
+                <div>
+                    {{ $barangsPaginated->links() }}
+                </div>
+            @endif
         </div>
     </div>
 
@@ -277,9 +297,13 @@
                     
                     <div class="mb-5 p-4 bg-gray-50 rounded-xl border border-gray-100">
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Barang yang Diminta</label>
-                        <div id="req_nama_barang" class="text-lg font-bold text-primary mb-1"></div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span id="req_kode_barang" class="px-2 py-0.5 bg-gray-900 text-white font-mono text-xs font-bold rounded"></span>
+                            <div id="req_nama_barang" class="text-lg font-bold text-primary"></div>
+                        </div>
                         <div class="text-sm font-medium text-gray-600 flex items-center gap-2">
-                            <span>📦 Stok Tersedia:</span>
+                            <span class="material-symbols-rounded" style="font-size:16px;">inventory_2</span>
+                            <span>Stok Tersedia:</span>
                             <span id="req_stok_tersedia" class="font-bold text-gray-900"></span> Unit
                         </div>
                     </div>
@@ -341,7 +365,7 @@
         function openRestockModal(id, nama) {
             const modal = document.getElementById('restockModal');
             document.getElementById('restockForm').action = `/gudang/${id}/batch`;
-            document.getElementById('restockBarangName').textContent = '📦 ' + nama;
+            document.getElementById('restockBarangName').textContent = nama;
             
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -363,10 +387,11 @@
 
         const satuanByKategori = @json($satuanByKategori ?? []);
 
-        function openRequestModal(id, nama, stok, kategori) {
+        function openRequestModal(id, nama, stok, kategori, kode) {
             const modal = document.getElementById('permintaanModal');
             document.getElementById('req_barang_id').value = id;
             document.getElementById('req_nama_barang').textContent = nama;
+            document.getElementById('req_kode_barang').textContent = kode ? '#' + kode : '';
             document.getElementById('req_stok_tersedia').textContent = stok;
             document.getElementById('jumlah').max = stok;
             
@@ -465,7 +490,7 @@
                     if (row.children.length === 1) return; // Skip empty row message
                     
                     const text = row.textContent.toLowerCase();
-                    const rowKategori = row.querySelector('td:nth-child(4)').textContent.trim();
+                    const rowKategori = row.querySelector('td:nth-child(5)') ? row.querySelector('td:nth-child(5)').textContent.trim() : '';
                     
                     const matchSearch = text.includes(term);
                     const matchKategori = kategori === '' || rowKategori.includes(kategori);

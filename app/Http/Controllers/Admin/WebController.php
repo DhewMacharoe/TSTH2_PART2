@@ -16,7 +16,10 @@ class WebController extends Controller
         $konten          = Konten::all()->keyBy('key');
         $aboutBullets    = Konten::where('section', 'about_bullet')->get();
         $homeBackgrounds = Konten::where('section', 'home_background')->get();
-        return view('manajemen_web.home', compact('konten', 'aboutBullets', 'homeBackgrounds'));
+        $allPenelitian   = Penelitian::latest()->get();
+        $allBerita       = Berita::published()->orderBy('date', 'desc')->get();
+        $allGaleri       = GaleriAlbum::latest()->get();
+        return view('manajemen_web.home', compact('konten', 'aboutBullets', 'homeBackgrounds', 'allPenelitian', 'allBerita', 'allGaleri'));
     }
 
 
@@ -28,8 +31,9 @@ class WebController extends Controller
             $query->where('title', 'like', '%' . $permintaan->search . '%')
                   ->orWhere('description', 'like', '%' . $permintaan->search . '%');
         }
-        $penelitian = $query->get();
-        return view('manajemen_web.penelitian', compact('konten', 'penelitian'));
+        $penelitian = $query->latest()->paginate(10)->withQueryString();
+        $penelitianes = $penelitian;
+        return view('manajemen_web.penelitian', compact('konten', 'penelitian', 'penelitianes'));
     }
 
     public function katalog(Request $request)
@@ -49,8 +53,9 @@ class WebController extends Controller
                   ->orWhere('description', 'like', '%' . $permintaan->search . '%')
                   ->orWhere('category', 'like', '%' . $permintaan->search . '%');
         }
-        $berita = $query->get();
-        return view('manajemen_web.berita', compact('konten', 'berita'));
+        $berita = $query->paginate(15)->withQueryString();
+        $allBerita = $berita;
+        return view('manajemen_web.berita', compact('konten', 'berita', 'allBerita'));
     }
 
     public function galeri(Request $permintaan)
@@ -61,7 +66,7 @@ class WebController extends Controller
             $query->where('title', 'like', '%' . $permintaan->search . '%')
                   ->orWhere('description', 'like', '%' . $permintaan->search . '%');
         }
-        $galeri = $query->latest()->get();
+        $galeri = $query->latest()->paginate(12)->withQueryString();
         return view('manajemen_web.galeri', compact('konten', 'galeri'));
     }
 
@@ -86,6 +91,11 @@ class WebController extends Controller
                 Konten::updateOrCreate(
                     ['key' => $key],
                     ['image_path' => $path, 'type' => 'image', 'section' => $section]
+                );
+            } elseif (is_array($value)) {
+                Konten::updateOrCreate(
+                    ['key' => $key],
+                    ['value' => json_encode(array_values($value)), 'type' => 'json', 'section' => $section]
                 );
             } elseif (is_string($value) || is_null($value)) {
                 Konten::updateOrCreate(

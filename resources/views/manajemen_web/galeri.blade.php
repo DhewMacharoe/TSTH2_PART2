@@ -15,14 +15,14 @@
         <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
         <div class="relative z-10">
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-accent/20 text-accent border border-accent/30 mb-3">
-                <span>🖼️</span> Album Foto Dokumentasi
+                <span class="material-symbols-rounded text-sm">photo_library</span> Album Foto Dokumentasi
             </span>
             <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Manajemen Galeri Foto</h1>
             <p class="text-white/70 text-sm mt-1 max-w-xl">Unggah dan kelola album foto kegiatan — hingga 10 gambar per album, dengan kontrol per foto.</p>
         </div>
         <div class="relative z-10 shrink-0">
             <a href="{{ route('galeri') }}" target="_blank" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-5 py-2.5 rounded-xl text-xs font-bold backdrop-blur-sm transition-all hover:scale-105 shadow-sm">
-                <span>🌐</span> Lihat Halaman Galeri
+                <span class="material-symbols-rounded text-sm">language</span> Lihat Halaman Galeri
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
             </a>
         </div>
@@ -30,7 +30,9 @@
 
     @if (session('success'))
         <div class="bg-emerald-50 text-emerald-800 p-4 rounded-2xl mb-8 font-semibold border border-emerald-200/80 flex items-center gap-3 shadow-sm">
-            <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shrink-0">✓</div>
+            <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                <span class="material-symbols-rounded text-base">check</span>
+            </div>
             <div class="text-sm">{{ session('success') }}</div>
         </div>
     @endif
@@ -38,7 +40,7 @@
     @if ($errors->any())
         <div class="bg-red-50 text-red-700 p-4 rounded-2xl mb-8 font-semibold border border-red-200/80 space-y-1">
             @foreach ($errors->all() as $error)
-                <p class="text-sm">⚠️ {{ $error }}</p>
+                <p class="text-sm flex items-center gap-1.5"><span class="material-symbols-rounded text-base">warning</span> {{ $error }}</p>
             @endforeach
         </div>
     @endif
@@ -48,7 +50,9 @@
         @csrf @method('PUT')
         <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
             <div class="flex items-center gap-3 border-b border-gray-100 pb-5 mb-6">
-                <div class="w-10 h-10 rounded-2xl bg-pink-50 text-pink-700 flex items-center justify-center font-extrabold text-xl shadow-inner">📌</div>
+                <div class="w-10 h-10 rounded-2xl bg-pink-50 text-pink-700 flex items-center justify-center shadow-inner">
+                    <span class="material-symbols-rounded text-xl">push_pin</span>
+                </div>
                 <div>
                     <h2 class="text-lg font-extrabold text-gray-900">Header Halaman Galeri</h2>
                     <p class="text-xs text-gray-500">Teks judul dan deskripsi yang tampil di banner atas halaman galeri publik.</p>
@@ -72,7 +76,7 @@
             <div class="mt-5 flex justify-end">
                 <button type="submit"
                     class="inline-flex items-center gap-2 bg-gray-900 hover:bg-black text-white font-bold py-2.5 px-6 rounded-xl text-xs transition shadow-md">
-                    <span>💾</span> Simpan Header Galeri
+                    <span class="material-symbols-rounded text-sm">save</span> Simpan Header Galeri
                 </button>
             </div>
         </div>
@@ -92,6 +96,10 @@
                     try { p = JSON.parse(p); } catch(e) { p = []; }
                 }
                 this.activeItem.photos = Array.isArray(p) ? p : [];
+            },
+            isVideo(path) {
+                if (!path) return false;
+                return /\.(mp4|webm|ogg|mov|avi|mkv)$/i.test(path);
             }
          }">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-gray-100 pb-5 gap-4">
@@ -128,7 +136,9 @@
                             @php
                                 $photos = is_array($item->photos) ? $item->photos : (json_decode($item->photos, true) ?? []);
                                 $cover = count($photos) > 0 ? $photos[0] : 'default.jpg';
+                                $isCoverVideo = \App\Models\GaleriAlbum::isVideoFile($cover);
                                 $photoCount = count($photos);
+                                $stats = $item->media_stats ?? ['photos' => $photoCount, 'videos' => 0, 'total' => $photoCount];
                                 $itemData = [
                                     'id' => $item->id,
                                     'title' => $item->title,
@@ -138,8 +148,13 @@
                             @endphp
                             <tr class="hover:bg-gray-50/50 transition-colors">
                                 <td class="p-4">
-                                    <div class="relative w-20 h-14 rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-gray-100">
-                                        <img src="{{ asset('storage/' . $cover) }}" class="w-full h-full object-cover">
+                                    <div class="relative w-20 h-14 rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-gray-900 flex items-center justify-center">
+                                        @if($isCoverVideo)
+                                            <video src="{{ asset('storage/' . $cover) }}" class="w-full h-full object-cover" muted></video>
+                                            <span class="absolute inset-0 bg-black/30 flex items-center justify-center text-white text-xs">▶️</span>
+                                        @else
+                                            <img src="{{ asset('storage/' . $cover) }}" class="w-full h-full object-cover">
+                                        @endif
                                         @if($photoCount > 1)
                                             <span class="absolute -top-1.5 -right-1.5 bg-primary text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow-sm border-2 border-white">
                                                 +{{ $photoCount - 1 }}
@@ -154,22 +169,22 @@
                                     </div>
                                 </td>
                                 <td class="p-4">
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-800 font-bold text-[11px] rounded-full border border-emerald-100">
-                                        📷 {{ $photoCount }} / 10
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-800 font-bold text-[11px] rounded-full border border-emerald-100">
+                                        <span class="material-symbols-rounded text-xs">folder</span> {{ $stats['photos'] }} Foto / {{ $stats['videos'] }} Video
                                     </span>
                                 </td>
                                 <td class="p-4 text-xs text-gray-500 leading-relaxed">{{ Str::limit($item->description, 60) }}</td>
                                 <td class="p-4 text-right">
                                     <div class="flex justify-end items-center gap-1.5">
                                         <button type="button" @click="setItem(@js($itemData)); detailOpen = true"
-                                            class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg text-xs font-bold transition" title="Detail">👁️</button>
+                                            class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg text-xs font-bold transition inline-flex items-center justify-center" title="Detail"><span class="material-symbols-rounded text-base">visibility</span></button>
                                         <button type="button" @click="setItem(@js($itemData)); editOpen = true"
-                                            class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg text-xs font-bold transition" title="Edit">✏️</button>
+                                            class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg text-xs font-bold transition inline-flex items-center justify-center" title="Edit"><span class="material-symbols-rounded text-base">edit</span></button>
                                         <form action="{{ route('web.management.galeri.destroy', $item->id) }}" method="POST"
                                             onsubmit="return confirm('Hapus album beserta semua fotonya?');" class="inline-block">
                                             @csrf @method('DELETE')
                                             <button type="submit"
-                                                class="p-2 text-red-600 hover:bg-red-50 rounded-lg text-xs font-bold transition" title="Hapus">🗑️</button>
+                                                class="p-2 text-red-600 hover:bg-red-50 rounded-lg text-xs font-bold transition inline-flex items-center justify-center" title="Hapus"><span class="material-symbols-rounded text-base">delete</span></button>
                                         </form>
                                     </div>
                                 </td>
@@ -184,12 +199,20 @@
             </table>
         </div>
 
+        @if (method_exists($galeri, 'hasPages') && $galeri->hasPages())
+            <div class="p-6 bg-white border-t border-gray-100 flex justify-center">
+                {{ $galeri->links() }}
+            </div>
+        @endif
+
         <!-- MODAL TAMBAH ALBUM -->
         <div x-show="open" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" style="display: none;">
             <div class="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-xl shadow-2xl border border-gray-100 max-h-[90vh] flex flex-col" @click.away="open = false">
                 <div class="flex items-center justify-between pb-4 border-b border-gray-100">
                     <h3 class="text-lg font-extrabold text-gray-900">Buat Album Foto Baru</h3>
-                    <button @click="open = false" class="text-gray-400 hover:text-gray-600 text-sm">✕</button>
+                    <button @click="open = false" class="text-gray-400 hover:text-gray-600 text-sm inline-flex items-center justify-center">
+                        <span class="material-symbols-rounded text-base">close</span>
+                    </button>
                 </div>
                 <form action="{{ route('web.management.galeri.store') }}" method="POST" enctype="multipart/form-data" class="flex-1 overflow-y-auto custom-scrollbar pt-4">
                     @csrf
@@ -207,14 +230,14 @@
                                 placeholder="Penjelasan singkat mengenai dokumentasi kegiatan..."></textarea>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Unggah Foto (Bisa Pilih Banyak Sekaligus)</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Unggah Berkas Media (Foto &amp; Video)</label>
                             <div class="p-5 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50/50 hover:bg-white transition-colors text-center">
                                 <input type="file" name="images[]"
                                     class="w-full text-xs text-gray-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-primary file:text-white cursor-pointer"
-                                    accept="image/*" multiple required>
+                                    accept="image/*,video/*" multiple required>
                                 <p class="text-[11px] text-gray-400 mt-3 leading-relaxed">
-                                    💡 Tekan <kbd class="px-1.5 py-0.5 bg-gray-200 rounded text-[10px] font-bold text-gray-600">Ctrl</kbd> / <kbd class="px-1.5 py-0.5 bg-gray-200 rounded text-[10px] font-bold text-gray-600">Shift</kbd> untuk memilih beberapa foto.<br>
-                                    Maks. <strong>10 foto</strong> per album, ukuran maks. 20MB per foto.
+                                    <span class="material-symbols-rounded text-xs align-middle text-amber-500">lightbulb</span> Tekan <kbd class="px-1.5 py-0.5 bg-gray-200 rounded text-[10px] font-bold text-gray-600">Ctrl</kbd> / <kbd class="px-1.5 py-0.5 bg-gray-200 rounded text-[10px] font-bold text-gray-600">Shift</kbd> untuk memilih beberapa berkas sekaligus.<br>
+                                    Maks. <strong>10 file</strong> (foto: JPG, PNG, WEBP / video: MP4, WEBM, MOV), maks. 100MB per file.
                                 </p>
                             </div>
                         </div>
@@ -231,8 +254,10 @@
         <div x-show="editOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" style="display: none;">
             <div class="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-xl shadow-2xl border border-gray-100 max-h-[90vh] flex flex-col" @click.away="editOpen = false">
                 <div class="flex items-center justify-between pb-4 border-b border-gray-100">
-                    <h3 class="text-lg font-extrabold text-gray-900">Edit Album Foto</h3>
-                    <button @click="editOpen = false" class="text-gray-400 hover:text-gray-600 text-sm">✕</button>
+                    <h3 class="text-lg font-extrabold text-gray-900">Edit Album Galeri</h3>
+                    <button @click="editOpen = false" class="text-gray-400 hover:text-gray-600 text-sm inline-flex items-center justify-center">
+                        <span class="material-symbols-rounded text-base">close</span>
+                    </button>
                 </div>
                 <form :action="`/web-management/galeri/${activeItem.id}`" method="POST" enctype="multipart/form-data" class="flex-1 overflow-y-auto custom-scrollbar pt-4">
                     @csrf @method('PUT')
@@ -248,45 +273,60 @@
                                 class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-primary text-sm leading-relaxed resize-none"></textarea>
                         </div>
 
-                        <!-- Kelola Foto Saat Ini -->
+                        <!-- Kelola Media Saat Ini -->
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Foto Saat Ini dalam Album</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Media Saat Ini dalam Album</label>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
                                 <template x-for="(photo, index) in activeItem.photos" :key="index">
-                                    <div class="group relative rounded-2xl overflow-hidden border border-gray-200 shadow-sm aspect-square bg-gray-100">
-                                        <img :src="`/storage/${photo}`" class="w-full h-full object-cover">
+                                    <div class="group relative rounded-2xl overflow-hidden border border-gray-200 shadow-sm aspect-square bg-gray-900 flex items-center justify-center">
+                                        <template x-if="isVideo(photo)">
+                                            <video :src="`/storage/${photo}`" class="w-full h-full object-cover" muted></video>
+                                        </template>
+                                        <template x-if="!isVideo(photo)">
+                                            <img :src="`/storage/${photo}`" class="w-full h-full object-cover">
+                                        </template>
+                                        
+                                        <template x-if="isVideo(photo)">
+                                            <span class="absolute bottom-2 right-2 bg-black/75 text-amber-300 text-[10px] font-bold px-1.5 py-0.5 rounded shadow z-10 flex items-center gap-1"><span class="material-symbols-rounded text-[11px]">videocam</span> Video</span>
+                                        </template>
+
                                         <template x-if="index === 0">
                                             <span class="absolute top-2 left-2 bg-primary text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow z-10">Cover</span>
                                         </template>
-                                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                             <button type="button"
-                                                @click="if(confirm('Hapus foto ini dari album?')) {
-                                                    fetch(`/web-management/galeri/${activeItem.id}/photo/${index}`, {
-                                                        method: 'DELETE',
-                                                        headers: {
-                                                            'X-CSRF-TOKEN': document.querySelector('meta[name=&quot;csrf-token&quot;]').getAttribute('content'),
-                                                            'Accept': 'application/json'
-                                                        }
-                                                    }).then(res => { if(res.ok) location.reload(); });
-                                                }"
-                                                class="bg-red-500 hover:bg-red-600 text-white text-[10px] font-bold py-1.5 px-3 rounded-xl shadow transition">
-                                                🗑️ Hapus
+                                                @click="window.showConfirmDialog({
+                                                    title: 'Hapus Media dari Album',
+                                                    message: 'Apakah Anda yakin ingin menghapus berkas ini dari album?',
+                                                    confirmText: 'Ya, Hapus',
+                                                    onConfirm: () => {
+                                                        fetch(`/web-management/galeri/${activeItem.id}/photo/${index}`, {
+                                                            method: 'DELETE',
+                                                            headers: {
+                                                                'X-CSRF-TOKEN': document.querySelector('meta[name=&quot;csrf-token&quot;]').getAttribute('content'),
+                                                                'Accept': 'application/json'
+                                                            }
+                                                        }).then(res => { if(res.ok) location.reload(); });
+                                                    }
+                                                })"
+                                                class="bg-red-500 hover:bg-red-600 text-white text-[10px] font-bold py-1.5 px-3 rounded-xl shadow transition inline-flex items-center gap-1">
+                                                <span class="material-symbols-rounded text-xs">delete</span> Hapus
                                             </button>
                                         </div>
                                     </div>
                                 </template>
                             </div>
                             <div x-show="!activeItem.photos || activeItem.photos.length === 0" class="text-xs text-gray-400 italic p-4 text-center bg-gray-50 rounded-xl border border-gray-100">
-                                Album ini belum memiliki foto.
+                                Album ini belum memiliki media.
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Tambah Foto Baru ke Album (Opsional)</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Tambah Foto / Video Baru ke Album (Opsional)</label>
                             <input type="file" name="images[]"
                                 class="w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gray-900 file:text-white cursor-pointer"
-                                accept="image/*" multiple>
-                            <p class="text-[11px] text-gray-400 mt-1">Pilih foto baru jika ingin menambah ke album ini.</p>
+                                accept="image/*,video/*" multiple>
+                            <p class="text-[11px] text-gray-400 mt-1">Pilih foto atau video baru jika ingin menambah ke album ini.</p>
                         </div>
                     </div>
                     <div class="flex justify-end gap-2.5 mt-6 pt-4 border-t border-gray-100">
@@ -305,21 +345,28 @@
                         <h3 class="text-lg font-extrabold text-gray-900" x-text="activeItem.title"></h3>
                         <p class="text-xs text-gray-500 mt-0.5 whitespace-pre-wrap" x-text="activeItem.description"></p>
                     </div>
-                    <button @click="detailOpen = false" class="text-gray-400 hover:text-gray-600 text-sm shrink-0 ml-4">✕</button>
+                    <button @click="detailOpen = false" class="text-gray-400 hover:text-gray-600 text-sm shrink-0 ml-4 inline-flex items-center justify-center">
+                        <span class="material-symbols-rounded text-base">close</span>
+                    </button>
                 </div>
                 <div class="flex-1 overflow-y-auto custom-scrollbar pr-1">
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                         <template x-for="(photo, index) in activeItem.photos" :key="index">
-                            <div class="relative rounded-2xl overflow-hidden border border-gray-200 shadow-sm aspect-square bg-gray-100 group">
-                                <img :src="`/storage/${photo}`" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                            <div class="relative rounded-2xl overflow-hidden border border-gray-200 shadow-sm aspect-square bg-gray-900 group flex items-center justify-center">
+                                <template x-if="isVideo(photo)">
+                                    <video :src="`/storage/${photo}`" controls class="w-full h-full object-cover"></video>
+                                </template>
+                                <template x-if="!isVideo(photo)">
+                                    <img :src="`/storage/${photo}`" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                </template>
                                 <template x-if="index === 0">
-                                    <span class="absolute top-2 left-2 bg-primary text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow z-10">Cover Utama</span>
+                                    <span class="absolute top-2 left-2 bg-primary text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow z-10 pointer-events-none">Cover Utama</span>
                                 </template>
                             </div>
                         </template>
                     </div>
                     <div x-show="!activeItem.photos || activeItem.photos.length === 0" class="text-xs text-gray-400 italic p-8 text-center">
-                        Album ini belum memiliki foto.
+                        Album ini belum memiliki media.
                     </div>
                 </div>
                 <div class="flex justify-end pt-4 border-t border-gray-100 mt-4">

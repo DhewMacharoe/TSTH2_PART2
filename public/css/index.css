@@ -60,7 +60,7 @@ body {
   background-color: var(--color-bg-light);
   color: var(--color-text-dark);
   line-height: 1.65;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

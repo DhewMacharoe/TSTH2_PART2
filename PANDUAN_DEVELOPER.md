@@ -41,13 +41,13 @@ Gunakan daftar ini untuk tahu persis file mana yang mengatur fitur tertentu:
 | **Permintaan Barang** | `/permintaan` | `Admin\PermintaanController` | `PermintaanBarang` | `resources/views/permintaan/` |
 | **Status Permintaan** | `/permintaan/{id}/status`| `Admin\PermintaanStatusController`| `PermintaanBarang` | `resources/views/permintaan/` |
 | **Chat Permintaan** | `/permintaan/{id}/chat` | `Admin\PermintaanChatController`| `ObrolanPermintaan` | `resources/views/permintaan/` |
-| **Web CMS (Landing & Konten)**| `/web-management/home`| `Admin\WebController` & `WebCrudController`| `Konten` (Hero, Visi-Misi, BG) | `resources/views/manajemen_web/` |
-| **Web CMS (Penelitian & Berita)** | `/web-management/...` | `Admin\WebCrudController` | `Penelitian`, `Berita` | `resources/views/manajemen_web/` |
+| **Manajemen Web (Konten & Halaman)**| `/web-management/home`| `Admin\WebController` & `WebCrudController`| `Konten` (Hero, Visi-Misi, BG) | `resources/views/manajemen_web/` |
+| **Manajemen Web (Penelitian & Berita)** | `/web-management/...` | `Admin\WebCrudController` | `Penelitian`, `Berita` | `resources/views/manajemen_web/` |
 | **Galeri Dokumentasi** | `/galeri` & `/web-management/galeri` | `WebController` & `WebCrudController` | `GaleriAlbum` (Multi-foto JSON) | `resources/views/pengunjung/` & `manajemen_web/` |
 | **Katalog Tanaman (Admin)** | `/admin/plants` | `Admin\AdminPlantController` | `Plant`, `Category` | `resources/views/admin/plants/` |
 | **Katalog Tanaman (Public)**| `/katalog-tanaman` | `PlantController` | `Plant`, `Category` | `resources/views/catalog/` |
 | **Halaman Publik (Beranda dll)** | `/`, `/profil-tsth2`, `/layanan` | `Pengunjung\PublicController`| `Konten`, `Berita`, `Penelitian` | `resources/views/pengunjung/` |
-| **Logbook / Catatan** | `/catatan` | Inline closure di `web.php` | - | `resources/views/catatan/` |
+| **Logbook / Catatan** | `/catatan` | `Admin\DasborController@logbook` | - | `resources/views/catatan/` |
 | **Profil User** | `/profil` | `Admin\ProfilController` | `User` | `resources/views/profil/` |
 
 ---

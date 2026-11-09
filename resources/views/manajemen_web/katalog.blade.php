@@ -15,14 +15,14 @@
         <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
         <div class="relative z-10">
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-accent/20 text-accent border border-accent/30 mb-3">
-                <span>🌱</span> Koleksi Tanaman & Herbal
+                <span class="material-symbols-rounded text-sm">potted_plant</span> Koleksi Tanaman & Herbal
             </span>
             <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Manajemen Katalog Tanaman</h1>
             <p class="text-white/70 text-sm mt-1 max-w-xl">Kelola teks pengantar halaman katalog publik serta seluruh koleksi data plasma nutfah tanaman herbal dan hortikultura TSTH2.</p>
         </div>
         <div class="relative z-10 shrink-0">
             <a href="{{ route('katalog') }}" target="_blank" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-5 py-2.5 rounded-xl text-xs font-bold backdrop-blur-sm transition-all hover:scale-105 shadow-sm">
-                <span>🌐</span> Lihat Katalog Publik
+                <span class="material-symbols-rounded text-sm">public</span> Lihat Katalog Publik
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
             </a>
         </div>
@@ -30,7 +30,9 @@
 
     @if (session('success'))
         <div class="bg-emerald-50 text-emerald-800 p-4 rounded-2xl mb-8 font-semibold border border-emerald-200/80 flex items-center gap-3 shadow-sm">
-            <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shrink-0">✓</div>
+            <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                <span class="material-symbols-rounded text-base">check</span>
+            </div>
             <div class="text-sm">{{ session('success') }}</div>
         </div>
     @endif
@@ -42,7 +44,9 @@
 
         <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
             <div class="flex items-center gap-3 border-b border-gray-100 pb-4 mb-6">
-                <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-900 flex items-center justify-center font-bold text-lg">📝</div>
+                <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-900 flex items-center justify-center font-bold text-lg">
+                    <span class="material-symbols-rounded text-xl">edit_note</span>
+                </div>
                 <div>
                     <h3 class="text-base font-bold text-gray-900">Teks Pengantar Header Katalog Publik</h3>
                     <p class="text-xs text-gray-500">Teks judul dan deskripsi yang tampil di header halaman katalog publik.</p>
@@ -63,7 +67,7 @@
             </div>
             <div class="mt-6 flex justify-end">
                 <button type="submit" class="inline-flex items-center gap-2 bg-primary-900 hover:bg-primary-800 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-all hover:scale-105 text-sm">
-                    <span>💾</span> Simpan Header Katalog
+                    <span class="material-symbols-rounded text-sm">save</span> Simpan Header Katalog
                 </button>
             </div>
         </div>
@@ -74,16 +78,16 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-gray-100 pb-5">
             <div>
                 <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2.5">
-                    <span class="text-xl">🌿</span> Daftar Koleksi Tanaman
+                    <span class="material-symbols-rounded text-emerald-700 text-xl">potted_plant</span> Daftar Koleksi Tanaman
                 </h3>
                 <p class="text-xs text-gray-500 mt-0.5">Tambah spesies baru, edit taksonomi, sesuaikan lokasi, dan atur status tayang.</p>
             </div>
             <div class="flex flex-wrap gap-2.5 w-full sm:w-auto">
                 <a href="{{ route('admin.categories.index') }}" class="inline-flex items-center gap-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 px-4 py-2.5 text-xs font-bold text-gray-700 transition">
-                    <span>📂</span> Kelola Kategori
+                    <span class="material-symbols-rounded text-sm">folder</span> Kelola Kategori
                 </a>
                 <a href="{{ route('admin.plants.create') }}" class="inline-flex items-center gap-1.5 rounded-xl bg-primary-900 hover:bg-primary-800 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition hover:scale-105">
-                    <span>+</span> Tambah Tanaman
+                    <span class="material-symbols-rounded text-sm">add</span> Tambah Tanaman
                 </a>
             </div>
         </div>
@@ -91,8 +95,8 @@
         <!-- Ringkasan Statistik -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             <div class="flex items-center gap-4 rounded-2xl border border-emerald-100 bg-emerald-50/50 p-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 font-bold text-2xl shadow-inner">
-                    🏡
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 font-bold shadow-inner">
+                    <span class="material-symbols-rounded text-2xl">roofing</span>
                 </div>
                 <div>
                     <p class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Greenhouse</p>
@@ -101,8 +105,8 @@
             </div>
 
             <div class="flex items-center gap-4 rounded-2xl border border-amber-100 bg-amber-50/50 p-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-800 font-bold text-2xl shadow-inner">
-                    🌿
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-800 font-bold shadow-inner">
+                    <span class="material-symbols-rounded text-2xl">eco</span>
                 </div>
                 <div>
                     <p class="text-[11px] font-bold uppercase tracking-wider text-amber-700">Outdoor / Koleksi</p>
@@ -111,8 +115,8 @@
             </div>
 
             <div class="flex items-center gap-4 rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-blue-800 font-bold text-2xl shadow-inner">
-                    📊
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-blue-800 font-bold shadow-inner">
+                    <span class="material-symbols-rounded text-2xl">bar_chart</span>
                 </div>
                 <div>
                     <p class="text-[11px] font-bold uppercase tracking-wider text-blue-700">Total Populasi</p>
@@ -221,7 +225,9 @@
                                 @if($plant->image)
                                     <img src="{{ asset('storage/plants/'.$plant->image) }}" class="h-11 w-11 rounded-xl object-cover border border-gray-200 shadow-sm shrink-0">
                                 @else
-                                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 font-bold text-lg border border-emerald-100 shrink-0">🌿</div>
+                                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 font-bold border border-emerald-100 shrink-0">
+                                        <span class="material-symbols-rounded text-lg">eco</span>
+                                    </div>
                                 @endif
                                 <div class="min-w-0">
                                     <p class="font-bold text-gray-900 truncate">{{ $plant->name }}</p>
@@ -235,11 +241,11 @@
                         <td class="px-4 py-3.5">
                             @if($plant->location_type === 'greenhouse')
                                 <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800">
-                                    🏡 Greenhouse
+                                    <span class="material-symbols-rounded text-xs">roofing</span> Greenhouse
                                 </span>
                             @else
                                 <span class="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-[10px] font-bold text-amber-800">
-                                    🌿 Outdoor
+                                    <span class="material-symbols-rounded text-xs">eco</span> Outdoor
                                 </span>
                             @endif
                         </td>
@@ -254,13 +260,13 @@
                         <td class="px-5 py-3.5 text-right">
                             <div class="flex justify-end items-center gap-1.5 font-bold">
                                 <a href="{{ route('admin.plants.edit', $plant) }}" class="inline-flex items-center gap-1 text-amber-700 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-xl transition text-xs">
-                                    ✏️ Edit
+                                    <span class="material-symbols-rounded text-xs">edit</span> Edit
                                 </a>
                                 <form method="POST" action="{{ route('admin.plants.destroy', $plant) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus tanaman {{ $plant->name }}?')">
                                     @csrf 
                                     @method('DELETE')
                                     <button type="submit" class="inline-flex items-center gap-1 text-rose-700 hover:text-rose-900 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-xl transition text-xs">
-                                        🗑️ Hapus
+                                        <span class="material-symbols-rounded text-xs">delete</span> Hapus
                                     </button>
                                 </form>
                             </div>
@@ -270,7 +276,7 @@
                     <tr>
                         <td colspan="6" class="px-4 py-16 text-center text-gray-400">
                             <div class="flex flex-col items-center justify-center">
-                                <span class="text-4xl mb-2">🌿</span>
+                                <span class="material-symbols-rounded text-4xl mb-2 text-emerald-600">eco</span>
                                 <p class="text-sm font-bold text-gray-600">Belum ada data tanaman ditemukan</p>
                                 <p class="text-xs text-gray-400 mt-1">Coba sesuaikan kata kunci pencarian atau tambahkan tanaman baru.</p>
                             </div>
@@ -287,14 +293,14 @@
     <!-- STICKY ACTION PRATINJAU -->
     <div class="sticky bottom-6 bg-white/95 backdrop-blur-xl p-4 rounded-2xl shadow-xl border border-gray-100 flex flex-wrap justify-between items-center gap-4 z-30">
         <div class="text-xs text-gray-500 font-medium pl-2 hidden sm:block">
-            💡 <span class="text-gray-700 font-bold">Tips:</span> Gunakan tombol "Lihat Katalog Publik" untuk memeriksa tampilan data pada website pengunjung.
+            <span class="material-symbols-rounded text-sm align-middle text-amber-500">lightbulb</span> <span class="text-gray-700 font-bold">Tips:</span> Gunakan tombol "Lihat Katalog Publik" untuk memeriksa tampilan data pada website pengunjung.
         </div>
         <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
             <a href="{{ route('admin.plants.create') }}" class="inline-flex items-center gap-2 bg-primary-900 text-white font-bold py-2.5 px-5 rounded-xl hover:bg-primary-800 transition text-xs shadow-md">
-                <span>+</span> Tambah Tanaman
+                <span class="material-symbols-rounded text-sm">add</span> Tambah Tanaman
             </a>
             <a href="{{ route('katalog') }}" target="_blank" class="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-700 font-bold py-2.5 px-5 rounded-xl hover:bg-gray-50 transition text-xs shadow-sm">
-                <span>🌐</span> Pratinjau Katalog Publik
+                <span class="material-symbols-rounded text-sm">language</span> Pratinjau Katalog Publik
             </a>
         </div>
     </div>

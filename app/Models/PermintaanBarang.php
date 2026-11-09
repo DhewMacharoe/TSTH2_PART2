@@ -13,11 +13,59 @@ class PermintaanBarang extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'closed_at'    => 'datetime',
-        'forum_ends_at' => 'datetime',
-        'is_habis_pakai' => 'boolean',
+        'closed_at'                 => 'datetime',
+        'forum_ends_at'             => 'datetime',
+        'tanggal_pengambilan'       => 'datetime',
+        'tanggal_pengembalian'      => 'datetime',
+        'jadwal_pengambilan'        => 'datetime',
+        'pending_at'                => 'datetime',
+        'approved_at'               => 'datetime',
+        'rejected_at'               => 'datetime',
+        'escalated_at'              => 'datetime',
+        'is_habis_pakai'            => 'boolean',
         'is_habis_pakai_saat_lapor' => 'boolean',
     ];
+
+    /**
+     * Cek apakah jadwal pengambilan sudah terlewat saat status Menunggu Pengambilan.
+     */
+    public function isSchedulePast(): bool
+    {
+        return $this->jadwal_pengambilan && $this->jadwal_pengambilan->isPast();
+    }
+
+    /**
+     * Cek apakah status Pending sudah berlangsung selama 3 hari atau lebih.
+     */
+    public function isPendingOverdue(): bool
+    {
+        if ($this->status !== self::STATUS_PENDING) {
+            return false;
+        }
+
+        $pendingSince = $this->pending_at ?? $this->updated_at;
+        return $pendingSince && $pendingSince->diffInDays(now()) >= 3;
+    }
+
+    /**
+     * Cek apakah permintaan yang menunggu approval di level kepala_divisi
+     * sudah 3 hari tanpa respons — sehingga layak dieskalasi ke kepala_departemen.
+     */
+    public function isEscalatable(): bool
+    {
+        return $this->status === self::STATUS_MENUNGGU_APPROVAL
+            && $this->target_approval === self::TARGET_KEPALA_DIVISI
+            && $this->created_at->diffInDays(now()) >= 3;
+    }
+
+    /**
+     * Jumlah hari pending.
+     */
+    public function getPendingDaysAttribute(): int
+    {
+        $pendingSince = $this->pending_at ?? $this->updated_at;
+        return $pendingSince ? (int) $pendingSince->diffInDays(now()) : 0;
+    }
 
     // ─── Konstanta Status ───────────────────────────────────────────────────
     const STATUS_MENUNGGU_APPROVAL      = 'Menunggu Approval';
@@ -29,6 +77,11 @@ class PermintaanBarang extends Model
     const STATUS_SELESAI                = 'Selesai';
     const STATUS_DITOLAK                = 'Ditolak';
     const STATUS_DIBATALKAN             = 'Dibatalkan';
+    const STATUS_DIESKALASI             = 'Dieskalasi';
+
+    // Target approval dalam hirarki
+    const TARGET_KEPALA_DIVISI      = 'kepala_divisi';
+    const TARGET_KEPALA_DEPARTEMEN  = 'kepala_departemen';
 
     // Status "aktif" — forum masih berjalan
     const ACTIVE_STATUSES = [
@@ -71,6 +124,16 @@ class PermintaanBarang extends Model
     public function staffGudang()
     {
         return $this->belongsTo(User::class, 'staff_gudang_id');
+    }
+
+    public function approvedBy()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function rejectedBy()
+    {
+        return $this->belongsTo(User::class, 'rejected_by');
     }
 
     // ─── Scopes ─────────────────────────────────────────────────────────────

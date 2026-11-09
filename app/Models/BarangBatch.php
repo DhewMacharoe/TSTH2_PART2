@@ -23,6 +23,18 @@ class BarangBatch extends Model
         return $this->belongsTo(Barang::class);
     }
 
+    public function getCleanBatchNoAttribute(): int
+    {
+        $clean = (int) ltrim((string)($this->batch_no ?? '1'), 'B');
+        return max(1, $clean);
+    }
+
+    public function getFullKodeAttribute(): string
+    {
+        $base = $this->barang ? $this->barang->kode_barang : '0000';
+        return $base . '-' . $this->clean_batch_no;
+    }
+
     /**
      * Generate batch_no berikutnya untuk sebuah barang (misal: 001, 002).
      */

@@ -55,7 +55,7 @@ p = tf.add_paragraph()
 p.text = "Sistem Terpadu (Single Portal) antara Company Profile dan Dashboard."
 p.level = 1
 p = tf.add_paragraph()
-p.text = "Manajemen Konten (CMS) dan Data Tanaman (Warehouse) secara real-time."
+p.text = "Manajemen Konten dan Data Tanaman / Gudang secara real-time."
 p.level = 1
 
 # Slide 3: Wireframe Halaman Publik
@@ -78,7 +78,7 @@ slide = prs.slides.add_slide(title_only_layout)
 slide.shapes.title.text = "Wireframe: Dashboard & Panel Admin"
 
 # Draw Wireframes for Dashboard
-draw_box(slide, Inches(0.5), Inches(1.5), Inches(2.2), Inches(5.5), "SIDEBAR\n\n[ Logo TSTH2 ]\n\n- Dashboard Utama\n- Data Tanaman\n- Manajemen Web (CMS)\n- Berita & Artikel\n\n\n\n- Kembali ke Web")
+draw_box(slide, Inches(0.5), Inches(1.5), Inches(2.2), Inches(5.5), "SIDEBAR\n\n[ Logo TSTH2 ]\n\n- Dashboard Utama\n- Data Tanaman\n- Manajemen Web\n- Berita\n\n\n\n- Kembali ke Web")
 draw_box(slide, Inches(2.9), Inches(1.5), Inches(6.6), Inches(0.6), "TOP HEADER ( Kotak Pencarian...                  | Profil Pengguna | [Logout] )")
 draw_box(slide, Inches(2.9), Inches(2.3), Inches(6.6), Inches(4.7), "MAIN CONTENT AREA\n\nJudul Halaman: Data Tanaman\n\n[ Total Tanaman: 1200 ]     [ Kategori: 12 ]     [ Lokasi Blok: 5 ]\n\n---------------------------------------------------------------------------------\n TABEL DATA TANAMAN / INVENTARIS\n---------------------------------------------------------------------------------\n| Foto | ID | Nama Tanaman | Kategori | Blok | Stok | Aksi (Edit/Hapus) |\n| ...  | ...| ...          | ...      | ...  | ...  | ...               |")
 
@@ -94,16 +94,16 @@ p = tf.add_paragraph()
 p.text = "Web Admin:"
 p.level = 1
 p = tf.add_paragraph()
-p.text = "Akses penuh ke Manajemen Konten Web (CMS)."
+p.text = "Akses penuh ke Manajemen Konten Web."
 p.level = 2
 p = tf.add_paragraph()
-p.text = "PIC Warehouse:"
+p.text = "PIC Gudang:"
 p.level = 1
 p = tf.add_paragraph()
 p.text = "Akses penuh ke Data Tanaman (Tambah, Edit, Hapus)."
 p.level = 2
 p = tf.add_paragraph()
-p.text = "Staff Warehouse:"
+p.text = "Staff Gudang:"
 p.level = 1
 p = tf.add_paragraph()
 p.text = "Hanya dapat melihat data tanaman dan mengunduh laporan (Read-only)."

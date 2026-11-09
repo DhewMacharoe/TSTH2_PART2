@@ -53,6 +53,10 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'url_pengunjung' => env('URL_PENGUNJUNG', 'http://localhost:8000'),
+    'url_logbook' => env('URL_LOGBOOK', 'http://localhost:8001'),
+    'url_gudang' => env('URL_GUDANG', 'http://localhost:8002'),
+    'url_katalog' => env('URL_KATALOG', 'http://localhost:8000'),
 
     /*
     |--------------------------------------------------------------------------
@@ -78,9 +82,9 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'id'),
 
-    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'id'),
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 

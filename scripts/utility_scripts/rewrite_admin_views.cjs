@@ -320,7 +320,7 @@ const components = {
 @section('content')
 <div class="mb-8">
     <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-2">CMS - BERITA</h1>
-    <p class="text-gray-500 font-medium">Ubah daftar berita & artikel.</p>
+    <p class="text-gray-500 font-medium">Ubah daftar berita.</p>
 </div>
 
 @if(session('success'))

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace Database\Seeders;
 
@@ -34,6 +34,13 @@ class ContentSeeder extends Seeder
             ['section' => 'home', 'key' => 'home_director_desc',  'value' => 'Sri Fatmawati, Ph.D menjabat sebagai Direktur TSTH2, memberikan kepemimpinan strategis dalam memajukan ekosistem riset herbal dan hortikultura Indonesia. Dengan keahlian luas di bidang ilmu produk alam dan inovasi, beliau memimpin pengembangan program riset terpadu, varietas tanaman unggul, dan produk herbal berkualitas tinggi.', 'type' => 'text'],
             ['section' => 'home', 'key' => 'home_director_quote', 'value' => '"Inovasi sejati berasal dari pemahaman mendalam terhadap alam, diiringi teknologi untuk masa depan yang lebih baik."', 'type' => 'text'],
 
+            // ── Vice Director Section ──────────────────────────────────────
+            ['section' => 'home', 'key' => 'home_vice_director',       'value' => null, 'type' => 'image', 'image_path' => null],
+            ['section' => 'home', 'key' => 'home_vice_director_name',  'value' => '',   'type' => 'text'],
+            ['section' => 'home', 'key' => 'home_vice_director_title', 'value' => 'Wakil Direktur TSTH2', 'type' => 'text'],
+            ['section' => 'home', 'key' => 'home_vice_director_desc',  'value' => '', 'type' => 'text'],
+            ['section' => 'home', 'key' => 'home_vice_director_quote', 'value' => '', 'type' => 'text'],
+
             // â”€â”€ Profil / About Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             ['section' => 'about', 'key' => 'about_vision_title', 'value' => 'Visi', 'type' => 'text'],
             ['section' => 'about', 'key' => 'about_vision_desc',  'value' => 'Menjadi pusat riset herbal dan hortikultura terkemuka di Indonesia yang menghasilkan inovasi dan teknologi berdaya saing global, berkelanjutan, dan berdampak sosial.', 'type' => 'text'],
@@ -46,7 +53,7 @@ class ContentSeeder extends Seeder
             ['section' => 'research', 'key' => 'research_hero_bg',      'value' => null, 'type' => 'image', 'image_path' => 'contents/banner_riset.jpg'],
 
             // â”€â”€ News Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-            ['section' => 'news', 'key' => 'berita_hero_title', 'value' => 'Berita & Artikel',                                          'type' => 'text'],
+            ['section' => 'news', 'key' => 'berita_hero_title', 'value' => 'Berita',                                          'type' => 'text'],
             ['section' => 'news', 'key' => 'berita_hero_desc',  'value' => 'Kabar terbaru seputar inovasi, riset, dan kegiatan strategis di TSTH2.', 'type' => 'text'],
 
             // â”€â”€ Gallery Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€

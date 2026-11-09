@@ -249,7 +249,7 @@
                             @if($plant->image)
                                 <img src="{{ asset('storage/plants/'.$plant->image) }}" class="h-10 w-10 rounded-md object-cover">
                             @else
-                                <div class="flex h-10 w-10 items-center justify-center rounded-md bg-[#e8f3df] text-lg">🌿</div>
+                                <div class="flex h-10 w-10 items-center justify-center rounded-md bg-[#e8f3df] text-[#164f43]/60"><span class="material-symbols-rounded text-xl">eco</span></div>
                             @endif
                             <div>
                                 <p class="font-bold text-[#164f43]">{{ $plant->name }}</p>
