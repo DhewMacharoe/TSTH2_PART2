@@ -1,0 +1,54 @@
+Daftar Seeder Gambar Berita (Mapping Direktori Google Drive)
+=============================================================
+Panduan: Anda dapat mencocokkan gambar dari Google Drive sesuai dengan nama folder masing-masing berita di bawah ini.
+
+1. (Judul Berita) : Kunjungan Tim China 28 Juli 2026
+   (Link Gambar) : Kunjungan Tim China 28 Juli 2026/1.jpg
+
+2. (Judul Berita) : Dokumentasi Rapat_08 Juli 2026
+   (Link Gambar) : Dokumentasi Rapat_08 Juli 2026/1.jpg
+
+3. (Judul Berita) : Dokumentasi Rapat Kerja 9-10 Februari 2026
+   (Link Gambar) : Dokumentasi Rapat Kerja 9-10 Februari 2026/1.jpg
+
+4. (Judul Berita) : Dokumentasi Pemasangan Pancang di Lahan Kopi_6 Mei 2026
+   (Link Gambar) : Dokumentasi Pemasangan Pancang di Lahan Kopi_6 Mei 2026/1.jpg
+
+5. (Judul Berita) : Dokumentasi Pelatihan ISO 6-7 Februari 2026
+   (Link Gambar) : Dokumentasi Pelatihan ISO 6-7 Februari 2026/1.jpg
+
+6. (Judul Berita) : Dokumentasi Panen Tomat 13 Januari 2026
+   (Link Gambar) : Dokumentasi Panen Tomat 13 Januari 2026/1.jpg
+
+7. (Judul Berita) : Dokumentasi Panen Bawang Putih di Parsingguran 24 Februari 2026
+   (Link Gambar) : Dokumentasi Panen Bawang Putih di Parsingguran 24 Februari 2026/1.jpg
+
+8. (Judul Berita) : Dokumentasi kunjungan_24 Januari 2026
+   (Link Gambar) : Dokumentasi kunjungan_24 Januari 2026/1.jpg
+
+9. (Judul Berita) : Dokumentasi Kunjungan UGM_31 Agustus 2026
+   (Link Gambar) : Dokumentasi Kunjungan UGM_31 Agustus 2026/1.jpg
+
+10. (Judul Berita) : Dokumentasi Kunjungan tim Taiwan_08 Juli 2026
+    (Link Gambar) : Dokumentasi Kunjungan tim Taiwan_08 Juli 2026/1.jpg
+
+11. (Judul Berita) : Dokumentasi Kunjungan Tamu dari Belanda_20April2026
+    (Link Gambar) : Dokumentasi Kunjungan Tamu dari Belanda_20April2026/1.jpg
+
+12. (Judul Berita) : Dokumentasi Kunjungan SUD_28 Agustus 2026
+    (Link Gambar) : Dokumentasi Kunjungan SUD_28 Agustus 2026/1.jpg
+
+13. (Judul Berita) : Dokumentasi Kunjungan Koordinator Bidang Pangan 6 Februari 2026
+    (Link Gambar) : Dokumentasi Kunjungan Koordinator Bidang Pangan 6 Februari 2026/1.jpg
+
+14. (Judul Berita) : Dokumentasi Kunjungan Ketua DEN_25 September 2026
+    (Link Gambar) : Dokumentasi Kunjungan Ketua DEN_25 September 2026/1.jpg
+
+15. (Judul Berita) : Dokumentasi Kunjungan Ketua DEN dan Pak Martias 27 Juli 2026
+    (Link Gambar) : Dokumentasi Kunjungan Ketua DEN dan Pak Martias 27 Juli 2026/1.jpg
+
+16. (Judul Berita) : Dokumentasi Kunjungan Kalbe_05 Mei 2026
+    (Link Gambar) : Dokumentasi Kunjungan Kalbe_05 Mei 2026/1.jpg
+
+Catatan:
+Link gambar (image_path) di atas digunakan sementara di database. Jika Anda mengunduh file dari Drive tersebut lalu meletakkannya di folder `storage/app/public/` Laravel, pastikan struktur foldernya sama, atau Anda bisa mengubah `image_path` sesuai dengan nama file spesifik (contoh: Dokumentasi Kunjungan Kalbe_05 Mei 2026/IMG_1234.jpg).

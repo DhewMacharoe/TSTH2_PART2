@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Data - TSTH2</title>
+    <link rel="icon" href="assets/logo.jpg" type="image/jpeg">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/logo.jpg" alt="Logo">
+                <span>TSTH2 Panel</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">📊</span>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-item active">
+                    <span class="nav-icon">🌿</span>
+                    Data Tanaman
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">📦</span>
+                    Inventory
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    Pengaturan
+                </a>
+                
+                <a href="index.html" class="nav-item" style="margin-top: auto; position: absolute; bottom: 2rem; width: calc(100% - 2rem);">
+                    <span class="nav-icon">🔙</span>
+                    Kembali ke Web
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input type="text" placeholder="Cari tanaman, kategori...">
+                </div>
+                <div class="user-profile">
+                    <span style="font-weight: 500; font-size: 0.9rem;">Admin TSTH2</span>
+                    <div class="avatar">A</div>
+                </div>
+            </header>
+
+            <!-- Body -->
+            <div class="dashboard-body">
+                <div class="page-title">
+                    <h1>Data Tanaman Herbal</h1>
+                    <p>Kelola data dan stok tanaman di fasilitas Warehouse TSTH2</p>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon green">🌿</div>
+                        <div class="stat-info">
+                            <h4>Total Tanaman</h4>
+                            <div class="value">1,248</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon gold">🏷️</div>
+                        <div class="stat-info">
+                            <h4>Kategori Herbal</h4>
+                            <div class="value">56</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue">💧</div>
+                        <div class="stat-info">
+                            <h4>Penjadwalan Pupuk</h4>
+                            <div class="value">12</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Section -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 style="font-family: var(--font-heading);">Daftar Tanaman</h3>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">+ Tambah Data</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama Tanaman</th>
+                                <th>Kategori</th>
+                                <th>Lokasi Blok</th>
+                                <th>Stok</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#T001</td>
+                                <td><strong style="color: var(--color-text-dark);">Jahe Merah</strong></td>
+                                <td>Rimpang</td>
+                                <td>Blok A-12</td>
+                                <td>450 Bibit</td>
+                                <td><span class="status-badge tersedia">Tersedia</span></td>
+                                <td class="action-btns">
+                                    <button class="btn-icon">👁️</button>
+                                    <button class="btn-icon">✏️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#T002</td>
+                                <td><strong style="color: var(--color-text-dark);">Kumis Kucing</strong></td>
+                                <td>Daun</td>
+                                <td>Blok B-05</td>
+                                <td>15 Bibit</td>
+                                <td><span class="status-badge kritis">Stok Kritis</span></td>
+                                <td class="action-btns">
+                                    <button class="btn-icon">👁️</button>
+                                    <button class="btn-icon">✏️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#T003</td>
+                                <td><strong style="color: var(--color-text-dark);">Temulawak</strong></td>
+                                <td>Rimpang</td>
+                                <td>Blok A-14</td>
+                                <td>320 Bibit</td>
+                                <td><span class="status-badge tersedia">Tersedia</span></td>
+                                <td class="action-btns">
+                                    <button class="btn-icon">👁️</button>
+                                    <button class="btn-icon">✏️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#T004</td>
+                                <td><strong style="color: var(--color-text-dark);">Pegagan</strong></td>
+                                <td>Daun</td>
+                                <td>Blok C-02</td>
+                                <td>210 Bibit</td>
+                                <td><span class="status-badge tersedia">Tersedia</span></td>
+                                <td class="action-btns">
+                                    <button class="btn-icon">👁️</button>
+                                    <button class="btn-icon">✏️</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
