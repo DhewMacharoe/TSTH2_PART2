@@ -17,12 +17,20 @@ class UserSeeder extends Seeder
             'role' => 'web_admin',
         ]);
 
-        // PIC Warehouse (Admin Gudang)
+        // PIC Warehouse Gudang — Departemen General Affair (GA)
         User::updateOrCreate(['email' => 'pic@tsth2.id'], [
             'name' => 'Budi Santoso',
             'password' => Hash::make('password'),
             'role' => 'pic_gudang',
-            'divisi' => 'gudang',
+            'divisi' => 'General Affair',
+        ]);
+
+        // PIC Warehouse Laboratorium — Departemen Riset dan Inovasi (RdI)
+        User::updateOrCreate(['email' => 'piclab@tsth2.id'], [
+            'name' => 'Dr. Hendra Wijaya',
+            'password' => Hash::make('password'),
+            'role' => 'pic_lab',
+            'divisi' => 'Riset dan Inovasi',
         ]);
 
         // Staf Warehouse

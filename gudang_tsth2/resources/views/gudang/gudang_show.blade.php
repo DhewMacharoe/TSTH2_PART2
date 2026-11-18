@@ -80,16 +80,28 @@
         </div>
     </div>
 
+    @php
+        $canManageThisItem = auth()->user()->isWebAdmin()
+            || (auth()->user()->isPicGudang() && $barang->jenis_barang === 'lapangan')
+            || (auth()->user()->isPicLab() && $barang->jenis_barang === 'lab');
+    @endphp
+
     <!-- Daftar Batch -->
-    <div class="mb-4 flex justify-between items-center">
+    <div class="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
             <h3 class="text-xl font-bold text-gray-900">Manajemen Batch Kedatangan</h3>
             <p class="text-gray-500 text-sm mt-1">Satu batch bisa berisi beberapa kondisi dan satuan berbeda.</p>
         </div>
-        @if(in_array(auth()->user()->role, ['pic_gudang', 'web_admin', 'kepala_divisi', 'kepala_departemen']))
-            <button onclick="document.getElementById('modalNewBatch').classList.remove('hidden')" class="px-4 py-2 bg-primary text-white rounded-lg font-bold text-sm shadow-md hover:bg-primary-light transition-colors">
-                + Tambah Batch Baru
-            </button>
+        @if($canManageThisItem)
+            <div class="flex items-center gap-2">
+                <a href="{{ route('gudang.edit', $barang->id) }}" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg font-bold text-sm shadow-sm transition-colors flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                    <span>Edit Barang</span>
+                </a>
+                <button onclick="document.getElementById('modalNewBatch').classList.remove('hidden')" class="px-4 py-2 bg-primary text-white rounded-lg font-bold text-sm shadow-md hover:bg-primary-light transition-colors">
+                    + Tambah Batch Baru
+                </button>
+            </div>
         @endif
     </div>
 
@@ -109,7 +121,7 @@
                     </div>
                     <p class="text-xs text-gray-500 font-medium mt-0.5">Datang: {{ \Carbon\Carbon::parse($firstBatch->tanggal_kedatangan)->format('d M Y') }}</p>
                 </div>
-                @if(in_array(auth()->user()->role, ['pic_gudang', 'web_admin', 'kepala_divisi', 'kepala_departemen']))
+                @if($canManageThisItem)
                     <button onclick="openModalItem('{{ $batchNo }}', '{{ \Carbon\Carbon::parse($firstBatch->tanggal_kedatangan)->format('Y-m-d') }}')" class="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg text-xs font-bold transition-colors">
                         + Tambah Item ke Batch Ini
                     </button>
@@ -176,7 +188,7 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-center">
-                                        @if(in_array(auth()->user()->role, ['pic_gudang', 'web_admin']))
+                                        @if($canManageThisItem)
                                             <form action="{{ route('gudang.batch.item.destroy', $batch->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus sub-batch ini?');">
                                                 @csrf
                                                 @method('DELETE')
@@ -234,7 +246,7 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            @if($detailIndex == 0 && in_array(auth()->user()->role, ['pic_gudang', 'web_admin']))
+                                            @if($detailIndex == 0 && $canManageThisItem)
                                                 <!-- Hanya tampilkan tombol hapus batch induk di baris pertama detailnya -->
                                                 <form action="{{ route('gudang.batch.item.destroy', $batch->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus seluruh rincian stok dalam sub-batch ini?');">
                                                     @csrf
@@ -308,7 +320,7 @@
     @endif
 
     <!-- Modals -->
-    @if(in_array(auth()->user()->role, ['pic_gudang', 'web_admin']))
+    @if($canManageThisItem)
     
     <!-- Modal Add Item to Existing Batch -->
     <div id="modalAddItem" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm transition-opacity">

@@ -93,6 +93,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {{-- Segmented Type Filter --}}
         <div class="p-3 border-b border-gray-200 bg-white flex flex-wrap items-center justify-between gap-3">
+            @if(!auth()->user()->isPicGudang() && !auth()->user()->isPicLab())
             <div class="inline-flex p-1 bg-gray-100 rounded-lg border border-gray-200/80">
                 <a href="{{ route('permintaan.index', array_merge(request()->except('jenis'), ['jenis' => 'all'])) }}"
                    class="px-3.5 py-1.5 rounded-md text-xs font-semibold transition-colors {{ ($selectedJenis ?? 'all') === 'all' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
@@ -100,19 +101,25 @@
                 </a>
                 <a href="{{ route('permintaan.index', array_merge(request()->except('jenis'), ['jenis' => 'lapangan'])) }}"
                    class="px-3.5 py-1.5 rounded-md text-xs font-semibold transition-colors inline-flex items-center gap-1.5 {{ ($selectedJenis ?? 'all') === 'lapangan' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
-                    <span>Lapangan</span>
+                    <span>Gudang GA</span>
                     @if(($statCounts['total_lapangan'] ?? 0) > 0)
                     <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ ($selectedJenis ?? 'all') === 'lapangan' ? 'bg-primary/10 text-primary font-bold' : 'bg-gray-200 text-gray-600' }}">{{ $statCounts['total_lapangan'] }}</span>
                     @endif
                 </a>
                 <a href="{{ route('permintaan.index', array_merge(request()->except('jenis'), ['jenis' => 'lab'])) }}"
                    class="px-3.5 py-1.5 rounded-md text-xs font-semibold transition-colors inline-flex items-center gap-1.5 {{ ($selectedJenis ?? 'all') === 'lab' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
-                    <span>Laboratorium</span>
+                    <span>Lab RdI</span>
                     @if(($statCounts['total_lab'] ?? 0) > 0)
                     <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ ($selectedJenis ?? 'all') === 'lab' ? 'bg-primary/10 text-primary font-bold' : 'bg-gray-200 text-gray-600' }}">{{ $statCounts['total_lab'] }}</span>
                     @endif
                 </a>
             </div>
+            @else
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg border border-gray-200 text-xs font-bold">
+                <span class="material-symbols-rounded text-base text-primary">{{ auth()->user()->isPicGudang() ? 'warehouse' : 'science' }}</span>
+                <span>{{ auth()->user()->isPicGudang() ? 'Antrean Permintaan — Warehouse Gudang (GA)' : 'Antrean Permintaan — Warehouse Laboratorium (RdI)' }}</span>
+            </div>
+            @endif
         </div>
         {{-- Filters --}}
         <div class="p-4 border-b border-gray-100 flex flex-col sm:flex-row items-center gap-3 bg-gray-50/50">

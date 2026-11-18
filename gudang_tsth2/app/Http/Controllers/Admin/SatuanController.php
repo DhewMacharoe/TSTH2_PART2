@@ -51,17 +51,33 @@ class SatuanController extends Controller
         $totalKonversiLapangan = $allKonversis->where('jenis_barang', 'lapangan')->count();
         $totalKonversiLab      = $allKonversis->where('jenis_barang', 'lab')->count();
 
-        // Kategori list per jenis untuk dropdown/datalist form
-        $kategoriList     = SatuanBarang::whereNotNull('kategori')->distinct()->pluck('kategori');
-        $kategoriLapangan = SatuanBarang::where('jenis_barang', 'lapangan')->whereNotNull('kategori')->distinct()->pluck('kategori');
-        $kategoriLab      = SatuanBarang::where('jenis_barang', 'lab')->whereNotNull('kategori')->distinct()->pluck('kategori');
+        // Kategori dari tabel kategori_barangs
+        $kategoriLapanganModels = \App\Models\KategoriBarang::lapangan()->orderBy('nama_kategori')->get();
+        $kategoriLabModels      = \App\Models\KategoriBarang::lab()->orderBy('nama_kategori')->get();
 
-        // Pastikan default jika kosong
+        $totalKategoriLapangan = $kategoriLapanganModels->count();
+        $totalKategoriLab      = $kategoriLabModels->count();
+
+        // Kategori list per jenis untuk dropdown/datalist form
+        $kategoriLapangan = $kategoriLapanganModels->pluck('nama_kategori');
+        $kategoriLab      = $kategoriLabModels->pluck('nama_kategori');
+
+        if ($user->role === 'pic_gudang') {
+            $kategoriList = $kategoriLapangan;
+        } elseif ($user->role === 'pic_lab') {
+            $kategoriList = $kategoriLab;
+        } else {
+            $kategoriList = ($selectedJenis === 'lapangan')
+                ? $kategoriLapangan
+                : (($selectedJenis === 'lab') ? $kategoriLab : \App\Models\KategoriBarang::orderBy('nama_kategori')->pluck('nama_kategori')->unique());
+        }
+
+        // Fallback jika database masih kosong
         if ($kategoriLapangan->isEmpty()) {
             $kategoriLapangan = collect(['Pupuk', 'Alat Budidaya', 'Bibit Tanaman', 'Lainnya']);
         }
         if ($kategoriLab->isEmpty()) {
-            $kategoriLab = collect(['Bahan Kimia', 'Reagen', 'Alat Laboratorium', 'Lainnya']);
+            $kategoriLab = collect(['Bahan Kimia', 'Reagen & Larutan', 'Alat Laboratorium', 'Lainnya']);
         }
         if ($kategoriList->isEmpty()) {
             $kategoriList = collect(['Pupuk', 'Bahan Kimia', 'Alat Budidaya', 'Bibit Tanaman', 'Lainnya']);
@@ -69,6 +85,7 @@ class SatuanController extends Controller
 
         return view('gudang.satuan', compact(
             'satuans', 'grouped', 'kategoriList', 'kategoriLapangan', 'kategoriLab',
+            'kategoriLapanganModels', 'kategoriLabModels',
             'konversis', 'selectedJenis',
             'totalSatuan', 'totalSatuanLapangan', 'totalSatuanLab',
             'totalKategoriLapangan', 'totalKategoriLab',
@@ -118,6 +135,17 @@ class SatuanController extends Controller
             'jenis_barang' => $permintaan->jenis_barang,
             'created_by'   => Auth::id(),
         ]);
+
+        // Pastikan kategori juga tercatat di tabel master kategori_barangs
+        \App\Models\KategoriBarang::firstOrCreate(
+            [
+                'nama_kategori' => trim($permintaan->kategori),
+                'jenis_barang'  => $permintaan->jenis_barang,
+            ],
+            [
+                'created_by'    => Auth::id(),
+            ]
+        );
 
         $jenisLabel = $satuan->jenis_label;
         AktivitasLogger::catat(

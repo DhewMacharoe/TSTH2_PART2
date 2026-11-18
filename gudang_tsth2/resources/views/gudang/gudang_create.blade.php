@@ -130,8 +130,12 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2" for="kategori">Kategori Barang <span
-                                    class="text-red-500">*</span></label>
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-sm font-bold text-gray-700" for="kategori">Kategori Barang <span class="text-red-500">*</span></label>
+                                <button type="button" onclick="document.getElementById('modalTambahKategoriCreate').classList.remove('hidden')" class="text-xs text-primary hover:underline font-bold inline-flex items-center gap-1">
+                                    <span class="material-symbols-rounded text-sm">add_circle</span> + Kategori Baru
+                                </button>
+                            </div>
                             <select id="kategori" name="kategori"
                                 class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-primary focus:border-primary p-3 font-medium"
                                 required>
@@ -171,9 +175,26 @@
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2" for="lokasi_blok">Lokasi Penyimpanan
                                 <span class="text-red-500">*</span></label>
-                            <input type="text" id="lokasi_blok" name="lokasi_blok"
+                            <input type="text" id="lokasi_blok" name="lokasi_blok" list="lokasi_list"
                                 class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-primary focus:border-primary p-3 font-medium"
-                                required placeholder="Contoh: Blok A - Rak 01" value="{{ old('lokasi_blok') }}">
+                                required placeholder="{{ auth()->user()->isPicLab() ? 'Contoh: Lemari Asam B3, Kulkas Reagen 4°C, Rak Alat Kaca' : 'Contoh: Blok A - Rak 01, Lahan Percobaan' }}" value="{{ old('lokasi_blok') }}">
+                            <datalist id="lokasi_list">
+                                @if(auth()->user()->isPicLab())
+                                    <option value="Lemari Asam B3">
+                                    <option value="Kulkas Reagen 4°C">
+                                    <option value="Freezer -20°C">
+                                    <option value="Rak Alat Kaca L-1">
+                                    <option value="Rak Alat Kaca L-2">
+                                    <option value="Meja Preparasi Lab 1">
+                                    <option value="Desikator Kimia">
+                                @else
+                                    <option value="Blok A - Rak 1">
+                                    <option value="Blok B - Rak 2">
+                                    <option value="Blok C - Rak 1">
+                                    <option value="Area Pembibitan Utara">
+                                    <option value="Lahan Percobaan Timur">
+                                @endif
+                            </datalist>
                         </div>
 
                         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
@@ -297,6 +318,51 @@
                 <button type="submit" class="px-8 py-2.5 text-white bg-green-600 hover:bg-green-700 rounded-lg font-bold transition-colors shadow-md shadow-green-500/20">Simpan Restock Batch</button>
             </div>
         </form>
+    </div>
+
+    <!-- Modal Tambah Kategori Baru Cepat -->
+    <div id="modalTambahKategoriCreate" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-gray-100">
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/80">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                        <span class="material-symbols-rounded text-lg">create_new_folder</span>
+                    </span>
+                    <h3 class="font-bold text-gray-900 text-sm">Tambah Kategori Baru</h3>
+                </div>
+                <button type="button" class="text-gray-400 hover:text-gray-600 rounded-lg p-1" onclick="document.getElementById('modalTambahKategoriCreate').classList.add('hidden')">
+                    <span class="material-symbols-rounded text-base">close</span>
+                </button>
+            </div>
+            <form id="formQuickTambahKategori" class="p-6 space-y-4">
+                @csrf
+                @if(auth()->user()->isPicLab())
+                    <input type="hidden" name="jenis_barang" value="lab">
+                @elseif(auth()->user()->isPicGudang())
+                    <input type="hidden" name="jenis_barang" value="lapangan">
+                @else
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Peruntukan Warehouse</label>
+                        <select name="jenis_barang" id="quick_jenis_barang" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 text-xs font-semibold focus:ring-1 focus:ring-primary focus:border-primary">
+                            <option value="lapangan">🌾 Gudang GA (Lapangan)</option>
+                            <option value="lab">🔬 Lab RdI (Laboratorium)</option>
+                        </select>
+                    </div>
+                @endif
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1" for="quick_nama_kategori">Nama Kategori <span class="text-red-500">*</span></label>
+                    <input type="text" id="quick_nama_kategori" name="nama_kategori" required placeholder="Contoh: Media Tanam, Kimia Analitik" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 text-xs font-medium focus:ring-1 focus:ring-primary focus:border-primary">
+                    <p id="quick_error_msg" class="text-red-600 text-xs mt-1 hidden"></p>
+                </div>
+                <div class="flex justify-end gap-2 pt-2 border-t border-gray-100">
+                    <button type="button" class="px-4 py-2 border border-gray-200 text-gray-600 rounded-xl text-xs font-bold hover:bg-gray-50" onclick="document.getElementById('modalTambahKategoriCreate').classList.add('hidden')">Batal</button>
+                    <button type="submit" id="btnSubmitQuickKat" class="px-4 py-2 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary-light flex items-center gap-1 shadow-sm">
+                        <span class="material-symbols-rounded text-base">save</span>
+                        Simpan & Gunakan
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 @endsection
 
@@ -445,5 +511,71 @@
     
     attachDateConstraint('tanggal_kedatangan', 'tanggal_kadaluarsa');
     attachDateConstraint('restock_tanggal_kedatangan', 'restock_tanggal_kadaluarsa');
+
+    // Quick Add Kategori via AJAX
+    const formQuickKat = document.getElementById('formQuickTambahKategori');
+    if (formQuickKat) {
+        formQuickKat.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const inputNama = document.getElementById('quick_nama_kategori');
+            const errP = document.getElementById('quick_error_msg');
+            const btnSubmit = document.getElementById('btnSubmitQuickKat');
+            
+            errP.classList.add('hidden');
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = 'Menyimpan...';
+
+            const formData = new FormData(this);
+
+            fetch('{{ route("gudang.kategori.store") }}', {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<span class="material-symbols-rounded text-base">save</span> Simpan & Gunakan';
+                
+                if (data.success && data.kategori) {
+                    const selectKat = document.getElementById('kategori');
+                    const newKatName = data.kategori.nama_kategori;
+                    
+                    // Add option if not exists
+                    let exists = false;
+                    for (let i = 0; i < selectKat.options.length; i++) {
+                        if (selectKat.options[i].value === newKatName) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        const opt = document.createElement('option');
+                        opt.value = newKatName;
+                        opt.textContent = newKatName;
+                        selectKat.appendChild(opt);
+                    }
+                    selectKat.value = newKatName;
+                    selectKat.dispatchEvent(new Event('change'));
+
+                    // Close modal and reset input
+                    inputNama.value = '';
+                    document.getElementById('modalTambahKategoriCreate').classList.add('hidden');
+                } else {
+                    errP.textContent = data.message || 'Gagal menambahkan kategori.';
+                    errP.classList.remove('hidden');
+                }
+            })
+            .catch(err => {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<span class="material-symbols-rounded text-base">save</span> Simpan & Gunakan';
+                errP.textContent = 'Terjadi kesalahan saat menyimpan kategori.';
+                errP.classList.remove('hidden');
+            });
+        });
+    }
 </script>
 @endpush

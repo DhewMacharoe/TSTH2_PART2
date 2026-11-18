@@ -76,6 +76,31 @@ class SatuanBarang extends Model
                 ['value' => 'Sudah Terbuka',        'label' => 'Sudah Terbuka',          'priority' => 1],
                 ['value' => 'Rusak',                'label' => 'Rusak',                  'priority' => 99],
             ],
+            'Reagen & Larutan' => [
+                ['value' => 'Tersegel/Baru',        'label' => 'Tersegel / Baru',         'priority' => 3],
+                ['value' => 'Sudah Terbuka',        'label' => 'Sudah Terbuka',           'priority' => 1],
+                ['value' => 'Hampir Habis',         'label' => 'Hampir Habis',            'priority' => 1],
+                ['value' => 'Kedaluwarsa',          'label' => 'Kedaluwarsa',             'priority' => 99],
+            ],
+            'Alat Gelas & Plastik Lab' => [
+                ['value' => 'Baru',                 'label' => 'Baru',                   'priority' => 3],
+                ['value' => 'Bagus',                'label' => 'Bagus / Steril',         'priority' => 2],
+                ['value' => 'Bekas Pakai - Bagus',  'label' => 'Bekas Pakai — Bagus',    'priority' => 2],
+                ['value' => 'Retak / Perlu Kalibrasi', 'label' => 'Retak / Perlu Kalibrasi', 'priority' => 1],
+                ['value' => 'Rusak',                'label' => 'Rusak / Pecah',          'priority' => 99],
+            ],
+            'Instrumen Lab' => [
+                ['value' => 'Baru',                 'label' => 'Baru',                   'priority' => 3],
+                ['value' => 'Bagus / Terkalibrasi', 'label' => 'Bagus / Terkalibrasi',   'priority' => 2],
+                ['value' => 'Perlu Kalibrasi Ulang','label' => 'Perlu Kalibrasi Ulang',  'priority' => 1],
+                ['value' => 'Rusak',                'label' => 'Rusak',                  'priority' => 99],
+            ],
+            'Bahan Habis Pakai Lab' => [
+                ['value' => 'Tersegel/Baru',        'label' => 'Tersegel / Baru',         'priority' => 3],
+                ['value' => 'Sudah Terbuka',        'label' => 'Sudah Terbuka',           'priority' => 1],
+                ['value' => 'Sisa Sedikit',         'label' => 'Sisa Sedikit',            'priority' => 1],
+                ['value' => 'Rusak',                'label' => 'Rusak / Terkontaminasi', 'priority' => 99],
+            ],
             'Lainnya' => [
                 ['value' => 'Baru',                 'label' => 'Baru',                   'priority' => 3],
                 ['value' => 'Bagus',                'label' => 'Bagus',                  'priority' => 2],

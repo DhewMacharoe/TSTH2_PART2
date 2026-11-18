@@ -7,38 +7,210 @@
 @endpush
 
 @section('content')
-<div class="mb-8">
-    <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Selamat Datang, {{ auth()->user()->name }}!</h1>
-    <p class="text-gray-500 font-medium mt-2">Ringkasan aktivitas dan sistem informasi manajemen terpadu TSTH2.</p>
+<div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-2 {{ auth()->user()->isPicLab() ? 'bg-purple-100 text-purple-900 border border-purple-200' : (auth()->user()->isPicGudang() ? 'bg-emerald-100 text-emerald-900 border border-emerald-200' : 'bg-gray-100 text-gray-800') }}">
+            <span class="material-symbols-rounded text-sm">{{ auth()->user()->isPicLab() ? 'science' : (auth()->user()->isPicGudang() ? 'warehouse' : 'shield_person') }}</span>
+            <span>
+                @if(auth()->user()->isPicLab())
+                    Warehouse Laboratorium — Riset & Inovasi (RdI)
+                @elseif(auth()->user()->isPicGudang())
+                    Warehouse Gudang — General Affair (GA)
+                @else
+                    {{ auth()->user()->role_label }}
+                @endif
+            </span>
+        </div>
+        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Selamat Datang, {{ auth()->user()->name }}!</h1>
+        <p class="text-gray-500 font-medium mt-1">
+            @if(auth()->user()->isPicLab())
+                Kelola reagen, bahan kimia, alat ukur laboratorium, dan approval permintaan bahan riset.
+            @elseif(auth()->user()->isPicGudang())
+                Kelola inventaris operasional lapangan, pupuk, bibit tanaman, dan distribusi logistik umum.
+            @else
+                Ringkasan aktivitas dan sistem informasi manajemen terpadu TSTH2.
+            @endif
+        </p>
+    </div>
+
+    @if(auth()->user()->canManageWarehouse())
+    <div class="flex items-center gap-2">
+        <a href="{{ route('gudang.create') }}" class="px-4 py-2.5 bg-primary hover:bg-primary-light text-white rounded-xl font-bold text-xs shadow-md shadow-primary/20 transition-all flex items-center gap-2">
+            <span class="material-symbols-rounded text-base">add_box</span>
+            <span>Tambah Barang Baru</span>
+        </a>
+        <a href="{{ route('satuan.index') }}" class="px-4 py-2.5 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-xl font-bold text-xs shadow-sm transition-all flex items-center gap-2">
+            <span class="material-symbols-rounded text-base">straighten</span>
+            <span>Master Satuan</span>
+        </a>
+    </div>
+    @endif
 </div>
 
-<!-- Shortcuts -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-    <a href="{{ route('gudang') }}" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md hover:border-primary/30 transition-all group">
-        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-            <span class="material-symbols-rounded text-2xl">inventory_2</span>
+{{-- 4 Stat Metric Cards --}}
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+        <div>
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider block">Item Terdaftar</span>
+            <span class="text-2xl font-extrabold text-gray-900 mt-1 block">{{ number_format($stats['total_barang'] ?? 0) }}</span>
+            <span class="text-[11px] text-gray-400 mt-0.5 block">Jenis barang aktif</span>
         </div>
-        <span class="font-bold text-gray-700 text-sm">Data Barang</span>
+        <div class="w-12 h-12 rounded-xl {{ auth()->user()->isPicLab() ? 'bg-purple-50 text-purple-700' : 'bg-emerald-50 text-emerald-700' }} flex items-center justify-center">
+            <span class="material-symbols-rounded text-2xl">{{ auth()->user()->isPicLab() ? 'biotech' : 'inventory_2' }}</span>
+        </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+        <div>
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider block">Total Stok Fisik</span>
+            <span class="text-2xl font-extrabold text-gray-900 mt-1 block">{{ number_format($stats['total_stok'] ?? 0) }}</span>
+            <span class="text-[11px] text-gray-400 mt-0.5 block">Akumulasi seluruh batch</span>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center">
+            <span class="material-symbols-rounded text-2xl">stacks</span>
+        </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+        <div>
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider block">Antrean Permintaan</span>
+            <span class="text-2xl font-extrabold {{ ($stats['pending_request'] ?? 0) > 0 ? 'text-amber-600' : 'text-gray-900' }} mt-1 block">
+                {{ number_format($stats['pending_request'] ?? 0) }}
+            </span>
+            <span class="text-[11px] {{ ($stats['pending_request'] ?? 0) > 0 ? 'text-amber-600 font-semibold' : 'text-gray-400' }} mt-0.5 block">
+                {{ ($stats['pending_request'] ?? 0) > 0 ? 'Perlu tindakan / approval' : 'Semua permintaan diproses' }}
+            </span>
+        </div>
+        <div class="w-12 h-12 rounded-xl {{ ($stats['pending_request'] ?? 0) > 0 ? 'bg-amber-50 text-amber-600 ring-2 ring-amber-300 animate-pulse' : 'bg-gray-100 text-gray-500' }} flex items-center justify-center">
+            <span class="material-symbols-rounded text-2xl">pending_actions</span>
+        </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+        <div>
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider block">Master Satuan</span>
+            <span class="text-2xl font-extrabold text-gray-900 mt-1 block">{{ number_format($stats['total_satuan'] ?? 0) }}</span>
+            <span class="text-[11px] text-gray-400 mt-0.5 block">Satuan & rumus konversi</span>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-gray-100 text-gray-700 flex items-center justify-center">
+            <span class="material-symbols-rounded text-2xl">straighten</span>
+        </div>
+    </div>
+</div>
+
+<!-- Shortcuts Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <a href="{{ route('gudang') }}" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-primary/40 transition-all group">
+        <div class="w-12 h-12 {{ auth()->user()->isPicLab() ? 'bg-purple-50 text-purple-700' : 'bg-emerald-50 text-emerald-700' }} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+            <span class="material-symbols-rounded text-2xl">{{ auth()->user()->isPicLab() ? 'science' : 'inventory_2' }}</span>
+        </div>
+        <span class="font-bold text-gray-800 text-sm">Data Barang</span>
+        <span class="text-[11px] text-gray-400 mt-0.5">{{ auth()->user()->isPicLab() ? 'Lab Riset (RdI)' : (auth()->user()->isPicGudang() ? 'Gudang Lapangan (GA)' : 'Semua Gudang') }}</span>
     </a>
-    <a href="{{ route('permintaan.index') }}" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md hover:border-primary/30 transition-all group">
-        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+    
+    <a href="{{ route('permintaan.index') }}" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-primary/40 transition-all group relative">
+        <div class="w-12 h-12 bg-blue-50 text-blue-700 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
             <span class="material-symbols-rounded text-2xl">shopping_cart</span>
         </div>
-        <span class="font-bold text-gray-700 text-sm">Permintaan</span>
+        @if(($stats['pending_request'] ?? 0) > 0)
+            <span class="absolute top-4 right-4 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm animate-pulse">{{ $stats['pending_request'] }}</span>
+        @endif
+        <span class="font-bold text-gray-800 text-sm">Permintaan</span>
+        <span class="text-[11px] text-gray-400 mt-0.5">Kelola & Approval</span>
     </a>
-    @if(in_array(auth()->user()->role, ['pic_gudang', 'agronom', 'pimpinan']))
-    <a href="{{ route('catatan') }}" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md hover:border-primary/30 transition-all group">
-        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+
+    @if(auth()->user()->canManageWarehouse())
+    <a href="{{ route('satuan.index') }}" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-primary/40 transition-all group">
+        <div class="w-12 h-12 bg-amber-50 text-amber-700 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+            <span class="material-symbols-rounded text-2xl">straighten</span>
+        </div>
+        <span class="font-bold text-gray-800 text-sm">Master Satuan</span>
+        <span class="text-[11px] text-gray-400 mt-0.5">Unit & Rumus Konversi</span>
+    </a>
+    @else
+    <a href="{{ route('catatan') }}" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-primary/40 transition-all group">
+        <div class="w-12 h-12 bg-amber-50 text-amber-700 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
             <span class="material-symbols-rounded text-2xl">menu_book</span>
         </div>
-        <span class="font-bold text-gray-700 text-sm">Logbook</span>
+        <span class="font-bold text-gray-800 text-sm">Logbook</span>
+        <span class="text-[11px] text-gray-400 mt-0.5">Catatan Harian</span>
     </a>
     @endif
-    <a href="{{ route('profil.edit') }}" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md hover:border-primary/30 transition-all group">
-        <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+
+    <a href="{{ route('profil.edit') }}" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-primary/40 transition-all group">
+        <div class="w-12 h-12 bg-purple-50 text-purple-700 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
             <span class="material-symbols-rounded text-2xl">person</span>
         </div>
-        <span class="font-bold text-gray-700 text-sm">Profil Saya</span>
+        <span class="font-bold text-gray-800 text-sm">Profil Saya</span>
+        <span class="text-[11px] text-gray-400 mt-0.5">Pengaturan Akun</span>
     </a>
+</div>
+
+{{-- Bottom 2 Columns: Permintaan Terkini & Aktivitas Logistik --}}
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    {{-- Left: Permintaan Terkini --}}
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-rounded text-primary text-xl">shopping_cart</span>
+                <h3 class="font-bold text-gray-900 text-sm">Permintaan Barang Terkini</h3>
+            </div>
+            <a href="{{ route('permintaan.index') }}" class="text-xs text-primary hover:underline font-bold">Lihat Semua →</a>
+        </div>
+        <div class="divide-y divide-gray-100">
+            @forelse($recentPermintaan as $p)
+                <div class="px-6 py-3.5 flex items-center justify-between hover:bg-gray-50/50 transition-colors">
+                    <div class="min-w-0 pr-3">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-xs text-gray-900 truncate">{{ $p->barang?->nama_barang ?? 'Barang #' . $p->barang_id }}</span>
+                            <span class="font-mono text-[10px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">{{ $p->jumlah }} {{ $p->satuan_diminta }}</span>
+                        </div>
+                        <span class="text-[11px] text-gray-400 block mt-0.5">Pemohon: <strong class="text-gray-600">{{ $p->user?->name }}</strong> · {{ $p->created_at?->diffForHumans() }}</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $p->status === 'Menunggu Approval' ? 'bg-amber-100 text-amber-800' : ($p->status === 'Barang Diambil' ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-700') }}">
+                            {{ $p->status }}
+                        </span>
+                    </div>
+                </div>
+            @empty
+                <div class="p-8 text-center text-gray-400 text-xs">
+                    <span class="material-symbols-rounded text-3xl mb-1 block text-gray-300">inbox</span>
+                    Belum ada antrean permintaan barang.
+                </div>
+            @endforelse
+        </div>
+    </div>
+
+    {{-- Right: Aktivitas Logistik --}}
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-rounded text-primary text-xl">history</span>
+                <h3 class="font-bold text-gray-900 text-sm">Riwayat Aktivitas Logistik</h3>
+            </div>
+            <a href="{{ route('gudang.aktivitas') }}" class="text-xs text-primary hover:underline font-bold">Lihat Log →</a>
+        </div>
+        <div class="divide-y divide-gray-100">
+            @forelse($recentActivities as $act)
+                <div class="px-6 py-3.5 hover:bg-gray-50/50 transition-colors">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0">
+                            <p class="text-xs text-gray-800 font-medium leading-relaxed">{{ $act->keterangan }}</p>
+                            <span class="text-[10px] text-gray-400 mt-1 block">{{ $act->created_at?->diffForHumans() }}</span>
+                        </div>
+                        <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded {{ $act->tipe_mutasi === 'masuk' ? 'bg-emerald-50 text-emerald-700' : ($act->tipe_mutasi === 'keluar' ? 'bg-blue-50 text-blue-700' : 'bg-gray-100 text-gray-600') }}">
+                            {{ $act->tipe_mutasi ?? 'info' }}
+                        </span>
+                    </div>
+                </div>
+            @empty
+                <div class="p-8 text-center text-gray-400 text-xs">
+                    <span class="material-symbols-rounded text-3xl mb-1 block text-gray-300">receipt_long</span>
+                    Belum ada riwayat aktivitas tercatat.
+                </div>
+            @endforelse
+        </div>
+    </div>
 </div>
 @endsection

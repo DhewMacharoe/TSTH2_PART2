@@ -50,6 +50,26 @@
         </div>
     </div>
 
+    {{-- Flash Notifications --}}
+    @if(session('success'))
+        <div class="mb-5 flex items-center gap-3 px-5 py-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl font-semibold shadow-sm" id="flash-success">
+            <span class="material-symbols-rounded text-xl text-emerald-600">check_circle</span>
+            <span class="text-sm">{{ session('success') }}</span>
+            <button class="ml-auto text-emerald-400 hover:text-emerald-600 inline-flex items-center" onclick="this.closest('#flash-success').remove()">
+                <span class="material-symbols-rounded text-base">close</span>
+            </button>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="mb-5 flex items-center gap-3 px-5 py-4 bg-red-50 border border-red-200 text-red-800 rounded-2xl font-semibold shadow-sm" id="flash-error">
+            <span class="material-symbols-rounded text-xl text-red-600">error</span>
+            <span class="text-sm">{{ session('error') }}</span>
+            <button class="ml-auto text-red-400 hover:text-red-600 inline-flex items-center" onclick="this.closest('#flash-error').remove()">
+                <span class="material-symbols-rounded text-base">close</span>
+            </button>
+        </div>
+    @endif
+
     <!-- Stats Overview -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         @if(auth()->user()->isPicGudang())
@@ -67,17 +87,17 @@
                 <p class="text-xs text-emerald-700 font-semibold mt-1">Stok aktif Gudang GA</p>
             </div>
 
-            <div onclick="focusFilterKategori()" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-150 cursor-pointer group">
+            <div onclick="document.getElementById('modalKelolaKategori').classList.remove('hidden')" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-150 cursor-pointer group">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Kategori Barang</span>
-                    <span class="w-8 h-8 rounded-lg bg-gray-100 text-gray-500 group-hover:text-gray-700 flex items-center justify-center">
+                    <span class="w-8 h-8 rounded-lg bg-gray-100 text-gray-500 group-hover:text-primary flex items-center justify-center transition-colors">
                         <span class="material-symbols-rounded text-lg">category</span>
                     </span>
                 </div>
                 <div class="text-2xl font-bold text-gray-900 tracking-tight">
                     {{ number_format($totalKategori ?? 0) }} <span class="text-xs font-normal text-gray-400">Jenis</span>
                 </div>
-                <p class="text-xs text-gray-400 mt-1">Klik untuk filter kategori</p>
+                <p class="text-xs text-primary font-semibold mt-1">Klik untuk kelola kategori &rarr;</p>
             </div>
 
             <div class="bg-white p-5 rounded-xl border border-gray-200">
@@ -121,17 +141,17 @@
                 <p class="text-xs text-purple-700 font-semibold mt-1">Stok aktif Lab RdI</p>
             </div>
 
-            <div onclick="focusFilterKategori()" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-150 cursor-pointer group">
+            <div onclick="document.getElementById('modalKelolaKategori').classList.remove('hidden')" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-150 cursor-pointer group">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Kategori Lab</span>
-                    <span class="w-8 h-8 rounded-lg bg-gray-100 text-gray-500 group-hover:text-gray-700 flex items-center justify-center">
+                    <span class="w-8 h-8 rounded-lg bg-gray-100 text-gray-500 group-hover:text-primary flex items-center justify-center transition-colors">
                         <span class="material-symbols-rounded text-lg">category</span>
                     </span>
                 </div>
                 <div class="text-2xl font-bold text-gray-900 tracking-tight">
                     {{ number_format($totalKategori ?? 0) }} <span class="text-xs font-normal text-gray-400">Jenis</span>
                 </div>
-                <p class="text-xs text-gray-400 mt-1">Klik untuk filter kategori</p>
+                <p class="text-xs text-primary font-semibold mt-1">Klik untuk kelola kategori &rarr;</p>
             </div>
 
             <div class="bg-white p-5 rounded-xl border border-gray-200">
@@ -177,19 +197,19 @@
                 <p class="text-xs text-gray-400 mt-1">Gabungan Gudang & Lab</p>
             </a>
 
-            <div onclick="focusFilterKategori()" 
+            <div onclick="document.getElementById('modalKelolaKategori').classList.remove('hidden')" 
                  class="bg-white p-5 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-150 cursor-pointer group"
-                 title="Pilih kategori barang">
+                 title="Kelola kategori barang">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Kategori</span>
-                    <span class="w-8 h-8 rounded-lg bg-gray-100 text-gray-500 group-hover:text-gray-700 flex items-center justify-center transition-colors">
+                    <span class="w-8 h-8 rounded-lg bg-gray-100 text-gray-500 group-hover:text-primary flex items-center justify-center transition-colors">
                         <span class="material-symbols-rounded text-lg">category</span>
                     </span>
                 </div>
                 <div class="text-2xl font-bold text-gray-900 tracking-tight">
                     {{ number_format($totalKategori ?? 0) }} <span class="text-xs font-normal text-gray-400">Jenis</span>
                 </div>
-                <p class="text-xs text-gray-400 mt-1">Klik untuk filter kategori</p>
+                <p class="text-xs text-primary font-semibold mt-1">Klik untuk kelola kategori &rarr;</p>
             </div>
 
             <a href="{{ route('gudang', ['jenis' => 'lapangan']) }}" 
@@ -284,6 +304,12 @@
                     Export CSV
                 </a>
                 @if(auth()->user()->canManageWarehouse())
+                <button type="button" onclick="document.getElementById('modalKelolaKategori').classList.remove('hidden')" 
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg text-xs font-semibold shadow-sm transition-colors"
+                        title="Tambah atau Hapus Kategori Warehouse">
+                    <span class="material-symbols-rounded text-base text-primary">category</span>
+                    Kelola Kategori
+                </button>
                 <a href="{{ route('gudang.create') }}" 
                    class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white hover:bg-primary-light rounded-lg text-xs font-semibold shadow-sm transition-colors">
                     <span class="material-symbols-rounded text-base">add</span>
@@ -298,16 +324,16 @@
             <table class="w-full text-left text-sm text-gray-600 block md:table">
                 <thead class="hidden md:table-header-group bg-gray-50/80 text-gray-900 font-bold border-b border-gray-200">
                     <tr>
-                        <th class="px-6 py-4">Gambar</th>
-                        <th class="px-6 py-4">Kode Barang</th>
-                        <th class="px-6 py-4">Nama Barang</th>
-                        <th class="px-6 py-4">Merek</th>
-                        <th class="px-6 py-4">Kategori</th>
-                        <th class="px-6 py-4">Batch</th>
-                        <th class="px-6 py-4">Lokasi</th>
-                        <th class="px-6 py-4">Stok</th>
-                        <th class="px-6 py-4">Dibuat Oleh</th>
-                        <th class="px-6 py-4 text-center">Aksi</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Gambar</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Kode Barang</th>
+                        <th class="px-6 py-4 whitespace-nowrap min-w-[200px]">Nama Barang</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Merek</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Kategori</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Batch</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Lokasi</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Stok</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Dibuat Oleh</th>
+                        <th class="px-6 py-4 text-center whitespace-nowrap">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody" class="block md:table-row-group divide-y-0 md:divide-y divide-gray-100 space-y-4 md:space-y-0">
@@ -372,44 +398,49 @@
                                 @endif
                             </div>
                         </td>
-                        <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none text-right md:text-left">
+                        <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none text-right md:text-left whitespace-nowrap">
                             <span class="md:hidden font-bold text-gray-400 text-xs shrink-0">Merek</span>
-                            <span class="truncate max-w-[150px] md:max-w-none">{{ $barang->merk ?? '-' }}</span>
+                            <span class="text-xs font-medium text-gray-700">{{ $barang->merk ?? '-' }}</span>
                         </td>
-                        <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none">
+                        <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none whitespace-nowrap">
                             <span class="md:hidden font-bold text-gray-400 text-xs shrink-0">Kategori</span>
-                            <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium border border-gray-200">
+                            <span class="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-semibold border border-gray-200/80 whitespace-nowrap">
                                 {{ $barang->kategori }}
                             </span>
                         </td>
-                        <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none text-xs font-medium text-gray-500">
+                        <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none text-xs font-medium text-gray-500 whitespace-nowrap">
                             <span class="md:hidden font-bold text-gray-400 text-xs shrink-0">Batch</span>
-                            {{ $barang->batches()->where('stok', '>', 0)->count() }} Batch Aktif
+                            <span>{{ $barang->batches()->where('stok', '>', 0)->count() }} Batch Aktif</span>
                         </td>
-                        <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none font-medium text-gray-700">
+                        <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none font-medium text-gray-700 whitespace-nowrap">
                             <span class="md:hidden font-bold text-gray-400 text-xs shrink-0">Lokasi</span>
-                            <span class="truncate max-w-[150px] md:max-w-none">{{ $barang->lokasi_blok }}</span>
+                            <span class="text-xs">{{ $barang->lokasi_blok }}</span>
                         </td>
-                        <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none font-bold text-gray-900">
+                        <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none font-bold text-gray-900 whitespace-nowrap">
                             <span class="md:hidden font-bold text-gray-400 text-xs shrink-0">Stok</span>
                             @php
                                 $stokTotal = $barang->batches->sum('stok');
                             @endphp
-                            {{ $stokTotal }}
+                            <span class="text-sm font-bold text-gray-900">{{ $stokTotal }}</span>
                         </td>
                         
-                        <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none text-right md:text-left">
+                        <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none text-right md:text-left whitespace-nowrap">
                             <span class="md:hidden font-bold text-gray-400 text-xs shrink-0">Dibuat Oleh</span>
                             <div>
-                                <span class="font-bold text-gray-800 text-xs block truncate max-w-[120px] md:max-w-none text-right md:text-left">{{ $barang->creator->name ?? 'Sistem' }}</span>
+                                <span class="font-bold text-gray-800 text-xs block text-right md:text-left whitespace-nowrap">{{ $barang->creator->name ?? 'Sistem' }}</span>
                                 @if($barang->created_at)
-                                    <span class="text-[10px] text-gray-400 block text-right md:text-left">{{ $barang->created_at->format('d/m/Y') }}</span>
+                                    <span class="text-[10px] text-gray-400 block text-right md:text-left whitespace-nowrap">{{ $barang->created_at->format('d/m/Y') }}</span>
                                 @endif
                             </div>
                         </td>
 
-                        <td class="flex justify-end items-center md:table-cell px-0 md:px-6 py-4 md:py-4 mt-2 md:mt-0 text-right md:text-center">
-                            @if(in_array(auth()->user()->role, ['pic_gudang', 'web_admin', 'kepala_divisi', 'kepala_departemen']))
+                        @php
+                            $canManageThisItem = auth()->user()->isWebAdmin()
+                                || (auth()->user()->isPicGudang() && $barang->jenis_barang === 'lapangan')
+                                || (auth()->user()->isPicLab() && $barang->jenis_barang === 'lab');
+                        @endphp
+                        <td class="flex justify-end items-center md:table-cell px-0 md:px-6 py-4 md:py-4 mt-2 md:mt-0 text-right md:text-center whitespace-nowrap">
+                            @if($canManageThisItem)
                             <div class="flex items-center justify-end md:justify-center gap-1.5">
                                 <a href="{{ route('gudang.show', $barang->id) }}" class="p-1.5 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors" title="Detail Batches">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
@@ -417,11 +448,9 @@
                                 <a href="{{ route('gudang.edit', $barang->id) }}" class="p-1.5 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Edit">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                                 </a>
-                                @if(in_array(auth()->user()->role, ['pic_gudang', 'web_admin']))
                                 <button type="button" onclick="openDeleteModal({{ $barang->id }}, '{{ addslashes($barang->nama_barang) }}')" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                 </button>
-                                @endif
                             </div>
                             @else
                             <div class="flex items-center justify-end md:justify-center gap-2">
@@ -574,6 +603,121 @@
         </div>
     </div>
 
+    <!-- Modal Kelola Kategori (Tambah / Hapus) -->
+    <div id="modalKelolaKategori" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-xl overflow-hidden border border-gray-100 flex flex-col max-h-[90vh]">
+            {{-- Modal Header --}}
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/80">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                        <span class="material-symbols-rounded text-lg">category</span>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-gray-900 text-base">Kelola Kategori Barang</h3>
+                        <p class="text-xs text-gray-500">
+                            @if(auth()->user()->isPicLab())
+                                Master kategori Warehouse Laboratorium (RdI)
+                            @elseif(auth()->user()->isPicGudang())
+                                Master kategori Warehouse Gudang General Affair (GA)
+                            @else
+                                Master kategori Warehouse Terpadu (GA & Lab)
+                            @endif
+                        </p>
+                    </div>
+                </div>
+                <button type="button" class="text-gray-400 hover:text-gray-600 rounded-lg p-1.5 hover:bg-gray-100 transition-colors" onclick="document.getElementById('modalKelolaKategori').classList.add('hidden')">
+                    <span class="material-symbols-rounded text-lg">close</span>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-6 flex-1">
+                {{-- Form Tambah Kategori Baru --}}
+                <div class="bg-primary/[0.03] border border-primary/20 rounded-xl p-4">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-primary mb-3 flex items-center gap-1.5">
+                        <span class="material-symbols-rounded text-base">create_new_folder</span>
+                        Tambah Kategori Baru
+                    </h4>
+                    <form action="{{ route('gudang.kategori.store') }}" method="POST" class="space-y-3">
+                        @csrf
+                        @if(auth()->user()->isWebAdmin())
+                            <div>
+                                <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">Peruntukan Warehouse</label>
+                                <select name="jenis_barang" class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs font-semibold focus:ring-1 focus:ring-primary focus:border-primary text-gray-800" required>
+                                    <option value="lapangan">🌾 Gudang GA (Lapangan)</option>
+                                    <option value="lab">🔬 Lab RdI (Laboratorium)</option>
+                                </select>
+                            </div>
+                        @else
+                            <input type="hidden" name="jenis_barang" value="{{ auth()->user()->isPicLab() ? 'lab' : 'lapangan' }}">
+                        @endif
+
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <input type="text" name="nama_kategori" required
+                                   placeholder="Nama kategori baru (cth: Mikrobiologi, Pupuk Cair)"
+                                   class="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-2 text-xs font-medium focus:ring-1 focus:ring-primary focus:border-primary text-gray-800">
+                            <button type="submit" class="px-4 py-2 bg-primary hover:bg-primary-light text-white rounded-lg text-xs font-bold transition-all shadow-sm shrink-0 flex items-center justify-center gap-1">
+                                <span class="material-symbols-rounded text-sm">add</span>
+                                Simpan Kategori
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                {{-- List Kategori yang Ada --}}
+                <div>
+                    <div class="flex items-center justify-between mb-2.5">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-600">Daftar Kategori Terdaftar</h4>
+                        <span class="text-[11px] text-gray-400 font-semibold">{{ count($kategoriModels ?? []) }} Kategori</span>
+                    </div>
+
+                    <div class="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden bg-white">
+                        @forelse($kategoriModels ?? [] as $katModel)
+                            <div class="p-3 flex items-center justify-between hover:bg-gray-50/80 transition-colors">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-7 h-7 rounded-md {{ $katModel->jenis_barang === 'lab' ? 'bg-purple-50 text-purple-700' : 'bg-emerald-50 text-emerald-700' }} flex items-center justify-center shrink-0">
+                                        <span class="material-symbols-rounded text-sm">{{ $katModel->jenis_barang === 'lab' ? 'science' : 'warehouse' }}</span>
+                                    </span>
+                                    <div>
+                                        <span class="text-xs font-bold text-gray-800 block">{{ $katModel->nama_kategori }}</span>
+                                        <span class="text-[10px] text-gray-400">
+                                            {{ $katModel->jenis_barang === 'lab' ? 'Lab RdI' : 'Gudang GA' }} &bull; {{ $katModel->barangs_count }} barang terkait
+                                        </span>
+                                    </div>
+                                </div>
+                                @if(strtolower(trim($katModel->nama_kategori)) !== 'lainnya')
+                                <form action="{{ route('gudang.kategori.destroy', $katModel->id) }}" method="POST"
+                                      onsubmit="return konfirmasiHapusKategori(event, this, '{{ addslashes($katModel->nama_kategori) }}', {{ $katModel->barangs_count }})">
+                                    @csrf @method('DELETE')
+                                    <input type="hidden" name="pindahkan_ke_lainnya" value="0">
+                                    <button type="submit" 
+                                            class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1 text-[11px] font-semibold"
+                                            title="Hapus Kategori">
+                                        <span class="material-symbols-rounded text-base">delete</span>
+                                        <span class="hidden sm:inline">Hapus</span>
+                                    </button>
+                                </form>
+                                @else
+                                <span class="text-[10px] text-gray-400 font-semibold bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">Default Sistem</span>
+                                @endif
+                            </div>
+                        @empty
+                            <div class="p-6 text-center text-xs text-gray-400 font-medium">
+                                Belum ada kategori terdaftar.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            {{-- Modal Footer --}}
+            <div class="px-6 py-3 border-t border-gray-100 bg-gray-50 flex justify-end">
+                <button type="button" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 rounded-xl text-xs font-bold transition-colors" onclick="document.getElementById('modalKelolaKategori').classList.add('hidden')">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('scripts')
@@ -599,6 +743,22 @@
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
             }, 300);
+        }
+
+        function konfirmasiHapusKategori(e, form, namaKategori, barangsCount) {
+            if (barangsCount > 0) {
+                const tanya = confirm(
+                    `Kategori '${namaKategori}' saat ini masih digunakan oleh ${barangsCount} data barang aktif di warehouse!\n\n` +
+                    `Apakah Anda ingin memindahkan ${barangsCount} barang tersebut ke kategori 'Lainnya' dan menghapus kategori '${namaKategori}'?`
+                );
+                if (tanya) {
+                    form.querySelector('input[name="pindahkan_ke_lainnya"]').value = "1";
+                    return true;
+                }
+                return false;
+            } else {
+                return confirm(`Yakin ingin menghapus kategori '${namaKategori}'? Semua satuan di kategori ini juga akan dihapus.`);
+            }
         }
 
         function openRestockModal(id, nama) {

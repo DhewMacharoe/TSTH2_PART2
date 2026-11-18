@@ -247,15 +247,15 @@
             </a>
             <a href="{{ route('satuan.index', ['jenis' => 'lapangan']) }}"
                class="px-3.5 py-1.5 rounded-md text-xs font-semibold transition-colors inline-flex items-center gap-1.5 {{ ($selectedJenis ?? 'all') === 'lapangan' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
-                <span class="material-symbols-rounded text-sm">warehouse</span>
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 <span>Gudang GA</span>
-                <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ ($selectedJenis ?? 'all') === 'lapangan' ? 'bg-primary/10 text-primary font-bold' : 'bg-gray-200 text-gray-600' }}">{{ $totalSatuanLapangan }}</span>
+                <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ ($selectedJenis ?? 'all') === 'lapangan' ? 'bg-primary/10 text-primary font-bold' : 'bg-gray-200 text-gray-600' }}">{{ $totalSatuanLapangan }}</span>
             </a>
             <a href="{{ route('satuan.index', ['jenis' => 'lab']) }}"
                class="px-3.5 py-1.5 rounded-md text-xs font-semibold transition-colors inline-flex items-center gap-1.5 {{ ($selectedJenis ?? 'all') === 'lab' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
-                <span class="material-symbols-rounded text-sm">science</span>
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
                 <span>Lab RdI</span>
-                <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ ($selectedJenis ?? 'all') === 'lab' ? 'bg-primary/10 text-primary font-bold' : 'bg-gray-200 text-gray-600' }}">{{ $totalSatuanLab }}</span>
+                <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ ($selectedJenis ?? 'all') === 'lab' ? 'bg-primary/10 text-primary font-bold' : 'bg-gray-200 text-gray-600' }}">{{ $totalSatuanLab }}</span>
             </a>
         </div>
         @else
@@ -265,12 +265,18 @@
         </div>
         @endif
 
-        <div class="relative min-w-[220px]">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <span class="material-symbols-rounded text-base">search</span>
-            </span>
-            <input type="text" id="quickSearchInput" placeholder="Cari satuan / kategori..."
-                   class="w-full pl-9 pr-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-medium focus:ring-1 focus:ring-primary focus:border-primary text-gray-800 placeholder-gray-400 transition-colors">
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+            <button type="button" onclick="document.getElementById('modalTambahKategori').classList.remove('hidden')" class="px-3.5 py-1.5 bg-primary hover:bg-primary-light text-white rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 shrink-0">
+                <span class="material-symbols-rounded text-base">create_new_folder</span>
+                <span>+ Tambah Kategori</span>
+            </button>
+            <div class="relative min-w-[200px] flex-1 sm:flex-initial">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                    <span class="material-symbols-rounded text-base">search</span>
+                </span>
+                <input type="text" id="quickSearchInput" placeholder="Cari satuan / kategori..."
+                       class="w-full pl-9 pr-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-medium focus:ring-1 focus:ring-primary focus:border-primary text-gray-800 placeholder-gray-400 transition-colors">
+            </div>
         </div>
     </div>
 
@@ -472,10 +478,26 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                         @foreach($groupedLapangan as $kategoriName => $items)
+                            @php
+                                $kategoriModelLapangan = ($kategoriLapanganModels ?? collect())->firstWhere('nama_kategori', $kategoriName);
+                            @endphp
                             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:border-gray-300 transition-all category-card" data-category="{{ strtolower($kategoriName) }}">
                                 <div class="px-3.5 py-2.5 bg-gray-50/80 border-b border-gray-100 flex items-center justify-between">
                                     <h4 class="font-bold text-gray-800 text-xs">{{ $kategoriName }}</h4>
-                                    <span class="text-[10px] font-semibold text-gray-500 bg-white border border-gray-200 px-2 py-0.5 rounded-full">{{ $items->count() }} satuan</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[10px] font-semibold text-gray-500 bg-white border border-gray-200 px-2 py-0.5 rounded-full">{{ $items->count() }} satuan</span>
+                                        @if($kategoriModelLapangan && strtolower(trim($kategoriName)) !== 'lainnya')
+                                        <form action="{{ route('gudang.kategori.destroy', $kategoriModelLapangan->id) }}" method="POST"
+                                              onsubmit="return konfirmasiHapusKategori(event, this, '{{ addslashes($kategoriName) }}', {{ $kategoriModelLapangan->barangs_count }})">
+                                            @csrf @method('DELETE')
+                                            <input type="hidden" name="pindahkan_ke_lainnya" value="0">
+                                            <button type="submit" title="Hapus Kategori"
+                                                    class="w-5 h-5 flex items-center justify-center text-gray-300 hover:text-red-600 hover:bg-red-50 rounded transition-all">
+                                                <span class="material-symbols-rounded text-xs">delete</span>
+                                            </button>
+                                        </form>
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="p-3 flex flex-wrap gap-1.5">
                                     @foreach($items as $satuan)
@@ -519,10 +541,26 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                         @foreach($groupedLab as $kategoriName => $items)
+                            @php
+                                $kategoriModelLab = ($kategoriLabModels ?? collect())->firstWhere('nama_kategori', $kategoriName);
+                            @endphp
                             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:border-gray-300 transition-all category-card" data-category="{{ strtolower($kategoriName) }}">
                                 <div class="px-3.5 py-2.5 bg-gray-50/80 border-b border-gray-100 flex items-center justify-between">
                                     <h4 class="font-bold text-gray-800 text-xs">{{ $kategoriName }}</h4>
-                                    <span class="text-[10px] font-semibold text-gray-500 bg-white border border-gray-200 px-2 py-0.5 rounded-full">{{ $items->count() }} satuan</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[10px] font-semibold text-gray-500 bg-white border border-gray-200 px-2 py-0.5 rounded-full">{{ $items->count() }} satuan</span>
+                                        @if($kategoriModelLab && strtolower(trim($kategoriName)) !== 'lainnya')
+                                        <form action="{{ route('gudang.kategori.destroy', $kategoriModelLab->id) }}" method="POST"
+                                              onsubmit="return konfirmasiHapusKategori(event, this, '{{ addslashes($kategoriName) }}', {{ $kategoriModelLab->barangs_count }})">
+                                            @csrf @method('DELETE')
+                                            <input type="hidden" name="pindahkan_ke_lainnya" value="0">
+                                            <button type="submit" title="Hapus Kategori"
+                                                    class="w-5 h-5 flex items-center justify-center text-gray-300 hover:text-red-600 hover:bg-red-50 rounded transition-all">
+                                                <span class="material-symbols-rounded text-xs">delete</span>
+                                            </button>
+                                        </form>
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="p-3 flex flex-wrap gap-1.5">
                                     @foreach($items as $satuan)
@@ -638,10 +676,106 @@
         </div>
 
     </div>
+
+    {{-- Modal Tambah Kategori --}}
+    <div id="modalTambahKategori" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm animate-fadeIn">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-gray-100 transform transition-all">
+            <div class="px-5 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/70">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                        <span class="material-symbols-rounded text-lg">create_new_folder</span>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-gray-900 text-sm">Tambah Kategori Baru</h3>
+                        <p class="text-[11px] text-gray-500">Kelompokkan barang dan satuan gudang</p>
+                    </div>
+                </div>
+                <button type="button" onclick="document.getElementById('modalTambahKategori').classList.add('hidden')" class="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors">
+                    <span class="material-symbols-rounded text-base">close</span>
+                </button>
+            </div>
+
+            <form action="{{ route('gudang.kategori.store') }}" method="POST" class="p-5 space-y-4">
+                @csrf
+                
+                {{-- Peruntukan Warehouse --}}
+                @if(auth()->user()->isWebAdmin())
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                            Peruntukan Warehouse <span class="text-red-500">*</span>
+                        </label>
+                        <select name="jenis_barang" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-2.5 text-xs font-semibold focus:ring-1 focus:ring-primary focus:border-primary text-gray-800" required>
+                            <option value="lapangan">🌾 Gudang GA (Lapangan)</option>
+                            <option value="lab">🔬 Lab RdI (Laboratorium)</option>
+                        </select>
+                    </div>
+                @else
+                    <input type="hidden" name="jenis_barang" value="{{ auth()->user()->isPicLab() ? 'lab' : 'lapangan' }}">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                            Peruntukan Warehouse
+                        </label>
+                        <div class="flex items-center gap-2 p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-700">
+                            <span class="material-symbols-rounded text-base text-primary">{{ auth()->user()->isPicLab() ? 'science' : 'warehouse' }}</span>
+                            <span>{{ auth()->user()->isPicLab() ? 'Lab RdI (Laboratorium)' : 'Gudang GA (Lapangan)' }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Nama Kategori --}}
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1" for="modal_nama_kategori">
+                        Nama Kategori <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="nama_kategori" id="modal_nama_kategori"
+                           class="w-full bg-gray-50 border border-gray-200 rounded-xl p-2.5 text-xs font-medium focus:ring-1 focus:ring-primary focus:border-primary text-gray-800"
+                           placeholder="Contoh: Alat Proteksi Tanaman, Kimia Analitik" required>
+                </div>
+
+                {{-- Deskripsi --}}
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1" for="modal_deskripsi_kategori">
+                        Deskripsi (Opsional)
+                    </label>
+                    <textarea name="deskripsi" id="modal_deskripsi_kategori" rows="2"
+                              class="w-full bg-gray-50 border border-gray-200 rounded-xl p-2.5 text-xs font-medium focus:ring-1 focus:ring-primary focus:border-primary text-gray-800"
+                              placeholder="Deskripsi singkat peruntukan kategori ini"></textarea>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
+                    <button type="button" onclick="document.getElementById('modalTambahKategori').classList.add('hidden')"
+                            class="px-4 py-2 border border-gray-200 text-gray-600 rounded-xl text-xs font-bold hover:bg-gray-50 transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit"
+                            class="px-4 py-2 bg-primary hover:bg-primary-light text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5">
+                        <span class="material-symbols-rounded text-base">save</span>
+                        <span>Simpan Kategori</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
 <script>
+    function konfirmasiHapusKategori(e, form, namaKategori, barangsCount) {
+        if (barangsCount > 0) {
+            const tanya = confirm(
+                `Kategori '${namaKategori}' saat ini masih digunakan oleh ${barangsCount} data barang aktif di warehouse!\n\n` +
+                `Apakah Anda ingin memindahkan ${barangsCount} barang tersebut ke kategori 'Lainnya' dan menghapus kategori '${namaKategori}'?`
+            );
+            if (tanya) {
+                form.querySelector('input[name="pindahkan_ke_lainnya"]').value = "1";
+                return true;
+            }
+            return false;
+        } else {
+            return confirm(`Yakin ingin menghapus kategori '${namaKategori}'? Semua satuannya juga akan dihapus.`);
+        }
+    }
+
     const kategoriLapangan = @json($kategoriLapangan ?? []);
     const kategoriLab = @json($kategoriLab ?? []);
     const groupedSatuans = @json($grouped ?? []);
@@ -653,27 +787,35 @@
         const kategoriInput = document.getElementById('kategori_satuan');
 
         if (type === 'lapangan') {
-            labelLapangan.className = 'flex items-center gap-2 p-3 border rounded-xl cursor-pointer transition-colors border-primary bg-primary/[0.04] text-gray-900';
-            labelLab.className = 'flex items-center gap-2 p-3 border rounded-xl cursor-pointer transition-colors border-gray-200 hover:border-gray-300 bg-white text-gray-700';
+            if (labelLapangan && labelLab) {
+                labelLapangan.className = 'flex items-center gap-2 p-3 border rounded-xl cursor-pointer transition-colors border-primary bg-primary/[0.04] text-gray-900';
+                labelLab.className = 'flex items-center gap-2 p-3 border rounded-xl cursor-pointer transition-colors border-gray-200 hover:border-gray-300 bg-white text-gray-700';
+            }
 
-            kategoriDatalist.innerHTML = '';
-            kategoriLapangan.forEach(kat => {
-                const opt = document.createElement('option');
-                opt.value = kat;
-                kategoriDatalist.appendChild(opt);
-            });
-            kategoriInput.placeholder = 'Contoh: Pupuk, Bibit Tanaman, Alat Budidaya';
+            if (kategoriDatalist) {
+                kategoriDatalist.innerHTML = '';
+                kategoriLapangan.forEach(kat => {
+                    const opt = document.createElement('option');
+                    opt.value = kat;
+                    kategoriDatalist.appendChild(opt);
+                });
+            }
+            if (kategoriInput) kategoriInput.placeholder = 'Contoh: Pupuk, Bibit Tanaman, Alat Budidaya';
         } else {
-            labelLab.className = 'flex items-center gap-2 p-3 border rounded-xl cursor-pointer transition-colors border-primary bg-primary/[0.04] text-gray-900';
-            labelLapangan.className = 'flex items-center gap-2 p-3 border rounded-xl cursor-pointer transition-colors border-gray-200 hover:border-gray-300 bg-white text-gray-700';
+            if (labelLapangan && labelLab) {
+                labelLab.className = 'flex items-center gap-2 p-3 border rounded-xl cursor-pointer transition-colors border-primary bg-primary/[0.04] text-gray-900';
+                labelLapangan.className = 'flex items-center gap-2 p-3 border rounded-xl cursor-pointer transition-colors border-gray-200 hover:border-gray-300 bg-white text-gray-700';
+            }
 
-            kategoriDatalist.innerHTML = '';
-            kategoriLab.forEach(kat => {
-                const opt = document.createElement('option');
-                opt.value = kat;
-                kategoriDatalist.appendChild(opt);
-            });
-            kategoriInput.placeholder = 'Contoh: Bahan Kimia, Reagen, Alat Laboratorium';
+            if (kategoriDatalist) {
+                kategoriDatalist.innerHTML = '';
+                kategoriLab.forEach(kat => {
+                    const opt = document.createElement('option');
+                    opt.value = kat;
+                    kategoriDatalist.appendChild(opt);
+                });
+            }
+            if (kategoriInput) kategoriInput.placeholder = 'Contoh: Bahan Kimia, Reagen & Larutan, Alat Laboratorium';
         }
     }
 
@@ -699,7 +841,11 @@
         }
 
         // Initialize form type
-        switchFormType('lapangan');
+        @if(auth()->user()->isPicLab())
+            switchFormType('lab');
+        @else
+            switchFormType('lapangan');
+        @endif
 
         // Quick Search Filter in Page
         const searchInput = document.getElementById('quickSearchInput');

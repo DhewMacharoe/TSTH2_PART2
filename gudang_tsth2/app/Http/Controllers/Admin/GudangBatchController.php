@@ -29,6 +29,14 @@ class GudangBatchController extends Controller
         ]);
 
         $barang  = Barang::findOrFail($id);
+        $user = Auth::user();
+        if ($user->role === 'pic_gudang' && $barang->jenis_barang === 'lab') {
+            abort(403, 'Akses ditolak: Anda tidak memiliki wewenang untuk menambah batch barang laboratorium.');
+        }
+        if ($user->role === 'pic_lab' && $barang->jenis_barang !== 'lab') {
+            abort(403, 'Akses ditolak: Anda tidak memiliki wewenang untuk menambah batch barang gudang general/lapangan.');
+        }
+
         $batchNo = BarangBatch::nextBatchNo($barang->id);
 
         $stokDetail = [];
@@ -78,6 +86,13 @@ class GudangBatchController extends Controller
     public function addItemToBatch(Request $permintaan, $batchNo)
     {
         $barang = Barang::findOrFail($permintaan->barang_id);
+        $user = Auth::user();
+        if ($user->role === 'pic_gudang' && $barang->jenis_barang === 'lab') {
+            abort(403, 'Akses ditolak: Anda tidak memiliki wewenang untuk menambah item ke barang laboratorium.');
+        }
+        if ($user->role === 'pic_lab' && $barang->jenis_barang !== 'lab') {
+            abort(403, 'Akses ditolak: Anda tidak memiliki wewenang untuk menambah item ke barang gudang general/lapangan.');
+        }
 
         $permintaan->validate([
             'barang_id'          => 'required|exists:barangs,id',
@@ -129,6 +144,14 @@ class GudangBatchController extends Controller
     public function destroyBatch($batch_id)
     {
         $batch = BarangBatch::with('barang')->findOrFail($batch_id);
+        $user = Auth::user();
+        if ($user->role === 'pic_gudang' && $batch->barang?->jenis_barang === 'lab') {
+            abort(403, 'Akses ditolak: Anda tidak memiliki wewenang untuk menghapus batch barang laboratorium.');
+        }
+        if ($user->role === 'pic_lab' && $batch->barang?->jenis_barang !== 'lab') {
+            abort(403, 'Akses ditolak: Anda tidak memiliki wewenang untuk menghapus batch barang gudang general/lapangan.');
+        }
+
         $barangName = $batch->barang?->nama_barang ?? 'Barang';
         $batchNo = $batch->batch_no;
         $stok = $batch->stok;
@@ -150,6 +173,14 @@ class GudangBatchController extends Controller
     public function destroyBatchItem($itemId)
     {
         $item = BarangBatch::with('barang')->findOrFail($itemId);
+        $user = Auth::user();
+        if ($user->role === 'pic_gudang' && $item->barang?->jenis_barang === 'lab') {
+            abort(403, 'Akses ditolak: Anda tidak memiliki wewenang untuk menghapus sub-batch barang laboratorium.');
+        }
+        if ($user->role === 'pic_lab' && $item->barang?->jenis_barang !== 'lab') {
+            abort(403, 'Akses ditolak: Anda tidak memiliki wewenang untuk menghapus sub-batch barang gudang general/lapangan.');
+        }
+
         $barangName = $item->barang?->nama_barang ?? 'Barang';
 
         AktivitasLogger::catat(

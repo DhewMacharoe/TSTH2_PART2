@@ -248,8 +248,8 @@
         border: none;
         cursor: pointer;
         font-family: var(--font-heading, inherit);
-        font-size: 1rem;
-        font-weight: 500;
+        font-size: 0.875rem;
+        font-weight: 600;
         letter-spacing: inherit;
         text-transform: uppercase;
         display: inline-flex;

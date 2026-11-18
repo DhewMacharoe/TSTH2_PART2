@@ -60,12 +60,27 @@ class GudangController extends Controller
         $totalBarangLab       = $allBarangs->where('jenis_barang', 'lab')->sum(fn($b) => $b->batches->sum('stok'));
         $countItemsLapangan   = $allBarangs->where('jenis_barang', 'lapangan')->count();
         $countItemsLab        = $allBarangs->where('jenis_barang', 'lab')->count();
-        $totalKategori        = $allBarangs->pluck('kategori')->unique()->count();
 
-        $barangsByCategory = $allBarangs->groupBy('kategori')->map(fn($items) => $items->sum(fn($b) => $b->batches->sum('stok')));
-        $barangsByBlock    = $allBarangs->groupBy('lokasi_blok')->map(fn($items) => $items->sum(fn($b) => $b->batches->sum('stok')));
+        $scopedBarangs = ($selectedJenis === 'all')
+            ? $allBarangs
+            : $allBarangs->where('jenis_barang', $selectedJenis);
 
-        $kategoriList     = SatuanBarang::whereNotNull('kategori')->distinct()->pluck('kategori');
+        $totalKategori = ($selectedJenis === 'all')
+            ? \App\Models\KategoriBarang::count()
+            : \App\Models\KategoriBarang::where('jenis_barang', $selectedJenis)->count();
+
+        $totalSatuanLapangan = SatuanBarang::where('jenis_barang', 'lapangan')->count();
+        $totalSatuanLab      = SatuanBarang::where('jenis_barang', 'lab')->count();
+
+        $barangsByCategory = $scopedBarangs->groupBy('kategori')->map(fn($items) => $items->sum(fn($b) => $b->batches->sum('stok')));
+        $barangsByBlock    = $scopedBarangs->groupBy('lokasi_blok')->map(fn($items) => $items->sum(fn($b) => $b->batches->sum('stok')));
+
+        $kategoriListQuery = ($selectedJenis === 'all')
+            ? \App\Models\KategoriBarang::orderBy('nama_kategori')
+            : \App\Models\KategoriBarang::where('jenis_barang', $selectedJenis)->orderBy('nama_kategori');
+        $kategoriModels = $kategoriListQuery->get();
+        $kategoriList   = $kategoriModels->pluck('nama_kategori')->unique();
+
         $satuanByKategori = [];
         foreach ($kategoriList as $kat) {
             $satuanByKategori[$kat] = SatuanBarang::forKategori($kat)->orderBy('nama_satuan')->pluck('nama_satuan')->toArray();
@@ -74,17 +89,31 @@ class GudangController extends Controller
         return view('gudang.gudang', compact(
             'allBarangs', 'barangsPaginated', 'totalBarang', 'totalKategori',
             'totalBarangLapangan', 'totalBarangLab', 'countItemsLapangan', 'countItemsLab',
-            'barangsByCategory', 'barangsByBlock', 'satuanByKategori', 'selectedJenis'
+            'totalSatuanLapangan', 'totalSatuanLab',
+            'barangsByCategory', 'barangsByBlock', 'kategoriModels', 'satuanByKategori', 'selectedJenis'
         ));
     }
 
     public function create()
     {
-        $existingBarangs = Barang::with('batches')->orderBy('nama_barang')->get();
-        $kategoriList   = SatuanBarang::whereNotNull('kategori')->distinct()->pluck('kategori');
-        if ($kategoriList->isEmpty()) {
-            $kategoriList = collect(['Pupuk', 'Bahan Kimia', 'Alat Budidaya', 'Bibit Tanaman', 'Lainnya']);
+        $user = Auth::user();
+        $queryBarangs = Barang::with('batches')->orderBy('nama_barang');
+
+        if ($user->role === 'pic_gudang') {
+            $queryBarangs->where('jenis_barang', 'lapangan');
+            $kategoriList = \App\Models\KategoriBarang::lapangan()->orderBy('nama_kategori')->pluck('nama_kategori');
+        } elseif ($user->role === 'pic_lab') {
+            $queryBarangs->where('jenis_barang', 'lab');
+            $kategoriList = \App\Models\KategoriBarang::lab()->orderBy('nama_kategori')->pluck('nama_kategori');
+        } else {
+            $kategoriList = \App\Models\KategoriBarang::orderBy('nama_kategori')->pluck('nama_kategori')->unique();
         }
+
+        if ($kategoriList->isEmpty()) {
+            $kategoriList = collect(['Pupuk', 'Bahan Kimia', 'Alat Budidaya', 'Bibit Tanaman', 'Reagen & Larutan', 'Lainnya']);
+        }
+
+        $existingBarangs = $queryBarangs->get();
 
         $satuanByKategori  = [];
         $kondisiByKategori = [];
@@ -196,7 +225,19 @@ class GudangController extends Controller
         if ($user->role === 'pic_lab' && $barang->jenis_barang !== 'lab') {
             abort(403, 'Akses ditolak: Anda tidak memiliki wewenang untuk mengelola barang gudang general/lapangan.');
         }
-        return view('gudang.gudang_edit', compact('barang'));
+
+        $jenis = $barang->jenis_barang ?? 'lapangan';
+        $kategoriList = \App\Models\KategoriBarang::where('jenis_barang', $jenis)->orderBy('nama_kategori')->pluck('nama_kategori');
+        if ($kategoriList->isEmpty()) {
+            $kategoriList = $jenis === 'lab'
+                ? collect(['Bahan Kimia', 'Reagen & Larutan', 'Alat Gelas & Plastik Lab', 'Instrumen Lab', 'Bahan Habis Pakai Lab', 'Lainnya'])
+                : collect(['Pupuk', 'Alat Budidaya', 'Bibit Tanaman', 'Lainnya']);
+        }
+        if (!$kategoriList->contains($barang->kategori) && $barang->kategori) {
+            $kategoriList->push($barang->kategori);
+        }
+
+        return view('gudang.gudang_edit', compact('barang', 'kategoriList'));
     }
 
     public function update(Request $request, $id)

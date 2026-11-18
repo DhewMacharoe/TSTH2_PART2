@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminPlantController;
 use App\Http\Controllers\Admin\DasborController;
 use App\Http\Controllers\Admin\GudangBatchController;
 use App\Http\Controllers\Admin\GudangController;
+use App\Http\Controllers\Admin\KategoriBarangController;
 use App\Http\Controllers\Admin\AktivitasGudangController;
 use App\Http\Controllers\Admin\PermintaanChatController;
 use App\Http\Controllers\Admin\PermintaanController;
@@ -72,6 +73,9 @@ Route::middleware(['auth', 'role:web_admin'])->group(function () {
 
 // Gudang (PIC Warehouse Gudang GA, PIC Lab RdI, & Web Admin)
 Route::middleware(['auth', 'role:pic_gudang|pic_lab|web_admin'])->group(function () {
+    Route::post('/gudang/kategori',              [KategoriBarangController::class, 'store'])->name('gudang.kategori.store');
+    Route::delete('/gudang/kategori/{id}',       [KategoriBarangController::class, 'destroy'])->name('gudang.kategori.destroy');
+
     Route::get('/gudang/satuan',                 [SatuanController::class, 'index'])->name('satuan.index');
     Route::post('/gudang/satuan',                [SatuanController::class, 'store'])->name('satuan.store');
     Route::delete('/gudang/satuan/{id}',         [SatuanController::class, 'destroy'])->name('satuan.destroy');

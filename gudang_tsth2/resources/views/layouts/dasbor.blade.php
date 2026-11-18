@@ -47,7 +47,17 @@
                 </div>
                 <div>
                     <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white leading-tight">TSTH2 <span class="text-accent">Hub</span></h1>
-                    <p class="text-[10px] text-white/60 font-semibold uppercase tracking-wider">Admin Portal</p>
+                    <p class="text-[10px] text-white/60 font-semibold uppercase tracking-wider">
+                        @if(auth()->user()->isPicLab())
+                            Warehouse Lab (RdI)
+                        @elseif(auth()->user()->isPicGudang())
+                            Warehouse Gudang (GA)
+                        @elseif(auth()->user()->isWebAdmin())
+                            Web Administrator
+                        @else
+                            Admin Portal
+                        @endif
+                    </p>
                 </div>
             </div>
             <button id="closeSidebarBtn" class="lg:hidden p-2 text-white/70 hover:text-white rounded-lg hover:bg-white/10 transition-colors" aria-label="Tutup Menu">
@@ -109,13 +119,21 @@
                     <span>Dashboard</span>
                 </a>
                 
-                @if(in_array(auth()->user()->role, ['pic_gudang', 'agronom', 'pimpinan', 'kepala_divisi', 'kepala_departemen', 'web_admin', 'employee', 'karyawan', 'leader']))
-                <p class="px-4 text-xs font-bold text-white/40 uppercase tracking-widest mb-2 mt-4">Inventory & Warehouse</p>
+                @if(in_array(auth()->user()->role, ['pic_gudang', 'pic_lab', 'agronom', 'pimpinan', 'kepala_divisi', 'kepala_departemen', 'web_admin', 'employee', 'karyawan', 'leader']))
+                <p class="px-4 text-xs font-bold text-white/40 uppercase tracking-widest mb-2 mt-4">
+                    @if(auth()->user()->isPicLab())
+                        Warehouse Lab (RdI)
+                    @elseif(auth()->user()->isPicGudang())
+                        Warehouse Gudang (GA)
+                    @else
+                        Inventory & Warehouse
+                    @endif
+                </p>
                 <a href="{{ route('gudang') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('gudang') || request()->routeIs('gudang.show') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
                     <span class="material-symbols-rounded">inventory_2</span>
                     <span>Data Barang</span>
                 </a>
-                @if(in_array(auth()->user()->role, ['pic_gudang', 'web_admin', 'kepala_divisi', 'kepala_departemen']))
+                @if(in_array(auth()->user()->role, ['pic_gudang', 'pic_lab', 'web_admin']))
                 <a href="{{ route('satuan.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('satuan*') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
                     <span class="material-symbols-rounded">straighten</span>
                     <span>Master Satuan</span>
@@ -123,17 +141,18 @@
                 @endif
                 @php
                     $pendingRequests = 0;
-                    $userRole = auth()->user()->role;
-                    if ($userRole === 'kepala_divisi') {
-                        $pendingRequests = \App\Models\PermintaanBarang::where('status', 'Menunggu Approval')->where('target_approval', 'kepala_divisi')->count();
-                    } elseif ($userRole === 'kepala_departemen') {
-                        $pendingRequests = \App\Models\PermintaanBarang::where('status', 'Menunggu Approval')->where('target_approval', 'kepala_departemen')->count();
-                    } elseif ($userRole === 'pic_gudang') {
-                        $pendingRequests = \App\Models\PermintaanBarang::whereIn('status', ['Menunggu Approval', 'Menunggu Pengambilan', 'Menunggu Verifikasi Pengembalian', 'Pending (Jadwal Ulang)'])->count();
-                    } elseif (in_array($userRole, ['web_admin', 'pimpinan'])) {
+                    $user = auth()->user();
+                    if ($user->isPicGudang()) {
+                        $pendingRequests = \App\Models\PermintaanBarang::where('jenis_barang', 'lapangan')
+                            ->whereIn('status', ['Menunggu Approval', 'Menunggu Pengambilan', 'Menunggu Verifikasi Pengembalian', 'Pending (Jadwal Ulang)'])->count();
+                    } elseif ($user->isPicLab()) {
+                        $pendingRequests = \App\Models\PermintaanBarang::where('jenis_barang', 'lab')
+                            ->whereIn('status', ['Menunggu Approval', 'Menunggu Pengambilan', 'Menunggu Verifikasi Pengembalian', 'Pending (Jadwal Ulang)'])->count();
+                    } elseif ($user->isWebAdmin() || $user->role === 'pimpinan') {
                         $pendingRequests = \App\Models\PermintaanBarang::where('status', 'Menunggu Approval')->count();
                     } else {
-                        $pendingRequests = \App\Models\PermintaanBarang::where('user_id', auth()->id())->whereIn('status', ['Menunggu Pengambilan', 'Pending (Jadwal Ulang)'])->count();
+                        $pendingRequests = \App\Models\PermintaanBarang::where('user_id', $user->id)
+                            ->whereIn('status', ['Menunggu Pengambilan', 'Pending (Jadwal Ulang)'])->count();
                     }
                 @endphp
                 <a href="{{ route('permintaan.index') }}" class="flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 font-medium {{ request()->routeIs('permintaan*') ? 'bg-accent text-white shadow-md font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
@@ -264,7 +283,7 @@
                 <span class="text-[10px] font-bold">Dashboard</span>
             </a>
             
-            @if(in_array(auth()->user()->role, ['pic_gudang', 'agronom', 'pimpinan', 'kepala_divisi', 'kepala_departemen', 'web_admin', 'employee', 'karyawan', 'leader']))
+            @if(in_array(auth()->user()->role, ['pic_gudang', 'pic_lab', 'agronom', 'pimpinan', 'kepala_divisi', 'kepala_departemen', 'web_admin', 'employee', 'karyawan', 'leader']))
             <a href="{{ route('gudang') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 {{ request()->routeIs('gudang') || request()->routeIs('gudang.show') ? 'text-accent' : 'text-gray-400 hover:text-gray-600' }}">
                 <span class="mobile-nav-icon material-symbols-rounded">inventory_2</span>
                 <span class="text-[10px] font-bold">Barang</span>
@@ -275,15 +294,15 @@
                     <span class="mobile-nav-icon material-symbols-rounded">shopping_cart</span>
                     @php
                         $mobilePending = 0;
-                        $mRole = auth()->user()->role;
-                        if ($mRole === 'kepala_divisi') {
-                            $mobilePending = \App\Models\PermintaanBarang::where('status', 'Menunggu Approval')->where('target_approval', 'kepala_divisi')->count();
-                        } elseif ($mRole === 'kepala_departemen') {
-                            $mobilePending = \App\Models\PermintaanBarang::where('status', 'Menunggu Approval')->where('target_approval', 'kepala_departemen')->count();
-                        } elseif ($mRole === 'pic_gudang') {
-                            $mobilePending = \App\Models\PermintaanBarang::whereIn('status', ['Menunggu Approval', 'Menunggu Pengambilan', 'Menunggu Verifikasi Pengembalian', 'Pending (Jadwal Ulang)'])->count();
-                        } elseif (in_array($mRole, ['web_admin', 'pimpinan'])) {
+                        $mUser = auth()->user();
+                        if ($mUser->isPicGudang()) {
+                            $mobilePending = \App\Models\PermintaanBarang::where('jenis_barang', 'lapangan')->whereIn('status', ['Menunggu Approval', 'Menunggu Pengambilan', 'Menunggu Verifikasi Pengembalian', 'Pending (Jadwal Ulang)'])->count();
+                        } elseif ($mUser->isPicLab()) {
+                            $mobilePending = \App\Models\PermintaanBarang::where('jenis_barang', 'lab')->whereIn('status', ['Menunggu Approval', 'Menunggu Pengambilan', 'Menunggu Verifikasi Pengembalian', 'Pending (Jadwal Ulang)'])->count();
+                        } elseif ($mUser->isWebAdmin() || $mUser->role === 'pimpinan') {
                             $mobilePending = \App\Models\PermintaanBarang::where('status', 'Menunggu Approval')->count();
+                        } else {
+                            $mobilePending = \App\Models\PermintaanBarang::where('user_id', $mUser->id)->whereIn('status', ['Menunggu Pengambilan', 'Pending (Jadwal Ulang)'])->count();
                         }
                     @endphp
                     @if($mobilePending > 0)
