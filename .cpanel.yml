@@ -1,8 +1,0 @@
----
-deployment:
-  tasks:
-    - export REPO=/home/tsthid/repositories/TSTH2_PART2
-    - /bin/cp -Rf $REPO/katalog/. /home/tsthid/katalog.tsth2.id/
-    - /bin/cp -Rf $REPO/logbook/. /home/tsthid/logbook.tsth2.id/
-    - /bin/cp -Rf $REPO/pengunjung/. /home/tsthid/pengunjung.tsth2.id/
-    - /bin/cp -Rf $REPO/warehouse/. /home/tsthid/gudang.tsth2.id/
