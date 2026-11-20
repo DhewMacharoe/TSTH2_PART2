@@ -1,0 +1,1 @@
+[04-Nov-2026 11:16:04 Asia/Jakarta] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.2.0". You are running 8.1.34. in /home/tsthid/katalog.tsth2.id/tsth2-katalog/vendor/composer/platform_check.php on line 24
