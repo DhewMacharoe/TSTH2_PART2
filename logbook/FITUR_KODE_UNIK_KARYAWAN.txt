@@ -1,0 +1,144 @@
+================================================================================
+  DOKUMENTASI LENGKAP: FITUR KODE UNIK KARYAWAN, KEPALA DEPARTEMEN & KEPALA DIVISI
+  Proyek  : Logbook Karyawan (Laravel 12)
+  Tanggal : 20 Oktober 2026
+================================================================================
+
+--------------------------------------------------------------------------------
+1. DESKRIPSI FITUR
+--------------------------------------------------------------------------------
+Fitur ini menghasilkan kode unik otomatis untuk:
+  - Kepala Departemen (format: DDDKDYYNNN)
+  - Kepala Divisi     (format: DDDBBYYNNN)
+  - Employee/Staf     (format: DDDBBYYNNN)
+
+Kode dibuat otomatis di backend ketika Admin menambahkan pengguna melalui halaman
+/admin/users/create. Kode langsung disimpan di tabel `users` (kolom `employee_code`)
+dan ditampilkan pada tabel daftar pengguna (/admin/users).
+
+Kode bersifat PERMANEN dan tidak akan berubah jika nama, role, departemen, atau
+divisi diedit di masa depan.
+
+
+--------------------------------------------------------------------------------
+2. FORMAT KODE UNIK
+--------------------------------------------------------------------------------
+Panjang: 10 karakter tanpa spasi, tanda hubung, atau simbol pemisah.
+
+A. KEPALA DEPARTEMEN:
+   Format  : DDDKDYYNNN
+   - DDD   : Kode Departemen (2 angka + 1 huruf)
+   - KD    : Penanda khusus Kepala Departemen
+   - YY    : 2 digit terakhir tahun masuk (dari field tahun masuk)
+   - NNN   : Nomor urut 3 digit, dimulai dari 001
+
+   Contoh:
+   - General Affair (2026)          -> 01GKD26001
+   - Riset dan Inovasi TSTH2 (2026) -> 02RKD26001
+
+B. KEPALA DIVISI & EMPLOYEE:
+   Format  : DDDBBYYNNN
+   - DDD   : Kode Departemen (2 angka + 1 huruf)
+   - BB    : Kode Divisi (2 huruf)
+   - YY    : 2 digit terakhir tahun masuk (dari field tahun masuk)
+   - NNN   : Nomor urut 3 digit, dimulai dari 001
+
+   Contoh:
+   - Kepala Divisi Administrasi (2026) -> 01GAD26001
+   - Staff Administrasi berikutnya (2026) -> 01GAD26002 (SHARED SEQUENCE!)
+   - Staff Administrasi ketiga (2026)     -> 01GAD26003
+   - Kepala Divisi Operasional (2026)  -> 01GOP26001
+   - Kepala Divisi Hilirisasi (2026)   -> 02RHI26001
+   - Kepala Divisi GH/SH (2026)        -> 02RGS26001
+   - Kepala Divisi Genomic (2026)      -> 02RGE26001
+
+
+--------------------------------------------------------------------------------
+3. TABEL PEMETAAN KODE
+--------------------------------------------------------------------------------
+
+DEPARTEMEN:
+  Nama Departemen             | Kode DDD
+  ----------------------------+---------
+  General Affair              | 01G
+  Riset dan Inovasi           | 02R
+  Riset dan Inovasi TSTH2     | 02R
+  Hilirisasi Riset            | 02R
+
+DIVISI:
+  Nama Divisi                 | Kode BB
+  ----------------------------+---------
+  Administrasi                | AD
+  Operasional                 | OP
+  Genomic                     | GE
+  Hilirisasi                  | HI
+  GH/SH                       | GS
+
+JABATAN KHUSUS:
+  Jabatan                     | Kode
+  ----------------------------+---------
+  Kepala Departemen           | KD
+
+
+--------------------------------------------------------------------------------
+4. ATURAN NOMOR URUT BERSAMA (SHARED SEQUENCE)
+--------------------------------------------------------------------------------
+Nomor urut (NNN) terikat pada prefix: DDD + BB (atau KD) + YY.
+
+Contoh Alur:
+1. Admin membuat akun Kepala Divisi Administrasi, tahun 2026 -> 01GAD26001
+2. Admin membuat akun Karyawan Administrasi, tahun 2026       -> 01GAD26002
+3. Admin membuat akun Karyawan Administrasi lagi, tahun 2026  -> 01GAD26003
+4. Admin membuat akun Karyawan Administrasi, tahun 2025       -> 01GAD25001 (prefix tahun beda, reset ke 001)
+
+
+--------------------------------------------------------------------------------
+5. PERLAKUAN UNTUK SETIAP ROLE
+--------------------------------------------------------------------------------
+| Role               | Dept | Divisi | Tahun Masuk | Dapat Kode? | Format     |
+|--------------------|------|--------|-------------|-------------|------------|
+| admin              | -    | -      | Opsional    | TIDAK       | -          |
+| pimpinan           | -    | -      | Opsional    | TIDAK       | -          |
+| kepala_departemen  | WAJIB| -      | WAJIB       | YA          | DDDKDYYNNN |
+| kepala_divisi      | WAJIB| WAJIB  | WAJIB       | YA          | DDDBBYYNNN |
+| employee           | WAJIB| WAJIB  | WAJIB       | YA          | DDDBBYYNNN |
+
+
+--------------------------------------------------------------------------------
+6. PENCEGAHAN RACE CONDITION & DUPLIKASI
+--------------------------------------------------------------------------------
+- Kolom `employee_code` memiliki index `UNIQUE` di tabel `users`.
+- Backend menggunakan `DB::transaction(..., 3)` dengan `lockForUpdate()`.
+- Urutan sequence dihitung dari record tertinggi dengan:
+  `orderByRaw('LENGTH(employee_code) DESC, employee_code DESC')`.
+- Jika terjadi deadlock akibat concurrent request, Laravel otomatis retry hingga 3 kali.
+
+
+--------------------------------------------------------------------------------
+7. DAFTAR FILE YANG DIBUAT / DIUBAH
+--------------------------------------------------------------------------------
+1. database/migrations/2026_10_20_000001_add_employee_code_and_join_year_to_users_table.php
+   -> Menambahkan kolom `employee_code` (unique, nullable) dan `join_year`.
+
+2. app/Models/User.php
+   -> Menambahkan `employee_code` dan `join_year` ke array `$fillable`.
+
+3. app/Services/EmployeeCodeService.php
+   -> Logika generator kode untuk KD (generateForKepalaDepartemen) dan
+      divisi/employee (generateForDivisionMember), serta nextSequence() dengan lock.
+
+4. app/Http/Controllers/UserController.php
+   -> store(): Validasi join_year untuk role terkait, generate kode otomatis
+      di dalam DB::transaction sebelum persist.
+   -> update(): Mempertahankan employee_code agar permanen.
+
+5. resources/views/admin/users/create.blade.php
+   -> Input `join_year`, preview kode realtime (DDDKDYYNNN / DDDBBYYNNN),
+      serta dynamic toggle sesuai role yang dipilih.
+
+6. resources/views/admin/users/index.blade.php
+   -> Menampilkan kolom `Kode Karyawan` dengan badge biru mono.
+
+7. resources/views/admin/users/edit.blade.php
+   -> Menampilkan banner informasi kode unik karyawan (read-only) jika ada.
+================================================================================

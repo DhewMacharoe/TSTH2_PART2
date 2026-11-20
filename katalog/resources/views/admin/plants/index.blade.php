@@ -1,0 +1,474 @@
+@extends('layouts.admin')
+
+@section('title', 'Kelola Tanaman | Admin TSTH2')
+
+@section('content')
+    <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+            <h1 class="mt-2 font-['Manrope'] text-3xl font-extrabold text-[#003f32]">Kelola Tanaman</h1>
+            <p class="mt-1 text-sm text-[#718178]">Tambah, ubah, atau hapus data katalog</p>
+        </div>
+    </div>
+
+    {{-- RINGKASAN DATA & STATISTIK KOLEKSI --}}
+    <div class="mt-5 space-y-4">
+                {{-- BAGIAN 1: STATISTIK UTAMA (LOKASI) --}}
+        @php
+            $currentLocation = request('location');
+            $isGreenhouseActive = $currentLocation === 'greenhouse';
+            $isOutdoorActive = $currentLocation === 'outdoor';
+
+            $greenhouseParams = array_merge(request()->query(), ['page' => null]);
+            if ($isGreenhouseActive) {
+                unset($greenhouseParams['location']);
+            } else {
+                $greenhouseParams['location'] = 'greenhouse';
+            }
+
+            $outdoorParams = array_merge(request()->query(), ['page' => null]);
+            if ($isOutdoorActive) {
+                unset($outdoorParams['location']);
+            } else {
+                $outdoorParams['location'] = 'outdoor';
+            }
+
+            $collectionParams = array_merge(request()->query(), ['page' => null]);
+            unset($collectionParams['location']);
+        @endphp
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {{-- Kartu Total Koleksi --}}
+            <a href="{{ route('admin.plants.index', $collectionParams) }}"
+               class="group flex items-center justify-between overflow-hidden rounded-2xl border {{ ! $isGreenhouseActive && ! $isOutdoorActive ? 'border-[#00634e] bg-[#f6fbf6] shadow-md ring-2 ring-[#00634e]/20' : 'border-[#dbe9dd] bg-white shadow-[0_5px_18px_rgba(0,63,50,.05)]' }} p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#00634e] hover:shadow-lg">
+                <div class="flex items-center gap-4">
+                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e8f3ea] text-[#00634e] transition-colors group-hover:bg-[#d9eddc]">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-[#00634e]">Total Koleksi</p>
+                        <h3 class="mt-1 text-xl font-extrabold text-[#003f32]">
+                            {{ $summary['total'] }} <span class="text-xs font-normal text-[#718178]">Jenis</span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end border-l border-[#edf3ed] pl-5">
+                    <p class="text-lg font-extrabold leading-none tabular-nums text-[#003f32]">
+                        {{ number_format($summary['population'] ?? 0, 0, ',', '.') }}
+                    </p>
+                    <p class="mt-1 text-[10px] font-medium text-[#718178]">Total Populasi</p>
+                    <span class="mt-1.5 inline-flex items-center text-[10px] font-bold text-[#00634e] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        Lihat Semua <span class="ml-1" aria-hidden="true">→</span>
+                    </span>
+                </div>
+            </a>
+
+            {{-- Kartu Lokasi: Greenhouse --}}
+            <a href="{{ route('admin.plants.index', $greenhouseParams) }}" 
+               class="group flex items-center justify-between overflow-hidden rounded-2xl border {{ $isGreenhouseActive ? 'border-[#00634e] bg-[#f6fbf6] shadow-md ring-2 ring-[#00634e]/20' : 'border-[#dbe9dd] bg-white shadow-[0_5px_18px_rgba(0,63,50,.05)]' }} p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#00634e] hover:shadow-lg">
+                
+                <div class="flex items-center gap-4">
+                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl {{ $isGreenhouseActive ? 'bg-green-100 text-green-800' : 'bg-green-50 text-green-700' }} transition-colors group-hover:bg-green-100">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider {{ $isGreenhouseActive ? 'text-[#00634e]' : 'text-[#718178]' }}">Greenhouse</p>
+                        <h3 class="mt-1 text-xl font-extrabold text-[#003f32]">
+                            {{ $summary['greenhouse'] }} <span class="text-xs font-normal text-[#718178]">Jenis</span>
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-end border-l border-[#edf3ed] pl-5">
+                    <p class="text-lg font-extrabold text-[#003f32] tabular-nums leading-none">
+                        {{ number_format($summary['greenhouse_population'] ?? 0, 0, ',', '.') }}
+                    </p>
+                    <p class="mt-1 text-[10px] font-medium text-[#718178]">Total Populasi</p>
+                    <span class="mt-1.5 inline-flex items-center text-[10px] font-bold text-[#00634e] {{ $isGreenhouseActive ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-300 group-hover:opacity-100">
+                        {{ $isGreenhouseActive ? 'Hapus Filter' : 'Lihat Detail' }} <span class="ml-1" aria-hidden="true">{{ $isGreenhouseActive ? '×' : '→' }}</span>
+                    </span>
+                </div>
+            </a>
+
+            {{-- Kartu Lokasi: Outdoor --}}
+            <a href="{{ route('admin.plants.index', $outdoorParams) }}" 
+               class="group flex items-center justify-between overflow-hidden rounded-2xl border {{ $isOutdoorActive ? 'border-[#b87900] bg-[#fffbf0] shadow-md ring-2 ring-[#b87900]/20' : 'border-[#dbe9dd] bg-white shadow-[0_5px_18px_rgba(0,63,50,.05)]' }} p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#b87900] hover:shadow-lg">
+                
+                <div class="flex items-center gap-4">
+                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl {{ $isOutdoorActive ? 'bg-amber-100 text-amber-800' : 'bg-amber-50 text-amber-700' }} transition-colors group-hover:bg-amber-100">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider {{ $isOutdoorActive ? 'text-[#b87900]' : 'text-[#718178]' }}">Outdoor</p>
+                        <h3 class="mt-1 text-xl font-extrabold text-[#003f32]">
+                            {{ $summary['outdoor'] }} <span class="text-xs font-normal text-[#718178]">Jenis</span>
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-end border-l border-[#edf3ed] pl-5">
+                    <p class="text-lg font-extrabold text-[#003f32] tabular-nums leading-none">
+                        {{ number_format($summary['outdoor_population'] ?? 0, 0, ',', '.') }}
+                    </p>
+                    <p class="mt-1 text-[10px] font-medium text-[#718178]">Total Populasi</p>
+                    <span class="mt-1.5 inline-flex items-center text-[10px] font-bold text-[#b87900] {{ $isOutdoorActive ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-300 group-hover:opacity-100">
+                        {{ $isOutdoorActive ? 'Hapus Filter' : 'Lihat Detail' }} <span class="ml-1" aria-hidden="true">{{ $isOutdoorActive ? '×' : '→' }}</span>
+                    </span>
+                </div>
+            </a>
+        </div>
+
+        {{-- BAGIAN 2: RINGKASAN PER KATEGORI --}}
+        <div class="rounded-2xl border border-[#dbe9dd] bg-white p-5 shadow-[0_5px_18px_rgba(0,63,50,.05)]">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-[#718178]">Kategori Tanaman</h2>
+            <div class="mt-4 flex gap-3 overflow-x-auto pb-2">
+                @forelse($categorySummary as $item)
+                    @php
+                        $selectedCategoryIds = array_map('strval', (array) request('category', []));
+                        $categoryIsSelected = in_array((string) $item->category_id, $selectedCategoryIds, true);
+                        $categoryUrlParameters = request()->except('category');
+                        if ($item->category && ! $categoryIsSelected) {
+                            $categoryUrlParameters['category'] = [$item->category_id];
+                        }
+                        $categoryUrl = route('admin.plants.index', $categoryUrlParameters);
+                    @endphp
+
+                    <a href="{{ $categoryUrl }}" class="group flex h-[90px] w-[180px] shrink-0 flex-col justify-between rounded-xl border {{ $categoryIsSelected ? 'border-[#00634e] shadow-sm' : 'border-[#dbe9dd]' }} bg-white p-3 transition-all duration-200 hover:border-[#00634e] hover:shadow-md">
+                        <h3 class="w-full truncate text-base font-bold text-[#003f32]" title="{{ $item->category?->name ?? 'Tanpa kategori' }}">
+                            {{ $item->category?->name ?? 'Tanpa kategori' }}
+                        </h3>
+                        <div class="flex flex-col text-xs leading-tight">
+                            <span class="text-[#718178]">{{ $item->plant_count }} jenis</span>
+                            <span class="font-semibold text-[#b87900]">{{ number_format($item->population_total, 0, ',', '.') }} populasi</span>
+                        </div>
+                    </a>
+                @empty
+                    <div class="w-full py-4 text-center text-xs text-[#718178]">
+                        Belum ada data kategori.
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+    {{-- SEARCH BAR, FILTER, & TOMBOL TAMBAH--}}
+    <div class="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        {{-- Search Bar & Filter Dropdown --}}
+        <form method="GET" class="flex w-full flex-col gap-2 sm:flex-1 sm:flex-row">
+            <div class="relative flex min-w-0 flex-1 items-center">
+                <span class="pointer-events-none absolute left-3.5 flex items-center text-[#718178]">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </span>
+                <input type="search" name="search" value="{{ request('search') }}" placeholder="Cari tanaman, kategori, atau lokasi..." class="h-10 w-full rounded-lg border-0 bg-white pl-10 pr-4 text-sm shadow-sm ring-1 ring-[#dbe9dd] focus:ring-2 focus:ring-[#00634e]">
+            </div>
+
+            @php
+                $selectedCategoryIds = array_map('strval', (array) request('category', []));
+                $selectedCategoryNames = $categories->whereIn('id', $selectedCategoryIds)->pluck('name')->all();
+                $categoryButtonLabel = $selectedCategoryNames ? implode(', ', $selectedCategoryNames) : 'Semua kategori';
+                $statusButtonLabel = match (request('status')) {
+                    'active' => 'Aktif',
+                    'inactive' => 'Nonaktif',
+                    default => 'Semua status',
+                };
+            @endphp
+
+            <div class="relative shrink-0 sm:w-56">
+                <button type="button" onclick="toggleDropdown(event, 'dropdown-filter-category')" class="flex h-10 w-full items-center justify-between rounded-lg bg-white px-4 text-sm font-bold text-[#557067] shadow-sm ring-1 ring-[#dbe9dd] transition hover:text-[#003f32] focus:outline-none focus:ring-2 focus:ring-[#00634e]">
+                    <span class="truncate text-left" title="{{ $categoryButtonLabel }}">{{ $categoryButtonLabel }}</span>
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="dropdown-filter-category" class="sort-dropdown hidden absolute right-0 top-12 z-50 w-full min-w-[290px] overflow-hidden rounded-xl border border-[#dbe9dd] bg-white shadow-xl">
+                    <div class="max-h-64 space-y-1 overflow-y-auto p-4">
+                        <label class="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm font-bold text-[#557067] hover:bg-[#f6fbf6]">
+                            <input type="checkbox" id="all-categories" @checked(!$selectedCategoryIds) class="h-4 w-4 rounded accent-[#00634e]">
+                            <span>Semua kategori</span>
+                        </label>
+                        @foreach ($categories as $category)
+                            <label class="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm text-[#557067] hover:bg-[#f6fbf6]">
+                                <input type="checkbox" name="category[]" value="{{ $category->id }}" @checked(in_array((string) $category->id, $selectedCategoryIds, true)) class="category-option h-4 w-4 rounded accent-[#00634e]">
+                                <span>{{ $category->name }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                    <div class="flex items-center justify-end gap-3 border-t border-[#edf3ed] px-4 py-3">
+                        <a href="{{ route('admin.plants.index', request()->except('category', 'page')) }}" class="inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-bold text-[#557067] hover:bg-[#f1f5f1]">Reset</a>
+                        <button type="submit" class="inline-flex h-10 items-center justify-center rounded-full bg-[#00634e] px-5 text-sm font-bold text-white shadow-sm transition hover:bg-[#003f32]">Tampilkan hasil</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative shrink-0 sm:w-48">
+                <button type="button" onclick="toggleDropdown(event, 'dropdown-filter-status')" class="flex h-10 w-full items-center justify-between rounded-lg bg-white px-4 text-sm font-bold text-[#557067] shadow-sm ring-1 ring-[#dbe9dd] transition hover:text-[#003f32] focus:outline-none focus:ring-2 focus:ring-[#00634e]">
+                    <span>{{ $statusButtonLabel }}</span>
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="dropdown-filter-status" class="sort-dropdown hidden absolute right-0 top-12 z-50 w-full min-w-[290px] overflow-hidden rounded-xl border border-[#dbe9dd] bg-white shadow-xl">
+                    <div class="p-4">
+                        <div class="space-y-1">
+                            <label class="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm text-[#557067] hover:bg-[#f6fbf6]">
+                                <input type="radio" name="status" value="" @checked(!request('status')) class="h-4 w-4 accent-[#00634e]">
+                                <span>Semua status</span>
+                            </label>
+                            <label class="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm text-[#557067] hover:bg-[#f6fbf6]">
+                                <input type="radio" name="status" value="active" @checked(request('status') === 'active') class="h-4 w-4 accent-[#00634e]">
+                                <span>Aktif</span>
+                            </label>
+                            <label class="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm text-[#557067] hover:bg-[#f6fbf6]">
+                                <input type="radio" name="status" value="inactive" @checked(request('status') === 'inactive') class="h-4 w-4 accent-[#00634e]">
+                                <span>Nonaktif</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-end gap-3 border-t border-[#edf3ed] px-4 py-3">
+                        <a href="{{ route('admin.plants.index', request()->except('status', 'page')) }}" class="inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-bold text-[#557067] hover:bg-[#f1f5f1]">Reset</a>
+                        <button type="submit" class="inline-flex h-10 items-center justify-center rounded-full bg-[#00634e] px-5 text-sm font-bold text-white shadow-sm transition hover:bg-[#003f32]">Tampilkan hasil</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        {{-- Tombol Tambah Tanaman--}}
+        <a href="{{ route('admin.plants.create') }}" class="inline-flex h-10 shrink-0 items-center justify-center rounded-lg bg-[#003f32] px-5 text-xs font-bold text-white shadow-sm hover:bg-[#00634e] transition">
+            Tambah Tanaman
+        </a>
+    </div>
+
+    {{-- TABEL DATA TANAMAN & DROPDOWN SORT --}}
+    <div class="mt-5 flex flex-wrap items-center gap-3 text-xs text-[#718178]" aria-live="polite">
+        @if ($plants->total() > 0)
+            <span>Showing {{ $plants->firstItem() }} to {{ $plants->lastItem() }} of {{ $plants->total() }} items</span>
+        @else
+            <span>Showing 0 to 0 of 0 items</span>
+        @endif
+        <a href="{{ route('admin.plants.export') }}" class="inline-flex items-center justify-center rounded-lg bg-[#003f32] px-3 py-2 text-[10px] font-bold text-white transition hover:bg-[#00634e]">
+            Ekspor Excel (CSV)
+        </a>
+    </div>
+
+    <div class="mt-2 overflow-x-visible rounded-xl border border-[#dbe9dd] bg-white shadow-[0_5px_18px_rgba(0,63,50,.05)]" id="plant-table-container">
+        @php
+            $activeSort = in_array(request('sort'), ['name', 'category', 'location', 'population', 'status'], true)
+                ? request('sort')
+                : null;
+            $activeDir = in_array(request('direction'), ['asc', 'desc'], true)
+                ? request('direction')
+                : null;
+            $sortUrl = function (string $column): string {
+                $isActive = request('sort') === $column && in_array(request('direction'), ['asc', 'desc'], true);
+                $direction = ! $isActive
+                    ? 'asc'
+                    : (request('direction') === 'asc' ? 'desc' : null);
+                $parameters = array_merge(request()->query(), ['page' => null]);
+
+                if ($direction === null) {
+                    unset($parameters['sort'], $parameters['direction']);
+                } else {
+                    $parameters['sort'] = $column;
+                    $parameters['direction'] = $direction;
+                }
+
+                return route('admin.plants.index', $parameters);
+            };
+            $sortState = fn (string $column): string => $activeSort === $column && $activeDir !== null ? $activeDir : 'none';
+            $sortLabel = fn (string $column, string $type): string => match ($sortState($column)) {
+                'asc' => 'Urutkan ' . ($type === 'number' ? 'terbesar ke terkecil' : 'Z-A'),
+                'desc' => 'Hapus urutan',
+                default => 'Urutkan ' . ($type === 'number' ? 'terkecil ke terbesar' : 'A-Z'),
+            };
+        @endphp
+
+        <table class="w-full min-w-[960px] text-left text-xs">
+            <thead class="border-b border-[#dbe9dd] bg-[#f6fbf6] text-[10px] uppercase tracking-wide text-[#718178]">
+                <tr>
+                    <th aria-sort="{{ $sortState('name') }}" class="px-0 py-0">
+                        <button type="button" onclick="window.location.href='{{ $sortUrl('name') }}'" title="{{ $sortLabel('name', 'text') }}" aria-label="Tanaman: {{ $sortLabel('name', 'text') }}" class="group flex min-h-11 w-full cursor-pointer items-center gap-2 px-5 py-3 text-left font-bold uppercase tracking-wide {{ $sortState('name') === 'none' ? 'text-[#718178]' : 'text-[#003f32]' }} transition-colors duration-150 hover:bg-[#edf6ee] hover:text-[#003f32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#00634e] motion-reduce:transition-none">
+                            <span>Tanaman</span>
+                            <span class="flex items-center text-[#718178] transition-colors duration-150 group-hover:text-[#003f32] motion-reduce:transition-none" aria-hidden="true">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path class="{{ $sortState('name') === 'asc' ? 'text-[#00634e]' : ($sortState('name') === 'desc' ? 'opacity-20' : '') }}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 9 4-4 4 4"/><path class="{{ $sortState('name') === 'desc' ? 'text-[#00634e]' : ($sortState('name') === 'asc' ? 'opacity-20' : '') }}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4"/></svg>
+                            </span>
+                        </button>
+                    </th>
+                    <th class="px-5 py-4">Kode aksesi</th>
+                    <th aria-sort="{{ $sortState('category') }}" class="px-0 py-0">
+                        <button type="button" onclick="window.location.href='{{ $sortUrl('category') }}'" title="{{ $sortLabel('category', 'text') }}" aria-label="Kategori: {{ $sortLabel('category', 'text') }}" class="group flex min-h-11 w-full cursor-pointer items-center gap-2 px-5 py-3 text-left font-bold uppercase tracking-wide {{ $sortState('category') === 'none' ? 'text-[#718178]' : 'text-[#003f32]' }} transition-colors duration-150 hover:bg-[#edf6ee] hover:text-[#003f32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#00634e] motion-reduce:transition-none">
+                            <span>Kategori</span>
+                            <span class="flex items-center text-[#718178] transition-colors duration-150 group-hover:text-[#003f32] motion-reduce:transition-none" aria-hidden="true">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path class="{{ $sortState('category') === 'asc' ? 'text-[#00634e]' : ($sortState('category') === 'desc' ? 'opacity-20' : '') }}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 9 4-4 4 4"/><path class="{{ $sortState('category') === 'desc' ? 'text-[#00634e]' : ($sortState('category') === 'asc' ? 'opacity-20' : '') }}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4"/></svg>
+                            </span>
+                        </button>
+                    </th>
+                    <th aria-sort="{{ $sortState('location') }}" class="px-0 py-0">
+                        <button type="button" onclick="window.location.href='{{ $sortUrl('location') }}'" title="{{ $sortLabel('location', 'text') }}" aria-label="Lokasi: {{ $sortLabel('location', 'text') }}" class="group flex min-h-11 w-full cursor-pointer items-center gap-2 px-5 py-3 text-left font-bold uppercase tracking-wide {{ $sortState('location') === 'none' ? 'text-[#718178]' : 'text-[#003f32]' }} transition-colors duration-150 hover:bg-[#edf6ee] hover:text-[#003f32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#00634e] motion-reduce:transition-none">
+                            <span>Lokasi</span>
+                            <span class="flex items-center text-[#718178] transition-colors duration-150 group-hover:text-[#003f32] motion-reduce:transition-none" aria-hidden="true">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path class="{{ $sortState('location') === 'asc' ? 'text-[#00634e]' : ($sortState('location') === 'desc' ? 'opacity-20' : '') }}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 9 4-4 4 4"/><path class="{{ $sortState('location') === 'desc' ? 'text-[#00634e]' : ($sortState('location') === 'asc' ? 'opacity-20' : '') }}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4"/></svg>
+                            </span>
+                        </button>
+                    </th>
+                    <th aria-sort="{{ $sortState('population') }}" class="px-0 py-0 text-right">
+                        <button type="button" onclick="window.location.href='{{ $sortUrl('population') }}'" title="{{ $sortLabel('population', 'number') }}" aria-label="Jumlah populasi: {{ $sortLabel('population', 'number') }}" class="group flex min-h-11 w-full cursor-pointer items-center justify-end gap-2 px-5 py-3 text-right font-bold uppercase tracking-wide {{ $sortState('population') === 'none' ? 'text-[#718178]' : 'text-[#003f32]' }} transition-colors duration-150 hover:bg-[#edf6ee] hover:text-[#003f32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#00634e] motion-reduce:transition-none">
+                            <span>Jumlah populasi</span>
+                            <span class="flex items-center text-[#718178] transition-colors duration-150 group-hover:text-[#003f32] motion-reduce:transition-none" aria-hidden="true">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path class="{{ $sortState('population') === 'asc' ? 'text-[#00634e]' : ($sortState('population') === 'desc' ? 'opacity-20' : '') }}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 9 4-4 4 4"/><path class="{{ $sortState('population') === 'desc' ? 'text-[#00634e]' : ($sortState('population') === 'asc' ? 'opacity-20' : '') }}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4"/></svg>
+                            </span>
+                        </button>
+                    </th>
+                    <th aria-sort="{{ $sortState('status') }}" class="px-0 py-0">
+                        <button type="button" onclick="window.location.href='{{ $sortUrl('status') }}'" title="{{ $sortLabel('status', 'text') }}" aria-label="Status: {{ $sortLabel('status', 'text') }}" class="group flex min-h-11 w-full cursor-pointer items-center gap-2 px-5 py-3 text-left font-bold uppercase tracking-wide {{ $sortState('status') === 'none' ? 'text-[#718178]' : 'text-[#003f32]' }} transition-colors duration-150 hover:bg-[#edf6ee] hover:text-[#003f32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#00634e] motion-reduce:transition-none">
+                            <span>Status</span>
+                            <span class="flex items-center text-[#718178] transition-colors duration-150 group-hover:text-[#003f32] motion-reduce:transition-none" aria-hidden="true">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path class="{{ $sortState('status') === 'desc' ? 'opacity-20' : '' }}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 9 4-4 4 4"/><path class="{{ $sortState('status') === 'desc' ? 'text-[#00634e]' : ($sortState('status') === 'asc' ? 'opacity-20' : '') }}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4"/></svg>
+                            </span>
+                        </button>
+                    </th>
+                    <th class="px-5 py-4 text-right">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-[#edf3ed]">
+            @forelse ($plants as $plant)
+                <tr class="transition-colors odd:bg-white even:bg-[#f6fbf6] hover:bg-[#eaf5ea]">
+                    <td class="px-5 py-4">
+                        <div class="flex items-center gap-3">
+                            @if($plant->image)
+                                {{-- PERUBAHAN: Menggunakan Proxy Route --}}
+                                <img src="{{ route('filebase.show', ['path' => 'plants/'.$plant->image]) }}" class="h-10 w-10 rounded-md object-cover">
+                            @else
+                                <div class="flex h-10 w-10 items-center justify-center rounded-md bg-[#e8f3df] text-lg">🌿</div>
+                            @endif
+                            <div>
+                                <p class="font-bold text-[#164f43]">{{ $plant->name }}</p>
+                                <p class="mt-0.5 text-[10px] italic text-[#b87900]">{{ $plant->latin_name }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-5 py-4 font-semibold text-[#718178]">{{ $plant->accession_code ?: '-' }}</td>
+                    <td class="px-5 py-4 text-[#557067]">{{ $plant->category?->name }}</td>
+                    <td class="px-5 py-4">
+                        @if($plant->location_type === 'both')
+                            <span class="rounded bg-green-100 px-2 py-1 text-[10px] font-bold text-green-800">Greenhouse</span>
+                            <span class="rounded bg-amber-100 px-2 py-1 text-[10px] font-bold text-amber-800">Outdoor</span>
+                        @elseif($plant->location_type === 'greenhouse')
+                            <span class="rounded bg-green-100 px-2 py-1 text-[10px] font-bold text-green-800">Greenhouse</span>
+                        @else
+                            <span class="rounded bg-amber-100 px-2 py-1 text-[10px] font-bold text-amber-800">Outdoor</span>
+                        @endif
+                    </td>
+                    <td class="px-5 py-4 text-right">
+                        @php
+                            $totalPopulation = match ($plant->location_type) {
+                                'both'       => (int) ($plant->greenhouse_population ?? 0) + (int) ($plant->outdoor_population ?? 0),
+                                'greenhouse' => (int) ($plant->greenhouse_population ?? 0),
+                                default      => (int) ($plant->outdoor_population ?? 0),
+                            };
+                        @endphp
+
+                        <div class="inline-flex flex-col items-end gap-1 whitespace-nowrap">
+                            <span class="text-base font-extrabold tabular-nums text-[#003f32] leading-none">
+                                {{ number_format($totalPopulation, 0, ',', '.') }}
+                            </span>
+                            <a href="{{ route('admin.plants.history', $plant) }}"
+                               class="inline-flex items-center text-[10px] font-medium text-[#718178] transition hover:text-[#00634e] hover:underline">
+                                Riwayat
+                                <span class="ml-0.5" aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </td>
+                    <td class="px-5 py-4">
+                        <div class="inline-flex flex-col items-start gap-1">
+                            <span class="rounded-full px-2.5 py-1 text-[10px] font-bold {{ $plant->is_active ? 'bg-[#e8f3df] text-[#28604d]' : 'bg-[#f1eeee] text-[#866464]' }}">
+                                {{ $plant->is_active ? 'Aktif' : 'Nonaktif' }}
+                            </span>
+                            <a href="{{ route('plant.show', $plant) }}" target="_blank" rel="noopener"
+                               class="inline-flex items-center text-[10px] font-medium text-[#718178] transition hover:text-[#00634e] hover:underline">
+                                Pratinjau
+                                <span class="ml-0.5" aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </td>
+                    <td class="px-5 py-4">
+                        <div class="flex justify-end gap-3 font-bold">
+                            <a href="{{ route('admin.plants.edit', $plant) }}#qr-code" class="text-[#00634e] hover:text-[#b87900]">QR</a>
+                            <a href="{{ route('admin.plants.edit', $plant) }}" class="text-[#00634e] hover:text-[#b87900]">Edit</a>
+                            <form method="POST" action="{{ route('admin.plants.destroy', $plant) }}" data-delete-form>
+                                @csrf
+                                @method('DELETE')
+                                <button class="text-[#b04d3e] hover:text-[#7d2318]">Hapus</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr><td colspan="7" class="px-5 py-14 text-center text-sm text-[#718178]">Belum ada data tanaman.</td></tr>
+            @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-6">{{ $plants->links() }}</div>
+
+    <script>
+        function toggleDropdown(clickEvent, dropdownId) {
+            clickEvent.stopPropagation();
+            document.querySelectorAll('.sort-dropdown').forEach(el => {
+                if (el.id !== dropdownId) el.classList.add('hidden');
+            });
+            const target = document.getElementById(dropdownId);
+            if (target) {
+                target.classList.toggle('hidden');
+            }
+        }
+
+        window.addEventListener('click', function () {
+            document.querySelectorAll('.sort-dropdown').forEach(el => {
+                el.classList.add('hidden');
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const allCategories = document.getElementById('all-categories');
+            const categoryOptions = document.querySelectorAll('.category-option');
+            const categoryDropdown = document.getElementById('dropdown-filter-category');
+            const statusDropdown = document.getElementById('dropdown-filter-status');
+
+            categoryDropdown?.addEventListener('click', function (clickEvent) {
+                clickEvent.stopPropagation();
+            });
+
+            statusDropdown?.addEventListener('click', function (clickEvent) {
+                clickEvent.stopPropagation();
+            });
+
+            if (allCategories) {
+                allCategories.addEventListener('change', function () {
+                    if (this.checked) {
+                        categoryOptions.forEach(option => option.checked = false);
+                    }
+                });
+            }
+
+            categoryOptions.forEach(option => {
+                option.addEventListener('change', function () {
+                    if (this.checked && allCategories) {
+                        allCategories.checked = false;
+                    }
+                });
+            });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('sort')) {
+                const tableContainer = document.getElementById('plant-table-container');
+                if (tableContainer) {
+                    tableContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+        });
+    </script>
+@endsection
