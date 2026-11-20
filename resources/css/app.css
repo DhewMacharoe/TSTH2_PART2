@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1 { @apply text-5xl font-extrabold capitalize font-heading; }
+  h2 { @apply text-4xl font-bold capitalize font-heading; }
+  h3 { @apply text-2xl font-bold capitalize font-heading; }
+  p { @apply text-base leading-relaxed normal-case font-sans; }
+}
+
+@layer components {
+  .chunk-card {
+    @apply bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300;
+  }
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-light text-white font-bold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition-all;
+  }
+  .btn-accent {
+    @apply bg-accent hover:bg-accent-light text-white font-bold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition-all;
+  }
+}
+
+@layer utilities {
+  .text-xs-sm { @apply text-xs sm:text-sm; }
+  .truncate-2 { @apply line-clamp-2; }
+}
