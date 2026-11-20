@@ -1,0 +1,99 @@
+name: Deploy to InfinityFree
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v3
+
+    - name: 🐘 Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        
+    - name: 📦 Install Composer Dependencies
+      run: composer install --no-dev --optimize-autoloader
+
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: 🏗️ Install NPM Dependencies & Build
+      run: |
+        npm install
+        npm run build
+
+    - name: 🗑️ Remove .gitignore
+      run: rm -f .gitignore
+
+    - name: 🗜️ Zip vendor folder to bypass FTP slowness
+      run: |
+        zip -q -r vendor.zip vendor/
+        rm -rf vendor/
+
+    - name: 📄 Create Unzipper Script
+      run: |
+        cat << 'EOF' > public/unzip.php
+        <?php
+        $zipFile = __DIR__ . '/../vendor.zip';
+        $extractPath = __DIR__ . '/../';
+        
+        if (!file_exists($zipFile)) {
+            die("Error: vendor.zip not found.");
+        }
+        
+        $zip = new ZipArchive;
+        if ($zip->open($zipFile) === TRUE) {
+            $zip->extractTo($extractPath);
+            $zip->close();
+            unlink($zipFile);
+            unlink(__FILE__);
+            echo "Success";
+        } else {
+            http_response_code(500);
+            echo "Failed";
+        }
+        EOF
+
+    - name: 🚀 Sync files to InfinityFree
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: htdocs/
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/.github/**
+          node_modules/**
+          resources/css/**
+          resources/js/**
+          tests/**
+          storage/framework/cache/**
+          storage/framework/views/**
+          storage/framework/sessions/**
+          storage/logs/**
+          .env
+          .env.example
+          README.md
+          phpunit.xml
+          package.json
+          package-lock.json
+          vite.config.js
+          tailwind.config.js
+          postcss.config.js
+
+    - name: ⚡ Extract vendor.zip on Server
+      run: |
+        # Wait a few seconds to ensure files are fully written by FTP
+        sleep 5
+        curl -sS https://tsth2.infy.click/unzip.php || echo "Curl completed"

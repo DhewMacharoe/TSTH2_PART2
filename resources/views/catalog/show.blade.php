@@ -1,0 +1,201 @@
+@extends('layouts.public')
+
+@section('title', $plant->name . ' | ' . __('site.plant_page_title_suffix'))
+
+@section('content')
+<div class="mx-auto max-w-6xl px-4 py-8">
+    @php
+        $catalogRoute = $plant->location_type === 'collection' ? 'collection' : 'katalog';
+        $catalogLabel = $plant->location_type === 'collection'
+            ? __('site.catalog_outdoor_label')
+            : __('site.catalog_greenhouse_label');
+    @endphp
+    
+    <!-- Breadcrumb -->
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <nav class="min-w-0 overflow-x-auto text-xs font-medium text-gray-500" aria-label="Breadcrumb">
+            <ol class="flex min-w-max items-center gap-2 whitespace-nowrap">
+                <li><a href="{{ route($catalogRoute) }}" class="text-[#003f32] transition hover:underline">{{ $catalogLabel }}</a></li>
+                <li aria-hidden="true" class="text-gray-300">/</li>
+                <li>
+                    @if ($plant->category)
+                        <a href="{{ route($catalogRoute, ['category' => $plant->category->slug]) }}" class="text-[#003f32] transition hover:underline">{{ $plant->category->name }}</a>
+                    @else
+                        {{ __('site.catalog_herbal_default') }}
+                    @endif
+                </li>
+                <li aria-hidden="true" class="text-gray-300">/</li>
+                <li aria-current="page" class="max-w-[280px] truncate font-bold text-gray-900">{{ $plant->name }}</li>
+            </ol>
+        </nav>
+        <button onclick="navigator.share ? navigator.share({title: '{{ $plant->name }}', url: window.location.href}) : alert('Link copied!')"
+                class="flex items-center gap-1.5 hover:text-gray-900 transition">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
+            {{ __('site.plant_share') }}
+        </button>
+    </div>
+
+    <!-- Main Card -->
+    <article class="overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100 p-8 sm:p-12">
+        
+        <!-- Top Section: Image & Main Info -->
+        <div class="mb-12 flex flex-col gap-10 md:flex-row">
+            
+            @php
+                $plantImages = collect([$plant->image])->filter()->merge($plant->image_gallery ?? [])->values();
+            @endphp
+            <div class="plant-carousel w-full shrink-0 md:w-1/3 lg:w-[320px]" data-carousel>
+                <div class="relative">
+                    <div class="flex snap-x snap-mandatory gap-2 overflow-x-auto rounded-lg scrollbar-none" data-carousel-track>
+                    @forelse ($plantImages as $imageIndex => $image)
+                        <div class="flex w-full shrink-0 snap-center items-center justify-center overflow-hidden rounded-lg border border-gray-50 bg-gray-50 {{ $imageIndex === 0 ? 'aspect-square' : 'h-80' }}">
+                            <img src="{{ asset('storage/plants/' . $image) }}"
+                                 alt="{{ $plant->name }} - {{ __('site.plant_foto_label') }} {{ $imageIndex + 1 }}"
+                                 class="{{ $imageIndex === 0 ? 'h-full w-full object-cover' : 'h-full w-auto max-w-full object-contain' }}">
+                        </div>
+                    @empty
+                        <div class="flex aspect-square w-full flex-col items-center justify-center rounded-lg border border-gray-100 bg-gray-50 text-[#477568]/40">
+                            <span class="material-symbols-rounded text-6xl mb-2">eco</span>
+                        </div>
+                    @endforelse
+                    </div>
+                    @if ($plantImages->count() > 1)
+                        <button type="button" class="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg font-bold text-[#003f32] shadow" data-carousel-prev aria-label="{{ __('site.plant_foto_prev') }}">‹</button>
+                        <button type="button" class="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg font-bold text-[#003f32] shadow" data-carousel-next aria-label="{{ __('site.plant_foto_next') }}">›</button>
+                    @endif
+                </div>
+                @if ($plantImages->count() > 1)
+                    <div class="flex items-center justify-center gap-1.5 pt-2" data-carousel-dots>
+                        @foreach ($plantImages as $imageIndex => $image)
+                            <button type="button" class="h-1.5 rounded-full transition-all {{ $imageIndex === 0 ? 'w-4 bg-[#003f32]' : 'w-1.5 bg-[#b8c8bd]' }}" data-carousel-dot="{{ $imageIndex }}" aria-label="{{ __('site.plant_view_foto') }} {{ $imageIndex + 1 }}"></button>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+            
+            <div class="flex-1">
+                <span class="mb-4 inline-block rounded-sm bg-[#f0fdf4] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#16a34a]">
+                    {{ $plant->category?->name ?? __('site.catalog_herbal_default') }}
+                </span>
+                
+                <h1 class="font-['Montserrat'] text-4xl font-extrabold tracking-tight text-[#000000]">{{ $plant->name }}</h1>
+                <p class="mb-8 mt-1 text-lg italic text-gray-500">{{ $plant->latin_name }}</p>
+                
+                <!-- Taxonomy Table (3-Column Grid) -->
+                <div class="grid grid-cols-2 gap-x-4 gap-y-6 border-y border-gray-100 py-5 sm:grid-cols-3">
+                    <div>
+                        <p class="text-[9px] font-bold uppercase tracking-wider text-gray-400">Kingdom</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-800">Plantae</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold uppercase tracking-wider text-gray-400">Ordo</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-800">{{ $plant->ordo ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold uppercase tracking-wider text-gray-400">{{ __('site.catalog_family_label') }}</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-800">{{ $plant->family }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold uppercase tracking-wider text-gray-400">Genus</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-800">{{ $plant->genus ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold uppercase tracking-wider text-gray-400">Botanist</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-800">{{ $plant->botanist ?: '-' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Section: Description, Benefits, Origin -->
+        <div class="space-y-10">
+            <section>
+                <h2 class="mb-4 font-['Montserrat'] text-lg font-bold text-gray-900">{{ __('site.plant_description_section') }}</h2>
+                <div class="text-[13px] leading-relaxed text-black">
+                    {!! nl2br(e($plant->description_full ?: $plant->description_short)) !!}
+                </div>
+            </section>
+
+            <section>
+                <h2 class="mb-4 font-['Montserrat'] text-lg font-bold text-gray-900">{{ __('site.plant_benefits_section') }}</h2>
+                <ul class="space-y-3 text-[13px] text-black">
+                    @if ($plant->benefits)
+                        @foreach (explode("\n", str_replace("\r", "", $plant->benefits)) as $manfaat)
+                            @if (trim($manfaat) !== '')
+                                <li class="flex items-start gap-2.5">
+                                    <svg class="mt-0.5 h-4 w-4 shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span>{{ trim($manfaat) }}</span>
+                                </li>
+                            @endif
+                        @endforeach
+                    @else
+                        <li class="flex items-start gap-2.5">
+                            <span class="text-gray-400">{{ __('site.plant_no_benefits_data') }}</span>
+                        </li>
+                    @endif
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="mb-4 font-['Montserrat'] text-lg font-bold text-gray-900">{{ __('site.plant_origin_section') }}</h2>
+                <div class="rounded-xl border border-green-100 bg-[#f0f8f4] p-5 shadow-sm">
+                    <div class="text-[13px] leading-relaxed text-gray-700">
+                        <p class="font-bold text-[#003f32] mb-1">
+                            {{ __('site.plant_origin_label') }}: {{ $plant->origin ?? __('site.plant_origin_not_available') }}
+                        </p>
+                        <p>
+                            {{ $plant->origin_distribution ?? __('site.plant_no_distribution') }}
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </article>
+</div>
+
+<script>
+    document.querySelectorAll('[data-carousel]').forEach((carousel) => {
+        const track = carousel.querySelector('[data-carousel-track]');
+        if (!track) return;
+        const slides = Array.from(track.children);
+        const dots = Array.from(carousel.querySelectorAll('[data-carousel-dot]'));
+        let currentIndex = 0;
+        let autoplay;
+
+        if (slides.length < 2) return;
+
+        const showSlide = (index) => {
+            currentIndex = (index + slides.length) % slides.length;
+            track.scrollTo({ left: slides[currentIndex].offsetLeft, behavior: 'smooth' });
+            dots.forEach((dot, dotIndex) => {
+                dot.classList.toggle('w-4', dotIndex === currentIndex);
+                dot.classList.toggle('bg-[#003f32]', dotIndex === currentIndex);
+                dot.classList.toggle('w-1.5', dotIndex !== currentIndex);
+                dot.classList.toggle('bg-[#b8c8bd]', dotIndex !== currentIndex);
+            });
+        };
+
+        const startAutoplay = () => {
+            clearInterval(autoplay);
+            autoplay = setInterval(() => showSlide(currentIndex + 1), 4500);
+        };
+
+        const prevBtn = carousel.querySelector('[data-carousel-prev]');
+        const nextBtn = carousel.querySelector('[data-carousel-next]');
+        if (prevBtn) prevBtn.addEventListener('click', () => { showSlide(currentIndex - 1); startAutoplay(); });
+        if (nextBtn) nextBtn.addEventListener('click', () => { showSlide(currentIndex + 1); startAutoplay(); });
+
+        dots.forEach((dot) => dot.addEventListener('click', () => {
+            showSlide(Number(dot.dataset.carouselDot));
+            startAutoplay();
+        }));
+        carousel.addEventListener('mouseenter', () => clearInterval(autoplay));
+        carousel.addEventListener('mouseleave', startAutoplay);
+        startAutoplay();
+    });
+</script>
+@endsection

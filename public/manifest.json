@@ -1,0 +1,40 @@
+{
+    "name": "TSTH2 Hub - Taman Sains Teknologi Herbal & Hortikultura",
+    "short_name": "TSTH2",
+    "description": "Portal Resmi & Sistem Informasi Manajemen TSTH2",
+    "id": "/",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "any",
+    "background_color": "#ffffff",
+    "theme_color": "#054439",
+    "prefer_related_applications": false,
+    "categories": ["education", "business", "productivity"],
+    "icons": [
+        {
+            "src": "/assets/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/assets/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/assets/icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/assets/icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
