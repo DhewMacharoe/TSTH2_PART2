@@ -49,6 +49,11 @@ class AuthenticatedSessionController extends Controller
         $urlGudang     = rtrim(config('app.url_gudang',     env('URL_GUDANG',     'http://localhost:8002')), '/');
         $urlKatalog    = rtrim(config('app.url_katalog',    env('URL_KATALOG',    'http://localhost:8000')), '/');
 
+        // Jika status akun masih pending persetujuan admin
+        if (($user->status ?? 'approved') === 'pending') {
+            return redirect()->route('approval.pending');
+        }
+
         // Routing login berdasarkan Spatie Role & Role Pengguna:
         // 1. Role Pimpinan -> Dashboard Pimpinan di Logbook
         if ($hasRole('pimpinan')) {

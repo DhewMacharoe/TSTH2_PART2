@@ -87,6 +87,22 @@
                     @if(in_array(Auth::user()->role, ['employee', 'karyawan'], true))
 
                         <a
+                            href="{{ route('employee.tasks.index') }}"
+                            class="
+                                px-1 py-5
+                                text-sm font-medium
+                                transition duration-200
+                                border-b-2
+                                {{ request()->routeIs('employee.tasks.*')
+                                    ? 'text-blue-600 border-blue-600'
+                                    : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-300'
+                                }}
+                            "
+                        >
+                            Tugas Saya
+                        </a>
+
+                        <a
                             href="{{ route('employee.logbooks.index') }}"
                             class="
                                 px-1 py-5
@@ -102,6 +118,29 @@
                             Logbook Saya
                         </a>
 
+                    @endif
+
+                    {{-- =============================== --}}
+                    {{-- MENU PIC GUDANG / PIC LAB --}}
+                    {{-- =============================== --}}
+
+                    @if(in_array(Auth::user()->role, ['pic_gudang', 'pic_lab'], true))
+                        @php
+                            $urlGudang = rtrim(config('app.url_gudang', env('URL_GUDANG', 'http://localhost:8002')), '/');
+                        @endphp
+                        <a
+                            href="{{ $urlGudang }}/dasbor"
+                            class="
+                                px-1 py-5
+                                text-sm font-semibold
+                                text-amber-700 hover:text-amber-900
+                                border-b-2 border-transparent hover:border-amber-400
+                                flex items-center gap-1.5 transition
+                            "
+                        >
+                            <span>Sistem Gudang & Lab</span>
+                            <span class="text-xs">&rarr;</span>
+                        </a>
                     @endif
 
 
@@ -542,6 +581,20 @@
                     Logbook Saya
                 </a>
 
+            @endif
+
+            {{-- PIC GUDANG & PIC LAB --}}
+            @if(in_array(Auth::user()->role, ['pic_gudang', 'pic_lab'], true))
+                @php
+                    $urlGudang = rtrim(config('app.url_gudang', env('URL_GUDANG', 'http://localhost:8002')), '/');
+                @endphp
+                <a
+                    href="{{ $urlGudang }}/dasbor"
+                    class="block px-4 py-3 text-sm font-semibold text-amber-700 hover:bg-amber-50 border-l-4 border-amber-500 transition"
+                    target="_blank"
+                >
+                    Sistem Warehouse & Gudang &rarr;
+                </a>
             @endif
 
 

@@ -17,6 +17,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'status',
+        'force_logout',
         'department_id',
         'division_id',
         'employee_code',
@@ -177,5 +179,15 @@ class User extends Authenticatable
             return 'K';
         }
         return strtoupper(substr($this->name ?? 'U', 0, 1));
+    }
+
+    public function isApproved(): bool
+    {
+        return ($this->status ?? 'approved') === 'approved';
+    }
+
+    public function isPending(): bool
+    {
+        return ($this->status ?? 'approved') === 'pending';
     }
 }

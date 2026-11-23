@@ -5,9 +5,17 @@
 {{-- ========================================================= --}}
 
 <x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-800">
-        Tambah User
-    </h2>
+    <div class="flex items-center justify-between">
+        <h2 class="font-semibold text-xl text-gray-800">
+            Tambah User Baru
+        </h2>
+        <a
+            href="{{ route('admin.users.index') }}"
+            class="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1 transition"
+        >
+            &larr; Kembali ke Daftar User
+        </a>
+    </div>
 </x-slot>
 
 
@@ -26,21 +34,15 @@
                 method="POST"
                 autocomplete="off"
             >
-
                 @csrf
-
 
                 {{-- ================================================= --}}
                 {{-- NAMA --}}
                 {{-- ================================================= --}}
 
                 <div class="mb-4">
-
-                    <label
-                        for="name"
-                        class="block mb-2 font-medium text-gray-700"
-                    >
-                        Nama
+                    <label for="name" class="block mb-2 font-medium text-gray-700">
+                        Nama Lengkap <span class="text-red-500">*</span>
                     </label>
 
                     <input
@@ -54,11 +56,8 @@
                     >
 
                     @error('name')
-                        <p class="text-red-500 text-sm mt-1">
-                            {{ $message }}
-                        </p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
-
                 </div>
 
 
@@ -67,19 +66,15 @@
                 {{-- ================================================= --}}
 
                 <div class="mb-4">
-
-                    <label
-                        for="email"
-                        class="block mb-2 font-medium text-gray-700"
-                    >
-                        Email
+                    <label for="email" class="block mb-2 font-medium text-gray-700">
+                        Email <span class="text-red-500">*</span>
                     </label>
 
                     <input
                         type="email"
                         name="email"
                         id="email"
-                        value=""
+                        value="{{ old('email') }}"
                         autocomplete="off"
                         class="w-full border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Masukkan email user"
@@ -87,11 +82,8 @@
                     >
 
                     @error('email')
-                        <p class="text-red-500 text-sm mt-1">
-                            {{ $message }}
-                        </p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
-
                 </div>
 
 
@@ -99,102 +91,153 @@
                 {{-- PASSWORD --}}
                 {{-- ================================================= --}}
 
-                <div class="mb-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="password" class="block mb-2 font-medium text-gray-700">
+                            Password <span class="text-red-500">*</span>
+                        </label>
 
-                    <label
-                        for="password"
-                        class="block mb-2 font-medium text-gray-700"
-                    >
-                        Password
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            autocomplete="new-password"
+                            class="w-full border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                            placeholder="Minimal 8 karakter"
+                            required
+                        >
+
+                        @error('password')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="password_confirmation" class="block mb-2 font-medium text-gray-700">
+                            Konfirmasi Password <span class="text-red-500">*</span>
+                        </label>
+
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            id="password_confirmation"
+                            class="w-full border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                            placeholder="Ulangi password"
+                            required
+                        >
+                    </div>
+                </div>
+
+
+                {{-- ================================================= --}}
+                {{-- STATUS APPROVAL --}}
+                {{-- ================================================= --}}
+
+                <div class="mb-4">
+                    <label for="status" class="block mb-2 font-medium text-gray-700">
+                        Status Akun
                     </label>
 
-                    <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        autocomplete="new-password"
+                    <select
+                        name="status"
+                        id="status"
                         class="w-full border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
-                        placeholder="Minimal 8 karakter"
-                        required
                     >
+                        <option value="approved" @selected(old('status', 'approved') === 'approved')>
+                            Disetujui (Approved) - Pengguna langsung aktif
+                        </option>
+                        <option value="pending" @selected(old('status') === 'pending')>
+                            Menunggu Persetujuan (Pending)
+                        </option>
+                    </select>
 
-                    @error('password')
-                        <p class="text-red-500 text-sm mt-1">
-                            {{ $message }}
-                        </p>
+                    @error('status')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
-
                 </div>
 
 
                 {{-- ================================================= --}}
-                {{-- KONFIRMASI PASSWORD --}}
+                {{-- ROLE SELECTION (TERSTRUKTUR) --}}
                 {{-- ================================================= --}}
 
-                <div class="mb-4">
-
-                    <label
-                        for="password_confirmation"
-                        class="block mb-2 font-medium text-gray-700"
-                    >
-                        Konfirmasi Password
+                <div class="mb-5 p-4 rounded-xl bg-gray-50 border border-gray-200">
+                    <label for="role-select" class="block mb-1.5 font-bold text-gray-800">
+                        Pilih Role Pengguna <span class="text-red-500">*</span>
                     </label>
-
-                    <input
-                        type="password"
-                        name="password_confirmation"
-                        id="password_confirmation"
-                        class="w-full border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
-                        placeholder="Ulangi password"
-                        required
-                    >
-
-                </div>
-
-
-                {{-- ================================================= --}}
-                {{-- ROLE --}}
-                {{-- ================================================= --}}
-
-                <div class="mb-4">
-
-                    <label
-                        for="role-select"
-                        class="block mb-2 font-medium text-gray-700"
-                    >
-                        Role
-                    </label>
+                    <p class="text-xs text-gray-500 mb-3">
+                        Pilih jenis role: PIC (Gudang/Lab), Kepala Departemen, Kepala Divisi, atau Karyawan Lapangan.
+                    </p>
 
                     <select
                         name="role"
                         id="role-select"
-                        class="w-full border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                        class="w-full border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500 font-medium"
                         required
                     >
+                        <option value="">-- Pilih Role --</option>
 
-                        <option value="">
-                            Pilih Role
-                        </option>
-
-                        @foreach($roles as $role)
-
-                            <option
-                                value="{{ $role->slug }}"
-                                @selected(old('role') === $role->slug)
-                            >
-                                {{ $role->name }}
+                        <optgroup label="1. PIC Gudang & Lab (Warehouse)">
+                            <option value="pic_gudang" @selected(old('role') === 'pic_gudang')>
+                                PIC Gudang (General Affair)
                             </option>
+                            <option value="pic_lab" @selected(old('role') === 'pic_lab')>
+                                PIC Lab (Riset dan Inovasi)
+                            </option>
+                        </optgroup>
 
-                        @endforeach
+                        <optgroup label="2. Struktural Organisasi">
+                            <option value="kepala_departemen" @selected(old('role') === 'kepala_departemen')>
+                                Kepala Departemen
+                            </option>
+                            <option value="kepala_divisi" @selected(old('role') === 'kepala_divisi')>
+                                Kepala Divisi
+                            </option>
+                        </optgroup>
 
+                        <optgroup label="3. Operasional">
+                            <option value="employee" @selected(old('role') === 'employee')>
+                                Karyawan / Employee
+                            </option>
+                        </optgroup>
+
+                        <optgroup label="4. Sistem & Eksekutif">
+                            <option value="pimpinan" @selected(old('role') === 'pimpinan')>
+                                Pimpinan / Direktur
+                            </option>
+                            <option value="admin" @selected(old('role') === 'admin')>
+                                Admin Sistem Logbook
+                            </option>
+                        </optgroup>
                     </select>
 
-                    @error('role')
-                        <p class="text-red-500 text-sm mt-1">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                    {{-- Role Hint Badges --}}
+                    <div id="role-hint" class="mt-2.5 hidden">
+                        <div id="hint-pic-gudang" class="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900 hidden flex items-center gap-2">
+                            <span class="inline-block w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+                            <span><strong>PIC Gudang:</strong> Mengelola inventaris & barang operasional General Affair pada Portal Warehouse (Port 8002).</span>
+                        </div>
+                        <div id="hint-pic-lab" class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 hidden flex items-center gap-2">
+                            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                            <span><strong>PIC Lab:</strong> Mengelola sampel & inventaris lab Riset dan Inovasi pada Portal Warehouse (Port 8002).</span>
+                        </div>
+                        <div id="hint-kadep" class="p-2.5 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-900 hidden flex items-center gap-2">
+                            <span class="inline-block w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>
+                            <span><strong>Kepala Departemen:</strong> Membawahi seluruh divisi dalam satu departemen, memantau proyek & me-review logbook.</span>
+                        </div>
+                        <div id="hint-kadiv" class="p-2.5 rounded-lg bg-cyan-50 border border-cyan-200 text-xs text-cyan-900 hidden flex items-center gap-2">
+                            <span class="inline-block w-2 h-2 rounded-full bg-cyan-500 shrink-0"></span>
+                            <span><strong>Kepala Divisi:</strong> Membuat target & task serta me-review logbook karyawan di divisinya.</span>
+                        </div>
+                        <div id="hint-employee" class="p-2.5 rounded-lg bg-green-50 border border-green-200 text-xs text-green-900 hidden flex items-center gap-2">
+                            <span class="inline-block w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
+                            <span><strong>Karyawan:</strong> Menerima tugas dari Kepala Divisi dan mencatat aktivitas harian pada Logbook.</span>
+                        </div>
+                    </div>
 
+                    @error('role')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
 
@@ -202,22 +245,10 @@
                 {{-- DEPARTMENT --}}
                 {{-- ================================================= --}}
 
-                <div
-                    class="mb-4"
-                    id="department-container"
-                >
-
-                    <label
-                        for="department-select"
-                        class="block mb-2 font-medium text-gray-700"
-                    >
+                <div class="mb-4" id="department-container">
+                    <label for="department-select" class="block mb-2 font-medium text-gray-700">
                         Department
-                        <span
-                            id="department-required"
-                            class="text-red-500 hidden"
-                        >
-                            *
-                        </span>
+                        <span id="department-required" class="text-red-500 hidden">*</span>
                     </label>
 
                     <select
@@ -225,33 +256,20 @@
                         id="department-select"
                         class="w-full border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
                     >
-
-                        <option value="">
-                            Pilih Department
-                        </option>
-
+                        <option value="">Pilih Department</option>
                         @foreach($departments as $department)
-
                             <option
                                 value="{{ $department->id }}"
-                                @selected(
-                                    (string) old('department_id') ===
-                                    (string) $department->id
-                                )
+                                @selected((string) old('department_id') === (string) $department->id)
                             >
                                 {{ $department->name }}
                             </option>
-
                         @endforeach
-
                     </select>
 
                     @error('department_id')
-                        <p class="text-red-500 text-sm mt-1">
-                            {{ $message }}
-                        </p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
-
                 </div>
 
 
@@ -259,22 +277,10 @@
                 {{-- DIVISION --}}
                 {{-- ================================================= --}}
 
-                <div
-                    class="mb-6"
-                    id="division-container"
-                >
-
-                    <label
-                        for="division-select"
-                        class="block mb-2 font-medium text-gray-700"
-                    >
+                <div class="mb-6" id="division-container">
+                    <label for="division-select" class="block mb-2 font-medium text-gray-700">
                         Division
-                        <span
-                            id="division-required"
-                            class="text-red-500 hidden"
-                        >
-                            *
-                        </span>
+                        <span id="division-required" class="text-red-500 hidden">*</span>
                     </label>
 
                     <select
@@ -282,34 +288,25 @@
                         id="division-select"
                         class="w-full border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
                     >
-
-                        <option value="">
-                            Pilih Division
-                        </option>
-
+                        <option value="">Pilih Division</option>
                         @foreach($divisions as $division)
-
                             <option
                                 value="{{ $division->id }}"
                                 data-department="{{ $division->department_id }}"
-                                @selected(
-                                    (string) old('division_id') ===
-                                    (string) $division->id
-                                )
+                                @selected((string) old('division_id') === (string) $division->id)
                             >
                                 {{ $division->name }}
                             </option>
-
                         @endforeach
-
                     </select>
 
-                    @error('division_id')
-                        <p class="text-red-500 text-sm mt-1">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                    <p id="division-not-needed" class="text-xs text-gray-500 mt-1 hidden">
+                        Role ini tidak membutuhkan pemilihan divisi individual.
+                    </p>
 
+                    @error('division_id')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
 
@@ -318,15 +315,11 @@
                 {{-- ================================================= --}}
 
                 <div class="mb-6" id="join-year-container">
-
-                    <label
-                        for="join_year"
-                        class="block mb-2 font-medium text-gray-700"
-                    >
+                    <label for="join_year" class="block mb-2 font-medium text-gray-700">
                         Tahun Masuk
                         <span class="text-red-500" id="join-year-required">*</span>
                         <span class="text-gray-400 text-sm font-normal">
-                            (untuk pembentukan kode karyawan)
+                            (untuk pembentukan kode karyawan otomatis)
                         </span>
                     </label>
 
@@ -341,14 +334,13 @@
                         placeholder="{{ date('Y') }}"
                     >
 
-                    <p class="text-gray-500 text-sm mt-1">
-                        Format kode: <code class="bg-gray-100 px-1 rounded text-xs font-semibold">DDDKDYYNNN</code> (Kepala Dept) atau <code class="bg-gray-100 px-1 rounded text-xs font-semibold">DDDBBYYNNN</code> (Kepala Divisi & Employee).
+                    <p class="text-gray-500 text-xs mt-1">
+                        Format kode: <code class="bg-gray-100 px-1 rounded font-semibold text-blue-700">DDDKDYYNNN</code> (Kepala Dept) atau <code class="bg-gray-100 px-1 rounded font-semibold text-blue-700">DDDBBYYNNN</code> (Kepala Divisi & Employee).
                     </p>
 
                     @error('join_year')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
-
                 </div>
 
 
@@ -387,22 +379,20 @@
                 {{-- BUTTON --}}
                 {{-- ================================================= --}}
 
-                <div class="flex gap-3">
-
+                <div class="flex gap-3 pt-4 border-t border-gray-100">
                     <a
                         href="{{ route('admin.users.index') }}"
-                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition"
+                        class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2.5 rounded-lg text-sm font-medium transition"
                     >
-                        Kembali
+                        Batal
                     </a>
 
                     <button
                         type="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg text-sm font-semibold shadow-sm transition"
                     >
                         Simpan User
                     </button>
-
                 </div>
 
             </form>
@@ -415,324 +405,235 @@
 
 
 {{-- ========================================================= --}}
-{{-- JAVASCRIPT --}}
+{{-- JAVASCRIPT LOGIC --}}
 {{-- ========================================================= --}}
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const roleSelect = document.getElementById('role-select');
+    const departmentContainer = document.getElementById('department-container');
+    const departmentSelect = document.getElementById('department-select');
+    const departmentRequired = document.getElementById('department-required');
 
-    document.addEventListener('DOMContentLoaded', function () {
+    const divisionContainer = document.getElementById('division-container');
+    const divisionSelect = document.getElementById('division-select');
+    const divisionRequired = document.getElementById('division-required');
+    const divisionNotNeeded = document.getElementById('division-not-needed');
 
-        const roleSelect =
-            document.getElementById('role-select');
+    const joinYearContainer = document.getElementById('join-year-container');
+    const joinYearInput = document.getElementById('join_year');
+    const joinYearRequired = document.getElementById('join-year-required');
 
-        const departmentContainer =
-            document.getElementById('department-container');
+    const codePreviewContainer = document.getElementById('code-preview-container');
+    const codePreviewBadge = document.getElementById('code-preview-badge');
+    const codePreviewDesc = document.getElementById('code-preview-desc');
 
-        const departmentSelect =
-            document.getElementById('department-select');
+    const roleHint = document.getElementById('role-hint');
+    const hints = {
+        'pic_gudang': document.getElementById('hint-pic-gudang'),
+        'pic_lab': document.getElementById('hint-pic-lab'),
+        'kepala_departemen': document.getElementById('hint-kadep'),
+        'kepala_divisi': document.getElementById('hint-kadiv'),
+        'employee': document.getElementById('hint-employee'),
+    };
 
-        const departmentRequired =
-            document.getElementById('department-required');
+    const divisionOptions = Array.from(divisionSelect.querySelectorAll('option'));
 
-        const divisionContainer =
-            document.getElementById('division-container');
+    function getDepartmentCode(name) {
+        if (!name) return '';
+        const n = name.toLowerCase();
+        if (n.includes('general')) return '01G';
+        if (n.includes('riset') || n.includes('hilirisasi riset')) return '02R';
+        return '';
+    }
 
-        const divisionSelect =
-            document.getElementById('division-select');
+    function getDivisionCode(name) {
+        if (!name) return '';
+        const n = name.toLowerCase();
+        if (n.includes('administrasi')) return 'AD';
+        if (n.includes('operasional')) return 'OP';
+        if (n.includes('genomic')) return 'GE';
+        if (n.includes('hilirisasi')) return 'HI';
+        if (n.includes('gh') || n.includes('sh')) return 'GS';
+        return '';
+    }
 
-        const divisionRequired =
-            document.getElementById('division-required');
+    function updateCodePreview() {
+        const role = roleSelect.value;
+        const joinYear = (joinYearInput.value || '').trim();
+        const yy = joinYear.length >= 2 ? joinYear.slice(-2) : 'YY';
 
-        const joinYearContainer =
-            document.getElementById('join-year-container');
+        const deptOption = departmentSelect.options[departmentSelect.selectedIndex];
+        const deptName = deptOption && deptOption.value ? deptOption.text : '';
+        const ddd = getDepartmentCode(deptName) || 'DDD';
 
-        const joinYearInput =
-            document.getElementById('join_year');
-
-        const joinYearRequired =
-            document.getElementById('join-year-required');
-
-        const codePreviewContainer =
-            document.getElementById('code-preview-container');
-
-        const codePreviewBadge =
-            document.getElementById('code-preview-badge');
-
-        const codePreviewDesc =
-            document.getElementById('code-preview-desc');
-
-        const divisionOptions =
-            Array.from(
-                divisionSelect.querySelectorAll('option')
-            );
-
-
-        // =====================================================
-        // HELPER PREVIEW KODE
-        // =====================================================
-
-        function getDepartmentCode(name)
-        {
-            if (!name) return '';
-            const n = name.toLowerCase();
-            if (n.includes('general')) return '01G';
-            if (n.includes('riset') || n.includes('hilirisasi riset')) return '02R';
-            return '';
+        if (role === 'kepala_departemen') {
+            if (ddd !== 'DDD' && joinYear.length >= 4) {
+                codePreviewBadge.textContent = `${ddd}KD${yy}NNN`;
+                codePreviewDesc.textContent = `Kode unik Kepala Departemen ${deptName} (nomor urut NNN dibuat otomatis).`;
+                codePreviewContainer.classList.remove('hidden');
+            } else {
+                codePreviewContainer.classList.add('hidden');
+            }
+            return;
         }
 
-        function getDivisionCode(name)
-        {
-            if (!name) return '';
-            const n = name.toLowerCase();
-            if (n.includes('administrasi')) return 'AD';
-            if (n.includes('operasional')) return 'OP';
-            if (n.includes('genomic')) return 'GE';
-            if (n.includes('hilirisasi')) return 'HI';
-            if (n.includes('gh') || n.includes('sh')) return 'GS';
-            return '';
+        if (role === 'kepala_divisi' || role === 'employee') {
+            const divOption = divisionSelect.options[divisionSelect.selectedIndex];
+            const divName = divOption && divOption.value ? divOption.text : '';
+            const bb = getDivisionCode(divName) || 'BB';
+
+            if (ddd !== 'DDD' && bb !== 'BB' && joinYear.length >= 4) {
+                const label = role === 'kepala_divisi' ? 'Kepala Divisi' : 'Karyawan';
+                codePreviewBadge.textContent = `${ddd}${bb}${yy}NNN`;
+                codePreviewDesc.textContent = `Kode unik ${label} ${deptName} - ${divName} (nomor urut NNN dibuat otomatis).`;
+                codePreviewContainer.classList.remove('hidden');
+            } else {
+                codePreviewContainer.classList.add('hidden');
+            }
+            return;
         }
 
-        function updateCodePreview()
-        {
-            const role = roleSelect.value;
-            const joinYear = (joinYearInput.value || '').trim();
-            const yy = joinYear.length >= 2 ? joinYear.slice(-2) : 'YY';
+        codePreviewContainer.classList.add('hidden');
+    }
 
-            const deptOption = departmentSelect.options[departmentSelect.selectedIndex];
-            const deptName = deptOption && deptOption.value ? deptOption.text : '';
-            const ddd = getDepartmentCode(deptName) || 'DDD';
+    function filterDivisions() {
+        const selectedDepartment = departmentSelect.value;
+        const currentDivision = divisionSelect.value;
+        let matched = false;
 
-            if (role === 'kepala_departemen')
-            {
-                if (ddd !== 'DDD' && joinYear.length >= 4) {
-                    codePreviewBadge.textContent = `${ddd}KD${yy}NNN`;
-                    codePreviewDesc.textContent = `Kode unik Kepala Departemen ${deptName} (nomor urut NNN dibuat otomatis).`;
-                    codePreviewContainer.classList.remove('hidden');
-                } else {
-                    codePreviewContainer.classList.add('hidden');
+        divisionSelect.innerHTML = '';
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = selectedDepartment ? 'Pilih Division' : 'Pilih Department Dahulu';
+        divisionSelect.appendChild(defaultOption);
+
+        divisionOptions.forEach(option => {
+            if (!option.value) return;
+            if (option.dataset.department === selectedDepartment) {
+                const clone = option.cloneNode(true);
+                if (clone.value === currentDivision) {
+                    clone.selected = true;
+                    matched = true;
                 }
-                return;
+                divisionSelect.appendChild(clone);
             }
-
-            if (role === 'kepala_divisi' || role === 'employee')
-            {
-                const divOption = divisionSelect.options[divisionSelect.selectedIndex];
-                const divName = divOption && divOption.value ? divOption.text : '';
-                const bb = getDivisionCode(divName) || 'BB';
-
-                if (ddd !== 'DDD' && bb !== 'BB' && joinYear.length >= 4) {
-                    codePreviewBadge.textContent = `${ddd}${bb}${yy}NNN`;
-                    const roleTitle = role === 'kepala_divisi' ? 'Kepala Divisi' : 'Karyawan';
-                    codePreviewDesc.textContent = `Kode unik ${roleTitle} ${divName} (nomor urut bersama NNN dibuat otomatis).`;
-                    codePreviewContainer.classList.remove('hidden');
-                } else {
-                    codePreviewContainer.classList.add('hidden');
-                }
-                return;
-            }
-
-            codePreviewContainer.classList.add('hidden');
-        }
-
-
-        // =====================================================
-        // UPDATE FORM BERDASARKAN ROLE
-        // =====================================================
-
-        function updateForm()
-        {
-            const role = roleSelect.value;
-
-
-            // -------------------------------------------------
-            // ADMIN, PIMPINAN, PIC GUDANG, PIC LAB
-            // -------------------------------------------------
-
-            if (
-                role === 'admin' ||
-                role === 'pimpinan' ||
-                role === 'pic_gudang' ||
-                role === 'pic_lab'
-            ) {
-
-                departmentContainer.style.display = 'none';
-                divisionContainer.style.display = 'none';
-                joinYearContainer.style.display = 'none';
-
-                departmentSelect.value = '';
-                divisionSelect.value = '';
-
-                departmentSelect.required = false;
-                divisionSelect.required = false;
-                joinYearInput.required = false;
-
-                departmentRequired.classList.add('hidden');
-                divisionRequired.classList.add('hidden');
-                joinYearRequired.classList.add('hidden');
-
-                updateCodePreview();
-                return;
-            }
-
-
-            // -------------------------------------------------
-            // KEPALA DEPARTEMEN
-            // -------------------------------------------------
-
-            if (role === 'kepala_departemen')
-            {
-
-                departmentContainer.style.display = 'block';
-                divisionContainer.style.display = 'none';
-                joinYearContainer.style.display = 'block';
-
-                departmentSelect.required = true;
-                divisionSelect.required = false;
-                joinYearInput.required = true;
-
-                divisionSelect.value = '';
-
-                departmentRequired.classList.remove('hidden');
-                divisionRequired.classList.add('hidden');
-                joinYearRequired.classList.remove('hidden');
-
-                updateCodePreview();
-                return;
-            }
-
-
-            // -------------------------------------------------
-            // KEPALA DIVISI & EMPLOYEE
-            // -------------------------------------------------
-
-            if (
-                role === 'kepala_divisi' ||
-                role === 'employee'
-            )
-            {
-
-                departmentContainer.style.display = 'block';
-                divisionContainer.style.display = 'block';
-                joinYearContainer.style.display = 'block';
-
-                departmentSelect.required = true;
-                divisionSelect.required = true;
-                joinYearInput.required = true;
-
-                departmentRequired.classList.remove('hidden');
-                divisionRequired.classList.remove('hidden');
-                joinYearRequired.classList.remove('hidden');
-
-                filterDivisions();
-                updateCodePreview();
-                return;
-            }
-
-
-            // -------------------------------------------------
-            // BELUM MEMILIH ROLE
-            // -------------------------------------------------
-
-            departmentContainer.style.display = 'none';
-            divisionContainer.style.display = 'none';
-            joinYearContainer.style.display = 'none';
-
-            departmentSelect.value = '';
-            divisionSelect.value = '';
-
-            departmentSelect.required = false;
-            divisionSelect.required = false;
-            joinYearInput.required = false;
-
-            departmentRequired.classList.add('hidden');
-            divisionRequired.classList.add('hidden');
-            joinYearRequired.classList.add('hidden');
-
-            updateCodePreview();
-        }
-
-
-        // =====================================================
-        // FILTER DIVISION BERDASARKAN DEPARTMENT
-        // =====================================================
-
-        function filterDivisions()
-        {
-
-            const departmentId =
-                departmentSelect.value;
-
-
-            divisionOptions.forEach(function (option)
-            {
-
-                // Option placeholder
-                if (!option.value)
-                {
-                    option.style.display = 'block';
-                    return;
-                }
-
-
-                const optionDepartment =
-                    option.dataset.department;
-
-
-                option.style.display =
-                    optionDepartment === departmentId
-                        ? 'block'
-                        : 'none';
-
-            });
-
-
-            // -------------------------------------------------
-            // CEK DIVISION YANG SEDANG DIPILIH
-            // -------------------------------------------------
-
-            const selectedOption =
-                divisionSelect.options[
-                    divisionSelect.selectedIndex
-                ];
-
-
-            if (
-                selectedOption &&
-                selectedOption.value &&
-                selectedOption.dataset.department !== departmentId
-            )
-            {
-                divisionSelect.value = '';
-            }
-
-        }
-
-
-        // =====================================================
-        // EVENT HANDLERS
-        // =====================================================
-
-        roleSelect.addEventListener('change', updateForm);
-
-        departmentSelect.addEventListener('change', function () {
-            divisionSelect.value = '';
-            filterDivisions();
-            updateCodePreview();
         });
 
-        divisionSelect.addEventListener('change', updateCodePreview);
+        if (!matched && currentDivision !== '') {
+            divisionSelect.value = '';
+        }
 
-        joinYearInput.addEventListener('input', updateCodePreview);
+        updateCodePreview();
+    }
 
+    function handleRoleChange() {
+        const role = roleSelect.value;
 
-        // =====================================================
-        // INITIALIZE
-        // =====================================================
+        // Tampilkan hint
+        roleHint.classList.remove('hidden');
+        Object.keys(hints).forEach(key => {
+            if (hints[key]) hints[key].classList.add('hidden');
+        });
+        if (hints[role]) {
+            hints[role].classList.remove('hidden');
+        } else {
+            roleHint.classList.add('hidden');
+        }
 
-        updateForm();
+        // PIC GUDANG & PIC LAB
+        if (role === 'pic_gudang' || role === 'pic_lab') {
+            departmentContainer.classList.remove('hidden');
+            departmentRequired.classList.remove('hidden');
+            departmentSelect.required = false;
 
+            // Auto-select department
+            if (role === 'pic_gudang') {
+                Array.from(departmentSelect.options).forEach(opt => {
+                    if (opt.text.toLowerCase().includes('general')) opt.selected = true;
+                });
+            } else if (role === 'pic_lab') {
+                Array.from(departmentSelect.options).forEach(opt => {
+                    if (opt.text.toLowerCase().includes('riset')) opt.selected = true;
+                });
+            }
+
+            divisionContainer.classList.add('hidden');
+            divisionSelect.value = '';
+            divisionSelect.required = false;
+
+            joinYearContainer.classList.add('hidden');
+            joinYearInput.required = false;
+            codePreviewContainer.classList.add('hidden');
+            return;
+        }
+
+        // KEPALA DEPARTEMEN
+        if (role === 'kepala_departemen') {
+            departmentContainer.classList.remove('hidden');
+            departmentRequired.classList.remove('hidden');
+            departmentSelect.required = true;
+
+            divisionContainer.classList.add('hidden');
+            divisionSelect.value = '';
+            divisionSelect.required = false;
+
+            joinYearContainer.classList.remove('hidden');
+            joinYearRequired.classList.remove('hidden');
+            joinYearInput.required = true;
+
+            filterDivisions();
+            updateCodePreview();
+            return;
+        }
+
+        // KEPALA DIVISI & EMPLOYEE
+        if (role === 'kepala_divisi' || role === 'employee') {
+            departmentContainer.classList.remove('hidden');
+            departmentRequired.classList.remove('hidden');
+            departmentSelect.required = true;
+
+            divisionContainer.classList.remove('hidden');
+            divisionRequired.classList.remove('hidden');
+            divisionSelect.required = true;
+            divisionNotNeeded.classList.add('hidden');
+
+            joinYearContainer.classList.remove('hidden');
+            joinYearRequired.classList.remove('hidden');
+            joinYearInput.required = true;
+
+            filterDivisions();
+            updateCodePreview();
+            return;
+        }
+
+        // ADMIN & PIMPINAN
+        departmentContainer.classList.add('hidden');
+        departmentRequired.classList.add('hidden');
+        departmentSelect.value = '';
+        departmentSelect.required = false;
+
+        divisionContainer.classList.add('hidden');
+        divisionRequired.classList.add('hidden');
+        divisionSelect.value = '';
+        divisionSelect.required = false;
+
+        joinYearContainer.classList.add('hidden');
+        joinYearInput.required = false;
+        codePreviewContainer.classList.add('hidden');
+    }
+
+    roleSelect.addEventListener('change', handleRoleChange);
+    departmentSelect.addEventListener('change', function () {
+        filterDivisions();
+        updateCodePreview();
     });
+    divisionSelect.addEventListener('change', updateCodePreview);
+    joinYearInput.addEventListener('input', updateCodePreview);
 
+    // Inisialisasi awal
+    handleRoleChange();
+});
 </script>
 
 </x-app-layout>
