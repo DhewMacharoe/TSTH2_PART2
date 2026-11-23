@@ -1,26 +1,8 @@
 ---
 deployment:
   tasks:
-    # 1. Deploy Katalog
-    - /bin/mkdir -p $HOME/catalog.tsth2.id
-    - /usr/bin/rsync -a --delete --exclude='.git' --exclude='.env' --exclude='storage/' --exclude='vendor/' --exclude='node_modules/' ./katalog/ $HOME/catalog.tsth2.id/
-    - /bin/mkdir -p $HOME/catalog.tsth2.id/storage/framework/{sessions,views,cache} $HOME/catalog.tsth2.id/storage/logs
-    - /bin/chmod -R 775 $HOME/catalog.tsth2.id/storage $HOME/catalog.tsth2.id/bootstrap/cache
-
-    # 2. Deploy Logbook
-    - /bin/mkdir -p $HOME/logbook.tsth2.id/logbook
-    - /usr/bin/rsync -a --delete --exclude='.git' --exclude='.env' --exclude='storage/' --exclude='vendor/' --exclude='node_modules/' ./logbook/ $HOME/logbook.tsth2.id/logbook/
-    - /bin/mkdir -p $HOME/logbook.tsth2.id/logbook/storage/framework/{sessions,views,cache} $HOME/logbook.tsth2.id/logbook/storage/logs
-    - /bin/chmod -R 775 $HOME/logbook.tsth2.id/logbook/storage $HOME/logbook.tsth2.id/logbook/bootstrap/cache
-
-    # 3. Deploy Pengunjung
-    - /bin/mkdir -p $HOME/pengunjung.tsth2.id/pengunjung
-    - /usr/bin/rsync -a --delete --exclude='.git' --exclude='.env' --exclude='storage/' --exclude='vendor/' --exclude='node_modules/' ./pengunjung/ $HOME/pengunjung.tsth2.id/pengunjung/
-    - /bin/mkdir -p $HOME/pengunjung.tsth2.id/pengunjung/storage/framework/{sessions,views,cache} $HOME/pengunjung.tsth2.id/pengunjung/storage/logs
-    - /bin/chmod -R 775 $HOME/pengunjung.tsth2.id/pengunjung/storage $HOME/pengunjung.tsth2.id/pengunjung/bootstrap/cache
-
-    # 4. Deploy Warehouse / Gudang
-    - /bin/mkdir -p $HOME/gudang.tsth2.id
-    - /usr/bin/rsync -a --delete --exclude='.git' --exclude='.env' --exclude='storage/' --exclude='vendor/' --exclude='node_modules/' ./warehouse/ $HOME/gudang.tsth2.id/
-    - /bin/mkdir -p $HOME/gudang.tsth2.id/storage/framework/{sessions,views,cache} $HOME/gudang.tsth2.id/storage/logs
-    - /bin/chmod -R 775 $HOME/gudang.tsth2.id/storage $HOME/gudang.tsth2.id/bootstrap/cache
+    - export DEPLOYPATH=/home/tsthid/catalog.tsth2.id/
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp -Rf katalog/. $DEPLOYPATH
+    - /bin/mkdir -p ${DEPLOYPATH}storage/framework/sessions ${DEPLOYPATH}storage/framework/views ${DEPLOYPATH}storage/framework/cache ${DEPLOYPATH}storage/logs
+    - /bin/chmod -R 775 ${DEPLOYPATH}storage ${DEPLOYPATH}bootstrap/cache
