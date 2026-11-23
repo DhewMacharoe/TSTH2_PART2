@@ -127,6 +127,11 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/admin/users', UserController::class)
             ->names('admin.users');
 
+        Route::post(
+            '/admin/users/{user}/approve',
+            [UserController::class, 'approve']
+        )->name('admin.users.approve');
+
         Route::resource('/admin/departments', DepartmentController::class)
             ->names('admin.departments');
 

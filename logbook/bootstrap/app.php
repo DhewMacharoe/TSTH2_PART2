@@ -27,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->web(append: [
             \App\Http\Middleware\CrossPortAuthMiddleware::class,
+            \App\Http\Middleware\CheckUserStatusAndForceLogout::class,
         ]);
 
         $middleware->alias([

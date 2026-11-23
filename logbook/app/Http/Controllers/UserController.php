@@ -32,39 +32,53 @@ class UserController extends Controller
     {
         return [
             (object) [
-                'slug' => 'admin',
-                'name' => 'Admin',
-                'group' => 'Sistem',
+                'slug'     => 'pic_gudang',
+                'name'     => 'PIC Gudang (General Affair)',
+                'category' => 'pic',
+                'group'    => 'Gudang & Lab (PIC)',
+                'badge'    => 'bg-amber-100 text-amber-800',
             ],
             (object) [
-                'slug' => 'pimpinan',
-                'name' => 'Pimpinan / Direktur',
-                'group' => 'Sistem',
+                'slug'     => 'pic_lab',
+                'name'     => 'PIC Lab (Riset dan Inovasi)',
+                'category' => 'pic',
+                'group'    => 'Gudang & Lab (PIC)',
+                'badge'    => 'bg-emerald-100 text-emerald-800',
             ],
             (object) [
-                'slug' => 'kepala_departemen',
-                'name' => 'Kepala Departemen',
-                'group' => 'Struktural',
+                'slug'     => 'kepala_departemen',
+                'name'     => 'Kepala Departemen',
+                'category' => 'kepala_departemen',
+                'group'    => 'Struktural Organisasi',
+                'badge'    => 'bg-blue-100 text-blue-700',
             ],
             (object) [
-                'slug' => 'kepala_divisi',
-                'name' => 'Kepala Divisi',
-                'group' => 'Struktural',
+                'slug'     => 'kepala_divisi',
+                'name'     => 'Kepala Divisi',
+                'category' => 'kepala_divisi',
+                'group'    => 'Struktural Organisasi',
+                'badge'    => 'bg-cyan-100 text-cyan-700',
             ],
             (object) [
-                'slug' => 'employee',
-                'name' => 'Karyawan / Employee',
-                'group' => 'Operasional',
+                'slug'     => 'employee',
+                'name'     => 'Karyawan / Employee',
+                'category' => 'employee',
+                'group'    => 'Operasional Lapangan',
+                'badge'    => 'bg-green-100 text-green-700',
             ],
             (object) [
-                'slug' => 'pic_gudang',
-                'name' => 'PIC Gudang',
-                'group' => 'Gudang & Inventaris',
+                'slug'     => 'pimpinan',
+                'name'     => 'Pimpinan / Direktur Eksekutif',
+                'category' => 'pimpinan',
+                'group'    => 'Sistem & Eksekutif',
+                'badge'    => 'bg-indigo-100 text-indigo-700',
             ],
             (object) [
-                'slug' => 'pic_lab',
-                'name' => 'PIC Lab',
-                'group' => 'Gudang & Inventaris',
+                'slug'     => 'admin',
+                'name'     => 'Administrator Logbook',
+                'category' => 'admin',
+                'group'    => 'Sistem & Eksekutif',
+                'badge'    => 'bg-purple-100 text-purple-700',
             ],
         ];
     }
@@ -81,12 +95,29 @@ class UserController extends Controller
         |--------------------------------------------------------------------------
         | ADMIN, PIMPINAN, PIC GUDANG, PIC LAB
         |--------------------------------------------------------------------------
-        | Tidak memiliki Department maupun Division.
+        | Admin & Pimpinan tidak memiliki Department maupun Division.
+        | PIC Gudang & PIC Lab opsional department (Gudang = GA, Lab = Riset).
         */
-        if (in_array($role, ['admin', 'pimpinan', 'pic_gudang', 'pic_lab'], true)) {
+        if (in_array($role, ['admin', 'pimpinan'], true)) {
             $validated['department_id'] = null;
-            $validated['division_id'] = null;
+            $validated['division_id']   = null;
 
+            return null;
+        }
+
+        if (in_array($role, ['pic_gudang', 'pic_lab'], true)) {
+            // PIC Gudang & Lab tidak terikat division individual logbook
+            $validated['division_id'] = null;
+            // Jika tidak diisi otomatis tetapkan: GA untuk gudang, Riset untuk lab
+            if (empty($validated['department_id'])) {
+                if ($role === 'pic_gudang') {
+                    $ga = Department::where('name', 'LIKE', '%General%')->first();
+                    $validated['department_id'] = $ga?->id;
+                } else {
+                    $rdi = Department::where('name', 'LIKE', '%Riset%')->first();
+                    $validated['department_id'] = $rdi?->id;
+                }
+            }
             return null;
         }
 
@@ -97,12 +128,10 @@ class UserController extends Controller
         | Memiliki Department, tetapi tidak memiliki Division.
         */
         if ($role === 'kepala_departemen') {
-
             if (empty($validated['department_id'])) {
                 return back()
                     ->withErrors([
-                        'department_id' =>
-                            'Department wajib dipilih untuk Kepala Departemen.',
+                        'department_id' => 'Department wajib dipilih untuk Kepala Departemen.',
                     ])
                     ->withInput();
             }
@@ -116,15 +145,13 @@ class UserController extends Controller
         |--------------------------------------------------------------------------
         | KEPALA DIVISI & EMPLOYEE
         |--------------------------------------------------------------------------
-        | Keduanya wajib memiliki Department dan Division.
+        | Keduanya wajib memiliki Department dan Division yang valid.
         */
         if (in_array($role, ['kepala_divisi', 'employee'], true)) {
-
             if (empty($validated['department_id'])) {
                 return back()
                     ->withErrors([
-                        'department_id' =>
-                            'Department wajib dipilih.',
+                        'department_id' => 'Department wajib dipilih.',
                     ])
                     ->withInput();
             }
@@ -132,29 +159,17 @@ class UserController extends Controller
             if (empty($validated['division_id'])) {
                 return back()
                     ->withErrors([
-                        'division_id' =>
-                            'Division wajib dipilih.',
+                        'division_id' => 'Division wajib dipilih.',
                     ])
                     ->withInput();
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | Pastikan Division berada di Department yang dipilih
-            |--------------------------------------------------------------------------
-            */
-            $division = Division::findOrFail(
-                $validated['division_id']
-            );
+            $division = Division::find($validated['division_id']);
 
-            if (
-                (int) $division->department_id !==
-                (int) $validated['department_id']
-            ) {
+            if (!$division || (int) $division->department_id !== (int) $validated['department_id']) {
                 return back()
                     ->withErrors([
-                        'division_id' =>
-                            'Division tidak sesuai dengan Department yang dipilih.',
+                        'division_id' => 'Division tidak sesuai dengan Department yang dipilih.',
                     ])
                     ->withInput();
             }
@@ -163,30 +178,49 @@ class UserController extends Controller
         return null;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with([
+        $statusFilter = $request->query('status'); // 'all', 'pending', 'approved'
+
+        $query = User::with([
             'department',
             'divisionRelation',
-        ])
-            ->latest()
-            ->paginate(10);
+        ])->latest();
+
+        if ($statusFilter && in_array($statusFilter, ['pending', 'approved', 'rejected'], true)) {
+            $query->where('status', $statusFilter);
+        }
+
+        $users = $query->paginate(15)->withQueryString();
+
+        $totalUsers    = User::count();
+        $pendingCount  = User::where('status', 'pending')->count();
+        $approvedCount = User::where('status', 'approved')->count();
+
+        $departments = Department::orderBy('name')->get();
+        $divisions   = Division::with('department')->orderBy('name')->get();
+        $roles       = $this->roleOptions();
 
         return view(
             'admin.users.index',
-            compact('users')
+            compact(
+                'users',
+                'totalUsers',
+                'pendingCount',
+                'approvedCount',
+                'statusFilter',
+                'departments',
+                'divisions',
+                'roles'
+            )
         );
     }
 
     public function create()
     {
         $departments = Department::orderBy('name')->get();
-
-        $divisions = Division::with('department')
-            ->orderBy('name')
-            ->get();
-
-        $roles = $this->roleOptions();
+        $divisions   = Division::with('department')->orderBy('name')->get();
+        $roles       = $this->roleOptions();
 
         return view(
             'admin.users.create',
@@ -206,39 +240,33 @@ class UserController extends Controller
                 'string',
                 'max:255',
             ],
-
             'email' => [
                 'required',
                 'email',
                 'unique:users,email',
             ],
-
             'password' => [
                 'required',
                 'string',
                 'min:8',
                 'confirmed',
             ],
-
             'role' => [
                 'required',
                 Rule::in($this->roles()),
             ],
-
+            'status' => [
+                'nullable',
+                Rule::in(['pending', 'approved', 'rejected']),
+            ],
             'department_id' => [
                 'nullable',
                 'exists:departments,id',
             ],
-
             'division_id' => [
                 'nullable',
                 'exists:divisions,id',
             ],
-
-            /*
-             * join_year WAJIB diisi untuk role yang mendapat kode unik.
-             * Untuk admin & pimpinan, field ini boleh kosong.
-             */
             'join_year' => [
                 'nullable',
                 'integer',
@@ -247,23 +275,13 @@ class UserController extends Controller
             ],
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Validasi struktur organisasi
-        |--------------------------------------------------------------------------
-        */
-        $organizationError =
-            $this->validateOrganizationStructure($validated);
+        $validated['status'] = $validated['status'] ?? 'approved';
 
+        $organizationError = $this->validateOrganizationStructure($validated);
         if ($organizationError) {
             return $organizationError;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Validasi join_year wajib untuk role berkode
-        |--------------------------------------------------------------------------
-        */
         $roleNeedsCode = in_array(
             $validated['role'],
             ['kepala_departemen', 'kepala_divisi', 'employee'],
@@ -273,28 +291,12 @@ class UserController extends Controller
         if ($roleNeedsCode && empty($validated['join_year'])) {
             return back()
                 ->withErrors([
-                    'join_year' =>
-                        'Tahun masuk wajib diisi untuk role ini.',
+                    'join_year' => 'Tahun masuk wajib diisi untuk role ini.',
                 ])
                 ->withInput();
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Hash Password
-        |--------------------------------------------------------------------------
-        */
-        $validated['password'] = Hash::make(
-            $validated['password']
-        );
-
-        /*
-        |--------------------------------------------------------------------------
-        | Simpan User + Generate Kode dalam satu Transaksi
-        |--------------------------------------------------------------------------
-        | DB::transaction + lockForUpdate mencegah dua request bersamaan
-        | menghasilkan nomor urut yang sama (race condition).
-        */
+        $validated['password'] = Hash::make($validated['password']);
         $flashMessage = '';
 
         try {
@@ -305,36 +307,20 @@ class UserController extends Controller
             ) {
                 $code = null;
 
-                if ($roleNeedsCode && ! empty($validated['department_id'])) {
+                if ($roleNeedsCode && !empty($validated['department_id'])) {
                     $department = Department::findOrFail($validated['department_id']);
                     $service    = new EmployeeCodeService();
 
-                    /*
-                    |----------------------------------------------------------
-                    | KEPALA DEPARTEMEN → format DDDKDYYNNN
-                    |----------------------------------------------------------
-                    */
                     if ($validated['role'] === 'kepala_departemen') {
                         $code = $service->generateForKepalaDepartemen(
                             $department->name,
                             (int) $validated['join_year']
                         );
-                    }
-
-                    /*
-                    |----------------------------------------------------------
-                    | KEPALA DIVISI & EMPLOYEE → format DDDBBYYNNN
-                    |----------------------------------------------------------
-                    | Nomor urut (NNN) bersifat SHARED dalam satu kombinasi
-                    | DDD+BB+YY, sehingga Kepala Divisi dan Employee pada divisi
-                    | & tahun yang sama tidak pernah mendapat nomor yang sama.
-                    */
-                    elseif (
+                    } elseif (
                         in_array($validated['role'], ['kepala_divisi', 'employee'], true) &&
-                        ! empty($validated['division_id'])
+                        !empty($validated['division_id'])
                     ) {
                         $division = Division::findOrFail($validated['division_id']);
-
                         $code = $service->generateForDivisionMember(
                             $department->name,
                             $division->name,
@@ -344,10 +330,11 @@ class UserController extends Controller
                 }
 
                 $validated['employee_code'] = $code;
+                $validated['force_logout']  = false;
                 User::create($validated);
 
                 $flashMessage = $code
-                    ? 'User berhasil ditambahkan. Kode: ' . $code
+                    ? 'User berhasil ditambahkan. Kode Karyawan: ' . $code
                     : 'User berhasil ditambahkan.';
             }, 3);
 
@@ -361,8 +348,7 @@ class UserController extends Controller
                 ->route('admin.users.index')
                 ->with(
                     'warning',
-                    'User berhasil ditambahkan, tetapi kode karyawan ' .
-                    'tidak dapat digenerate: ' . $e->getMessage()
+                    'User berhasil ditambahkan, tetapi kode karyawan tidak dapat digenerate: ' . $e->getMessage()
                 );
         }
 
@@ -374,12 +360,8 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $departments = Department::orderBy('name')->get();
-
-        $divisions = Division::with('department')
-            ->orderBy('name')
-            ->get();
-
-        $roles = $this->roleOptions();
+        $divisions   = Division::with('department')->orderBy('name')->get();
+        $roles       = $this->roleOptions();
 
         return view(
             'admin.users.edit',
@@ -392,74 +374,182 @@ class UserController extends Controller
         );
     }
 
-    public function update(
-        Request $request,
-        User $user
-    ) {
+    public function update(Request $request, User $user)
+    {
         $validated = $request->validate([
             'name' => [
                 'required',
                 'string',
                 'max:255',
             ],
-
             'email' => [
                 'required',
                 'email',
-                Rule::unique('users', 'email')
-                    ->ignore($user->id),
+                Rule::unique('users', 'email')->ignore($user->id),
             ],
-
             'role' => [
                 'required',
                 Rule::in($this->roles()),
             ],
-
+            'status' => [
+                'required',
+                Rule::in(['pending', 'approved', 'rejected']),
+            ],
             'department_id' => [
                 'nullable',
                 'exists:departments,id',
             ],
-
             'division_id' => [
                 'nullable',
                 'exists:divisions,id',
             ],
+            'join_year' => [
+                'nullable',
+                'integer',
+                'min:2000',
+                'max:' . (date('Y') + 1),
+            ],
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Validasi struktur organisasi
-        |--------------------------------------------------------------------------
-        */
-        $organizationError =
-            $this->validateOrganizationStructure($validated);
-
+        $organizationError = $this->validateOrganizationStructure($validated);
         if ($organizationError) {
             return $organizationError;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Update User
-        |--------------------------------------------------------------------------
-        */
+        // Jika user belum memiliki kode unik karyawan dan role membutuhkan kode unik
+        $roleNeedsCode = in_array(
+            $validated['role'],
+            ['kepala_departemen', 'kepala_divisi', 'employee'],
+            true
+        );
+
+        if (!$user->employee_code && $roleNeedsCode && !empty($validated['join_year']) && !empty($validated['department_id'])) {
+            try {
+                $department = Department::findOrFail($validated['department_id']);
+                $service    = new EmployeeCodeService();
+
+                if ($validated['role'] === 'kepala_departemen') {
+                    $validated['employee_code'] = $service->generateForKepalaDepartemen(
+                        $department->name,
+                        (int) $validated['join_year']
+                    );
+                } elseif (!empty($validated['division_id'])) {
+                    $division = Division::findOrFail($validated['division_id']);
+                    $validated['employee_code'] = $service->generateForDivisionMember(
+                        $department->name,
+                        $division->name,
+                        (int) $validated['join_year']
+                    );
+                }
+            } catch (\Exception $e) {
+                Log::warning('[EmployeeCode] Gagal generate kode saat update: ' . $e->getMessage());
+            }
+        }
+
+        // Terapkan force_logout = true agar user otomatis keluar jika sedang aktif
+        $validated['force_logout'] = true;
+
+        // Invalidate record sesi pengguna di tabel sessions jika ada
+        try {
+            DB::table('sessions')->where('user_id', $user->id)->delete();
+        } catch (\Throwable $e) {}
+
         $user->update($validated);
 
         return redirect()
             ->route('admin.users.index')
             ->with(
                 'success',
-                'User berhasil diperbarui.'
+                "User '{$user->name}' berhasil diperbarui dan disetujui. Sesi aktif user otomatis di-logout."
+            );
+    }
+
+    /**
+     * Setujui akun pengguna (Approval) dan tetapkan role & divisinya secara langsung.
+     * Setelah disetujui, akun tersebut otomatis di-logout dari semua sesi aktif.
+     */
+    public function approve(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'role' => [
+                'required',
+                Rule::in($this->roles()),
+            ],
+            'department_id' => [
+                'nullable',
+                'exists:departments,id',
+            ],
+            'division_id' => [
+                'nullable',
+                'exists:divisions,id',
+            ],
+            'join_year' => [
+                'nullable',
+                'integer',
+                'min:2000',
+                'max:' . (date('Y') + 1),
+            ],
+        ]);
+
+        $organizationError = $this->validateOrganizationStructure($validated);
+        if ($organizationError) {
+            return $organizationError;
+        }
+
+        $validated['status']       = 'approved';
+        $validated['force_logout'] = true;
+
+        $roleNeedsCode = in_array(
+            $validated['role'],
+            ['kepala_departemen', 'kepala_divisi', 'employee'],
+            true
+        );
+
+        $joinYear = $validated['join_year'] ?? $user->join_year ?? (int) date('Y');
+        $validated['join_year'] = $joinYear;
+
+        if (!$user->employee_code && $roleNeedsCode && !empty($validated['department_id'])) {
+            try {
+                $department = Department::findOrFail($validated['department_id']);
+                $service    = new EmployeeCodeService();
+
+                if ($validated['role'] === 'kepala_departemen') {
+                    $validated['employee_code'] = $service->generateForKepalaDepartemen(
+                        $department->name,
+                        $joinYear
+                    );
+                } elseif (!empty($validated['division_id'])) {
+                    $division = Division::findOrFail($validated['division_id']);
+                    $validated['employee_code'] = $service->generateForDivisionMember(
+                        $department->name,
+                        $division->name,
+                        $joinYear
+                    );
+                }
+            } catch (\Exception $e) {
+                Log::warning('[EmployeeCode] Gagal generate kode saat approve: ' . $e->getMessage());
+            }
+        }
+
+        // Hapus sesi aktif dari database agar user langsung logout
+        try {
+            DB::table('sessions')->where('user_id', $user->id)->delete();
+        } catch (\Throwable $e) {}
+
+        $user->update($validated);
+
+        return redirect()
+            ->route('admin.users.index')
+            ->with(
+                'success',
+                "Akun '{$user->name}' berhasil disetujui (Approved) sebagai " .
+                ucwords(str_replace('_', ' ', $user->role)) .
+                ". Sesi user otomatis di-logout."
             );
     }
 
     public function destroy(User $user)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Tidak boleh menghapus akun sendiri
-        |--------------------------------------------------------------------------
-        */
         if ($user->id === auth()->id()) {
             return redirect()
                 ->route('admin.users.index')

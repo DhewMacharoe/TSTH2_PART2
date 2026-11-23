@@ -25,6 +25,10 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
+        if (($user->status ?? 'approved') === 'pending') {
+            return redirect()->route('approval.pending');
+        }
+
         $hasRole = function ($roles) use ($user) {
             $roles = (array) $roles;
             if (method_exists($user, 'hasAnyRole')) {
