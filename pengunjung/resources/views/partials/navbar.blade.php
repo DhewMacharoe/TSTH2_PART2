@@ -548,12 +548,7 @@
     <!-- 1. TOP BAR (WARNA ATAS) -->
     <div class="top-header-bar">
         <div class="top-header-container">
-            
             <div class="top-header-right">
-
-                
-                <span class="top-nav-divider">|</span>
-
                 <!-- Language Switcher dengan Bendera & Dropdown (Persis seperti gambar ITB) -->
                 <div class="lang-top-dropdown notranslate" translate="no" id="langTopDropdown">
                     <button type="button" class="lang-top-btn" id="langTopBtn" aria-label="Pilih Bahasa / Select Language">
