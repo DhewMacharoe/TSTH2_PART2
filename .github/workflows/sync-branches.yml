@@ -1,0 +1,38 @@
+name: Auto Split to Branches
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  split-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Split and push pengunjung
+        run: |
+          git subtree split --prefix=pengunjung -b split-pengunjung
+          git push -f origin split-pengunjung:pengunjung
+
+      - name: Split and push catalog
+        run: |
+          git subtree split --prefix=katalog -b split-katalog
+          git push -f origin split-katalog:catalog
+
+      - name: Split and push logbook
+        run: |
+          git subtree split --prefix=logbook -b split-logbook
+          git push -f origin split-logbook:logbook
+
+      - name: Split and push gudang
+        run: |
+          git subtree split --prefix=warehouse -b split-warehouse
+          git push -f origin split-warehouse:gudang
