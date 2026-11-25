@@ -17,7 +17,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./pengunjung/
-          server-dir: /pengunjung.tsth2.id/
+          server-dir: pengunjung.tsth2.id/
           exclude: |
             **/.git*
             **/.git*/**
@@ -35,7 +35,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./katalog/
-          server-dir: /catalog.tsth2.id/
+          server-dir: catalog.tsth2.id/
           exclude: |
             **/.git*
             **/.git*/**
@@ -53,7 +53,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./logbook/
-          server-dir: /logbook.tsth2.id/
+          server-dir: logbook.tsth2.id/
           exclude: |
             **/.git*
             **/.git*/**
@@ -71,7 +71,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./warehouse/
-          server-dir: /gudang.tsth2.id/
+          server-dir: gudang.tsth2.id/
           exclude: |
             **/.git*
             **/.git*/**
