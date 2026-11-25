@@ -35,12 +35,11 @@ class SetLocale
         );
 
         if ($isPublicVisitorPage) {
-            // Cek session terlebih dahulu, jika belum ada cek cookie site_pref_lang atau googtrans
+            // Cek session terlebih dahulu, jika belum ada cek cookie site_pref_lang
             $locale = Session::get('locale');
             if (!$locale) {
                 $cookiePref = $request->cookie('site_pref_lang');
-                $googTrans = $request->cookie('googtrans', '');
-                if ($cookiePref === 'en' || str_contains($googTrans, '/id/en') || str_contains($googTrans, '/en')) {
+                if ($cookiePref === 'en') {
                     $locale = 'en';
                 } else {
                     $locale = 'id';
