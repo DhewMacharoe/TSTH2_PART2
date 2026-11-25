@@ -19,7 +19,7 @@ use App\Http\Controllers\Pengunjung\PublicController;
 use App\Http\Controllers\PlantController;
 use Illuminate\Support\Facades\Route;
 
-// Rute Autentikasi SSO Terpadu dari Portal Hub (:8000)
+// Rute Autentikasi SSO Terpadu dari Portal Hub 
 Route::get('/hub-auth', function (\Illuminate\Http\Request $request) {
     $email = $request->query('email');
     $ts = $request->query('ts');
@@ -88,7 +88,7 @@ Route::get('/', function () {
     return auth()->check() ? redirect()->route('gudang') : redirect()->route('login');
 })->name('home');
 
-// Pengalihan Halaman Publik Pengunjung ke Portal Utama (:8000)
+// Pengalihan Halaman Publik Pengunjung ke Portal Utama 
 Route::get('/profil-tsth2', fn() => redirect()->away(rtrim(config('app.url_pengunjung', env('URL_PENGUNJUNG', 'http://localhost:8000')), '/') . '/profil-tsth2'))->name('profil-public');
 Route::get('/layanan', fn() => redirect()->away(rtrim(config('app.url_pengunjung', env('URL_PENGUNJUNG', 'http://localhost:8000')), '/') . '/layanan'))->name('layanan');
 Route::get('/penelitian', fn() => redirect()->away(rtrim(config('app.url_pengunjung', env('URL_PENGUNJUNG', 'http://localhost:8000')), '/') . '/penelitian'))->name('penelitian');

@@ -128,7 +128,7 @@
                             {{ $totalStok <= 0 ? 'disabled' : '' }}>
                             [{{ $barang->kode_barang }}] {{ $barang->nama_barang }}
                             @if($barang->merk) ({{ $barang->merk }}) @endif
-                            — Stok: {{ $totalStok }}
+                            — Stok: {{ $barang->formatted_stok }}
                             {{ $totalStok <= 0 ? '[HABIS]' : '' }}
                         </option>
                     @endforeach

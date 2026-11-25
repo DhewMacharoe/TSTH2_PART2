@@ -156,8 +156,12 @@
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2" for="stok">Total Stok Saat Ini <span class="text-gray-400 font-normal">(Auto)</span></label>
-                            <input type="number" id="stok" name="stok" class="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-lg p-3 font-medium text-lg font-mono cursor-not-allowed" readonly required min="0" value="{{ old('stok', $barang->batches->sum('stok')) }}">
-                            <p class="text-xs text-gray-500 mt-1">Stok hanya bisa ditambah melalui fitur Restock.</p>
+                            <input type="text" id="stok" name="stok" class="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-lg p-3 font-medium text-lg font-mono cursor-not-allowed" readonly required value="{{ old('stok', $barang->formatted_stok) }}" title="{{ $barang->stok_breakdown }}">
+                            @if($barang->has_multiple_satuan)
+                                <p class="text-xs text-emerald-700 font-semibold mt-1">Rincian stok: {{ $barang->stok_breakdown }}</p>
+                            @else
+                                <p class="text-xs text-gray-500 mt-1">Stok hanya bisa ditambah melalui fitur Restock.</p>
+                            @endif
                         </div>
 
                         <div>

@@ -418,10 +418,14 @@
                         </td>
                         <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none font-bold text-gray-900 whitespace-nowrap">
                             <span class="md:hidden font-bold text-gray-400 text-xs shrink-0">Stok</span>
-                            @php
-                                $stokTotal = $barang->batches->sum('stok');
-                            @endphp
-                            <span class="text-sm font-bold text-gray-900">{{ $stokTotal }}</span>
+                            <div class="inline-flex items-center gap-1.5" title="{{ $barang->stok_breakdown }}">
+                                <span class="text-sm font-bold {{ $barang->has_positive_stock ? 'text-gray-900' : 'text-gray-400' }}">
+                                    {{ $barang->formatted_stok_main }}
+                                </span>
+                                @if($barang->has_multiple_satuan)
+                                    <span class="inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-black text-emerald-700 bg-emerald-100 border border-emerald-200 rounded-md cursor-help shadow-xs" title="Rincian: {{ $barang->stok_breakdown }}">+</span>
+                                @endif
+                            </div>
                         </td>
                         
                         <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none text-right md:text-left whitespace-nowrap">
