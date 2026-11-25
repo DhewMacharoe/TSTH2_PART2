@@ -26,9 +26,9 @@
         transition: all 0.3s ease;
     }
 
-    /* ── 1. TOP BAR (WARNA ATAS: NAVY BLUE / DEEP BLUE #004c8c) ── */
+    /* ── 1. TOP BAR (WARNA ATAS: HIJAU TUA BOTANIK #0e342a) ── */
     .top-header-bar {
-        background: #004c8c;
+        background: #0e342a;
         color: #ffffff;
         font-size: 0.825rem;
         font-weight: 500;
@@ -153,12 +153,12 @@
         box-sizing: border-box;
     }
     .lang-top-item:hover {
-        background: #f1f5f9;
-        color: #004c8c;
+        background: #f0fdf4;
+        color: #164E3F;
     }
     .lang-top-item.active {
-        background: #e0f2fe;
-        color: #0369a1;
+        background: #f0fdf4;
+        color: #164E3F;
         font-weight: 700;
     }
 
@@ -249,7 +249,7 @@
         left: 0;
         width: 0%;
         height: 2.5px;
-        background: #004c8c;
+        background: #164E3F;
         border-radius: 99px;
         transition: width 0.25s ease;
     }
@@ -259,7 +259,7 @@
     }
     .nav-link:hover,
     .nav-link.active {
-        color: #004c8c !important;
+        color: #164E3F !important;
     }
 
     /* Katalog dropdown */
@@ -294,7 +294,7 @@
         left: 0;
         width: 0%;
         height: 2.5px;
-        background: #004c8c;
+        background: #164E3F;
         border-radius: 99px;
         transition: width 0.25s ease;
     }
@@ -304,7 +304,7 @@
     }
     .nav-dropdown-btn-clean:hover,
     .nav-dropdown.is-open .nav-dropdown-btn-clean {
-        color: #004c8c !important;
+        color: #164E3F !important;
     }
     .dropdown-arrow-icon {
         transition: transform 0.25s ease;
@@ -346,8 +346,8 @@
         border-bottom: 1px solid #f1f5f9;
     }
     .dropdown-plain-item:hover {
-        background-color: #f0f9ff;
-        color: #004c8c;
+        background-color: #f0fdf4;
+        color: #164E3F;
     }
 
     /* Action button di kanan (Pill button seperti tombol Register di gambar ITB) */
@@ -482,7 +482,7 @@
                                 <span>Bahasa Indonesia</span>
                             </div>
                             @if($currentLocale !== 'en')
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#164E3F" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                             @endif
                         </button>
 
@@ -501,7 +501,7 @@
                                 <span>English</span>
                             </div>
                             @if($currentLocale === 'en')
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#164E3F" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                             @endif
                         </button>
                     </div>
@@ -537,10 +537,10 @@
                         <svg class="dropdown-arrow-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
                     </button>
                     <div class="tsth2-dropdown-menu" id="katalogDropdownMenu">
-                        <a href="{{ route('home') }}" class="dropdown-plain-item {{ request()->routeIs('home') ? 'style=color:#004c8c;font-weight:700;' : '' }}">
+                        <a href="{{ route('home') }}" class="dropdown-plain-item {{ request()->routeIs('home') ? 'style=color:#164E3F;font-weight:700;' : '' }}">
                             {{ __('site.nav_greenhouse') }}
                         </a>
-                        <a href="{{ route('collection') }}" class="dropdown-plain-item {{ request()->routeIs('collection') ? 'style=color:#004c8c;font-weight:700;' : '' }}">
+                        <a href="{{ route('collection') }}" class="dropdown-plain-item {{ request()->routeIs('collection') ? 'style=color:#164E3F;font-weight:700;' : '' }}">
                             {{ __('site.nav_outdoor') }}
                         </a>
                     </div>
@@ -567,12 +567,43 @@
      SCRIPT: INTERAKSI DROPDOWN & TRANSLATE ENGINE
      ═══════════════════════════════════════════════════════════════ -->
 <script>
+    function clearAllGoogleTranslateCookies() {
+        const hostname = window.location.hostname;
+        const paths = ['/', ''];
+        const domainList = ['', hostname, '.' + hostname];
+        
+        const parts = hostname.split('.');
+        for (let i = 0; i < parts.length - 1; i++) {
+            const d = parts.slice(i).join('.');
+            domainList.push('.' + d);
+            domainList.push(d);
+        }
+
+        const cookieNames = ['googtrans'];
+        paths.forEach(function(p) {
+            domainList.forEach(function(d) {
+                const domainStr = d ? '; domain=' + d : '';
+                const pathStr = '; path=' + (p || '/');
+                cookieNames.forEach(function(name) {
+                    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; max-age=0' + pathStr + domainStr + ';';
+                    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; max-age=0' + pathStr + domainStr + '; SameSite=Lax;';
+                    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; max-age=0' + pathStr + domainStr + '; SameSite=None; Secure;';
+                });
+            });
+        });
+    }
+
+    @if($currentLocale !== 'en')
+        clearAllGoogleTranslateCookies();
+    @endif
+
     function setSiteLanguage(lang) {
         const expires = new Date(Date.now() + 365 * 864e5).toUTCString();
         const isHttps = window.location.protocol === 'https:' ? '; Secure' : '';
         const host = window.location.hostname;
         
         document.cookie = "site_pref_lang=" + lang + "; expires=" + expires + "; path=/; SameSite=Lax" + isHttps;
+        localStorage.setItem('site_pref_lang', lang);
         
         if (lang === 'en') {
             document.cookie = "googtrans=/id/en; expires=" + expires + "; path=/; SameSite=Lax" + isHttps;
@@ -584,11 +615,9 @@
                 }
             }
         } else {
-            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            document.cookie = "googtrans=/id/id; expires=" + expires + "; path=/; SameSite=Lax" + isHttps;
+            clearAllGoogleTranslateCookies();
         }
         
-        localStorage.setItem('site_pref_lang', lang);
         window.location.href = "{{ url('/lang') }}/" + lang;
     }
 
