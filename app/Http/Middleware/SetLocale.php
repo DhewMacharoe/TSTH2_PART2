@@ -21,8 +21,7 @@ class SetLocale
             $locale = Session::get('locale');
             if (!$locale) {
                 $cookiePref = $request->cookie('site_pref_lang');
-                $googTrans = $request->cookie('googtrans', '');
-                if ($cookiePref === 'en' || str_contains((string) $googTrans, '/id/en') || str_contains((string) $googTrans, '/en')) {
+                if ($cookiePref === 'en') {
                     $locale = 'en';
                 } else {
                     $locale = 'id';

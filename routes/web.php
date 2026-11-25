@@ -59,10 +59,22 @@ Route::get('/hub-auth', function (\Illuminate\Http\Request $request) {
 })->name('hub.auth');
 
 // Switch Bahasa (EN / ID)
-Route::get('/lang/{locale}', function ($locale) {
+Route::get('/lang/{locale}', function (\Illuminate\Http\Request $request, $locale) {
     if (in_array($locale, ['id', 'en'])) {
         session(['locale' => $locale]);
         cookie()->queue(cookie('site_pref_lang', $locale, 60 * 24 * 365, '/'));
+
+        if ($locale === 'id') {
+            cookie()->queue(cookie()->forget('googtrans', '/'));
+            $host = $request->getHost();
+            cookie()->queue(cookie()->forget('googtrans', '/', $host));
+            cookie()->queue(cookie()->forget('googtrans', '/', '.' . $host));
+            $parts = explode('.', $host);
+            if (count($parts) > 2) {
+                $rootDomain = '.' . implode('.', array_slice($parts, -2));
+                cookie()->queue(cookie()->forget('googtrans', '/', $rootDomain));
+            }
+        }
     }
     return redirect()->back(fallback: route('home'));
 })->name('lang.switch');
