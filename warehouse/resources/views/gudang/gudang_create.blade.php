@@ -265,7 +265,7 @@
                     <select id="existing_barang_id" name="existing_barang_id" class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-primary focus:border-primary p-3 font-medium" required onchange="updateRestockAction(this.value)">
                         <option value="" disabled selected>Pilih Barang yang ingin di-restock...</option>
                         @foreach($existingBarangs as $b)
-                            <option value="{{ $b->id }}" data-kategori="{{ $b->kategori }}">{{ $b->nama_barang }} (Blok {{ $b->lokasi_blok }} | Total Stok: {{ $b->batches->sum('stok') }})</option>
+                            <option value="{{ $b->id }}" data-kategori="{{ $b->kategori }}">{{ $b->nama_barang }} (Blok {{ $b->lokasi_blok }} | Total Stok: {{ $b->formatted_stok }})</option>
                         @endforeach
                     </select>
                 </div>

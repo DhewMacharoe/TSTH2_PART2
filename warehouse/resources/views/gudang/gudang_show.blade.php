@@ -67,7 +67,15 @@
                 <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <p class="text-sm text-gray-500 font-bold mb-1">Total Stok Saat Ini</p>
-                        <p class="text-3xl font-bold text-gray-900">{{ $barang->batches->sum('stok') }}</p>
+                        <div class="flex items-center gap-2" title="{{ $barang->stok_breakdown }}">
+                            <span class="text-3xl font-bold text-gray-900">{{ $barang->formatted_stok_main }}</span>
+                            @if($barang->has_multiple_satuan)
+                                <span class="inline-flex items-center justify-center px-2 py-0.5 text-base font-extrabold text-emerald-700 bg-emerald-100 border border-emerald-200 rounded-lg cursor-help" title="Rincian: {{ $barang->stok_breakdown }}">+</span>
+                            @endif
+                        </div>
+                        @if($barang->has_multiple_satuan)
+                            <p class="text-xs text-gray-500 mt-1 font-medium">Rincian stok: <span class="font-bold text-gray-700">{{ $barang->stok_breakdown }}</span></p>
+                        @endif
                     </div>
                     <div>
                         <a href="{{ route('permintaan.create', ['kode' => $barang->kode_barang]) }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-light text-white rounded-xl font-bold text-sm shadow-md shadow-primary/20 transition-all">
@@ -118,6 +126,14 @@
                         <a href="{{ route('permintaan.create', ['kode' => $fullBatchCode]) }}" class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-gray-900 hover:bg-primary text-white font-mono text-xs font-bold rounded-md shadow-sm transition-colors" title="Klik untuk ajukan permintaan batch ini">
                             <span>#{{ $fullBatchCode }}</span>
                         </a>
+                        @if($firstBatch)
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-bold rounded-md border border-gray-200" title="{{ $firstBatch->stok_breakdown }}">
+                                <span>{{ $firstBatch->stock_info['formatted_main'] }}</span>
+                                @if($firstBatch->has_multiple_satuan)
+                                    <span class="text-emerald-600 font-black">+</span>
+                                @endif
+                            </span>
+                        @endif
                     </div>
                     <p class="text-xs text-gray-500 font-medium mt-0.5">Datang: {{ \Carbon\Carbon::parse($firstBatch->tanggal_kedatangan)->format('d M Y') }}</p>
                 </div>

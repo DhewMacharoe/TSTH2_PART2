@@ -131,7 +131,7 @@
     }
 </style>
 
-<footer class="tsth2-public-footer">
+<footer class="tsth2-public-footer" id="kontak">
     <div class="footer-inner">
         <div class="footer-grid">
             <div class="footer-col">

@@ -1,4 +1,4 @@
-<footer>
+<footer id="kontak">
     <div class="container">
         <div class="footer-grid">
             <div class="footer-col">

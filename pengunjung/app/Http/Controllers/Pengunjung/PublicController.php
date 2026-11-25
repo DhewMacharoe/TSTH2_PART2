@@ -106,6 +106,6 @@ class PublicController extends Controller
             cookie()->queue(cookie('site_pref_lang', $locale, 60 * 24 * 365, '/'));
         }
 
-        return back();
+        return redirect()->back(fallback: route('home'));
     }
 }

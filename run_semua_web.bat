@@ -1,129 +1,158 @@
 @echo off
-setlocal enabledelayedexpansion
-title TSTH2 Ecosystem Runner - 4 Layanan Terpadu
+title TSTH2 Ecosystem Runner - 4 Layanan Web
 color 0A
 
-:: Deteksi Base Directory (Aman untuk path berspasi)
-set "BASE_DIR=%~dp0"
-if "%BASE_DIR:~-1%"=="\" set "BASE_DIR=%BASE_DIR:~0,-1%"
+:: 1. Resolusi Base Directory yang aman untuk path berspasi
+for %%I in ("%~dp0.") do set "BASE_DIR=%%~fI"
 
-:: 1. Deteksi PHP Executable (Fallback otomatis ke XAMPP jika belum ada di System PATH)
+:: 2. Deteksi PHP Executable (Fallback ke XAMPP jika belum ada di System PATH)
 where php >nul 2>&1
-if %ERRORLEVEL% NEQ 0 (
-    if exist "C:\xampp\php\php.exe" (
-        set "PATH=C:\xampp\php;%PATH%"
-        echo [*] Menemukan PHP di C:\xampp\php (otomatis ditambahkan ke sesi ini).
-    ) else (
-        echo [!] PERINGATAN: PHP tidak ditemukan di PATH maupun di C:\xampp\php.
-        echo     Pastikan PHP / XAMPP sudah terinstal.
-    )
+if %ERRORLEVEL% EQU 0 goto CHECK_MYSQL
+
+if exist "C:\xampp\php\php.exe" (
+    set "PATH=C:\xampp\php;%PATH%"
+    echo [*] Menemukan PHP di C:\xampp\php - ditambahkan ke sesi ini.
+    goto CHECK_MYSQL
 )
+
+if exist "D:\xampp\php\php.exe" (
+    set "PATH=D:\xampp\php;%PATH%"
+    echo [*] Menemukan PHP di D:\xampp\php - ditambahkan ke sesi ini.
+    goto CHECK_MYSQL
+)
+
+echo [!] PERINGATAN: PHP tidak ditemukan di PATH maupun di C:\xampp\php.
+echo     Pastikan XAMPP atau PHP sudah terinstal pada komputer ini.
+echo.
+
+:: 3. Deteksi dan jalankan MySQL jika belum aktif
+:CHECK_MYSQL
+netstat -ano | findstr :3306 >nul 2>&1
+if %ERRORLEVEL% EQU 0 goto START_SERVERS
+
+echo [*] MySQL Port 3306 belum aktif. Mencoba menyalakan MySQL XAMPP...
+if exist "C:\xampp\mysql\bin\mysqld.exe" (
+    start "MySQL Daemon" /min "C:\xampp\mysql\bin\mysqld.exe" --defaults-file="C:\xampp\mysql\bin\my.ini" --standalone
+    ping 127.0.0.1 -n 3 >nul
+    goto START_SERVERS
+)
+
+if exist "C:\xampp\mysql_start.bat" (
+    start "MySQL" /min cmd /c "C:\xampp\mysql_start.bat"
+    ping 127.0.0.1 -n 3 >nul
+    goto START_SERVERS
+)
+
+:: 4. Jalankan keempat server web secara otomatis
+:START_SERVERS
+echo =====================================================================
+echo          MENJALANKAN KEEMPAT (4) LAYANAN WEB TSTH2...
+echo =====================================================================
+echo.
+
+echo [*] Menjalankan Web Pengunjung (Port 8000)...
+start "TSTH2 [Port 8000] - Web Pengunjung" /D "%BASE_DIR%\pengunjung" cmd /k "php artisan serve --host=127.0.0.1 --port=8000"
+
+echo [*] Menjalankan Web Logbook (Port 8001)...
+start "TSTH2 [Port 8001] - Web Logbook" /D "%BASE_DIR%\logbook" cmd /k "php artisan serve --host=127.0.0.1 --port=8001"
+
+echo [*] Menjalankan Web Warehouse (Port 8002)...
+start "TSTH2 [Port 8002] - Web Warehouse" /D "%BASE_DIR%\warehouse" cmd /k "php artisan serve --host=127.0.0.1 --port=8002"
+
+echo [*] Menjalankan Web Katalog (Port 8003)...
+start "TSTH2 [Port 8003] - Web Katalog" /D "%BASE_DIR%\katalog" cmd /k "php artisan serve --host=127.0.0.1 --port=8003"
+
+echo.
+echo [V] Keempat server web berhasil dijalankan!
+ping 127.0.0.1 -n 3 >nul
 
 :MENU_START
 cls
 echo =====================================================================
-echo          TSTH2 ECOSYSTEM - PENGELOLA 4 LAYANAN TERPADU
+echo          TSTH2 ECOSYSTEM - 4 LAYANAN WEB TELAH BERJALAN
 echo =====================================================================
 echo.
 echo   Folder Kerja : %BASE_DIR%
 echo.
-echo   Layanan yang tersedia:
-echo   [1] Web Pengunjung & CMS Admin : http://127.0.0.1:8000 (tsth2.id)
-echo   [2] Web Logbook Karyawan       : http://127.0.0.1:8001 (logbook.tsth2.id)
-echo   [3] Web Warehouse Gudang & Lab : http://127.0.0.1:8002 (warehouse.tsth2.id)
-echo   [4] Web Katalog Flora Herbal   : http://127.0.0.1:8003 (katalog.tsth2.id)
+echo   Daftar Layanan:
+echo   [1] Web Pengunjung (Port 8000)  : http://127.0.0.1:8000
+echo   [2] Web Logbook Karyawan (8001) : http://127.0.0.1:8001
+echo   [3] Web Warehouse Gudang (8002) : http://127.0.0.1:8002
+echo   [4] Web Katalog Flora (8003)    : http://127.0.0.1:8003
 echo.
 echo =====================================================================
+echo   PINTASAN BUKA DI BROWSER:
+echo   [B] Buka KEEMPAT web sekaligus di browser
+echo   [1] Buka Web Pengunjung (Port 8000)
+echo   [2] Buka Web Logbook (Port 8001)
+echo   [3] Buka Web Warehouse (Port 8002)
+echo   [4] Buka Web Katalog (Port 8003)
 echo.
-echo  PILIHAN TINDAKAN:
-echo   [S] JALANKAN SEMUA (4) SERVER WEB SEKARANG
-echo   [K] Hentikan (Kill) semua server PHP yang berjalan
+echo   MANAJEMEN SERVER:
 echo   [R] Restart semua server (Kill lalu jalankan ulang)
-echo.
-echo  PINTASAN BUKA DI BROWSER:
-echo   [1] Buka http://127.0.0.1:8000 (Web Pengunjung)
-echo   [2] Buka http://127.0.0.1:8001 (Logbook Karyawan)
-echo   [3] Buka http://127.0.0.1:8002 (Warehouse Gudang)
-echo   [4] Buka http://127.0.0.1:8003 (Katalog Tanaman)
-echo   [5] Buka KEEMPAT-EMPATNYA sekaligus di browser
-echo   [0] Keluar (Window server tetap berjalan)
-echo.
+echo   [K] Hentikan (Kill) semua proses PHP server
+echo   [0] Keluar (Window server tetap berjalan di latar belakang)
 echo =====================================================================
-set /p opt="Pilih opsi menu [S/K/R/1/2/3/4/5/0]: "
+echo.
 
-if /i "%opt%"=="S" goto RUN_SERVERS
-if /i "%opt%"=="K" goto KILL_SERVERS
-if /i "%opt%"=="R" goto RESTART_SERVERS
+set "CHOICE="
+set /p "CHOICE=Pilih menu [B/1/2/3/4/R/K/0]: "
+if not defined CHOICE goto EXIT_SCRIPT
 
-if "%opt%"=="1" ( start http://127.0.0.1:8000 & goto MENU_START )
-if "%opt%"=="2" ( start http://127.0.0.1:8001 & goto MENU_START )
-if "%opt%"=="3" ( start http://127.0.0.1:8002 & goto MENU_START )
-if "%opt%"=="4" ( start http://127.0.0.1:8003 & goto MENU_START )
-if "%opt%"=="5" (
-    start http://127.0.0.1:8000
-    start http://127.0.0.1:8001
-    start http://127.0.0.1:8002
-    start http://127.0.0.1:8003
-    goto MENU_START
-)
-if "%opt%"=="0" goto EXIT_PROMPT
+set "C=%CHOICE: =%"
+if /i "%C%"=="B" goto OPEN_ALL
+if /i "%C%"=="1" goto OPEN_1
+if /i "%C%"=="2" goto OPEN_2
+if /i "%C%"=="3" goto OPEN_3
+if /i "%C%"=="4" goto OPEN_4
+if /i "%C%"=="R" goto RESTART_SERVERS
+if /i "%C%"=="K" goto KILL_SERVERS
+if /i "%C%"=="0" goto EXIT_SCRIPT
+if /i "%C%"=="Q" goto EXIT_SCRIPT
 
-echo Pilihan tidak valid. Silakan ulangi.
-timeout /t 2 >nul
+echo [!] Pilihan tidak valid.
+ping 127.0.0.1 -n 2 >nul
 goto MENU_START
 
-:RUN_SERVERS
-echo.
-echo =====================================================================
-echo  Memulai peluncuran 4 server web TSTH2...
-echo =====================================================================
+:OPEN_ALL
+start http://127.0.0.1:8000
+start http://127.0.0.1:8001
+start http://127.0.0.1:8002
+start http://127.0.0.1:8003
+goto MENU_START
 
-:: Server 1: Pengunjung (Port 8000)
-echo [1/4] Menjalankan Server Port 8000 (Pengunjung & CMS Admin)...
-start "TSTH2 - Pengunjung (Port 8000)" /D "%BASE_DIR%\pengunjung" cmd /k "title TSTH2 - Pengunjung (Port 8000) & color 0B & php artisan serve --port=8000"
+:OPEN_1
+start http://127.0.0.1:8000
+goto MENU_START
 
-:: Server 2: Logbook (Port 8001)
-echo [2/4] Menjalankan Server Port 8001 (Logbook Karyawan)...
-start "TSTH2 - Logbook (Port 8001)" /D "%BASE_DIR%\logbook" cmd /k "title TSTH2 - Logbook (Port 8001) & color 0A & php artisan serve --port=8001"
+:OPEN_2
+start http://127.0.0.1:8001
+goto MENU_START
 
-:: Server 3: Warehouse (Port 8002)
-echo [3/4] Menjalankan Server Port 8002 (Warehouse Gudang & Lab)...
-start "TSTH2 - Warehouse (Port 8002)" /D "%BASE_DIR%\warehouse" cmd /k "title TSTH2 - Warehouse (Port 8002) & color 0E & php artisan serve --port=8002"
+:OPEN_3
+start http://127.0.0.1:8002
+goto MENU_START
 
-:: Server 4: Katalog (Port 8003)
-echo [4/4] Menjalankan Server Port 8003 (Katalog Flora Herbal)...
-start "TSTH2 - Katalog (Port 8003)" /D "%BASE_DIR%\katalog" cmd /k "title TSTH2 - Katalog (Port 8003) & color 0D & php artisan serve --port=8003"
-
-echo.
-echo [V] Keempat server web berhasil diluncurkan di terminal terpisah!
-echo.
-set /p open_browser="Apakah ingin langsung membuka ke-4 web di browser? (Y/N): "
-if /i "%open_browser%"=="Y" (
-    start http://127.0.0.1:8000
-    start http://127.0.0.1:8001
-    start http://127.0.0.1:8002
-    start http://127.0.0.1:8003
-)
+:OPEN_4
+start http://127.0.0.1:8003
 goto MENU_START
 
 :KILL_SERVERS
 echo.
-echo [!] Menghentikan seluruh proses server php artisan...
-taskkill /f /im php.exe >nul 2>&1
+echo [*] Menghentikan semua proses server PHP...
+taskkill /F /IM php.exe /T >nul 2>&1
 echo [V] Semua server PHP berhasil dihentikan.
-timeout /t 2 >nul
+ping 127.0.0.1 -n 3 >nul
 goto MENU_START
 
 :RESTART_SERVERS
 echo.
-echo [!] Menghentikan server lama...
-taskkill /f /im php.exe >nul 2>&1
-timeout /t 1 >nul
-goto RUN_SERVERS
+echo [*] Menghentikan semua server terlebih dahulu...
+taskkill /F /IM php.exe /T >nul 2>&1
+ping 127.0.0.1 -n 2 >nul
+goto START_SERVERS
 
-:EXIT_PROMPT
+:EXIT_SCRIPT
 echo.
-echo Terima kasih! Server web tetap berjalan di jendela terminal masing-masing.
-echo Jangan tutup jendela terminal server jika web masih digunakan.
-pause
-exit
+echo Keluar dari runner. Window server tetap aktif.
+exit /b 0

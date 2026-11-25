@@ -174,4 +174,45 @@ class Barang extends Model
               ->orWhere('tanggal_kadaluarsa', '>', now());
         })->sum('stok');
     }
+
+    // ─── Format Stok & Satuan Tertinggi ─────────────────────────────────────
+    public function getStockInfoAttribute(): array
+    {
+        return \App\Services\StockFormatter::formatBarang($this);
+    }
+
+    public function getFormattedStokAttribute(): string
+    {
+        return $this->stock_info['formatted'];
+    }
+
+    public function getFormattedStokMainAttribute(): string
+    {
+        return $this->stock_info['formatted_main'];
+    }
+
+    public function getHighestSatuanAttribute(): string
+    {
+        return $this->stock_info['highest_unit'];
+    }
+
+    public function getHighestStokAttribute(): float|int
+    {
+        return $this->stock_info['highest_stock'];
+    }
+
+    public function getHasMultipleSatuanAttribute(): bool
+    {
+        return $this->stock_info['has_multiple'];
+    }
+
+    public function getHasPositiveStockAttribute(): bool
+    {
+        return $this->stock_info['has_positive_stock'];
+    }
+
+    public function getStokBreakdownAttribute(): string
+    {
+        return $this->stock_info['breakdown'];
+    }
 }
