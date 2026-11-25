@@ -365,14 +365,14 @@
         flex-shrink: 0;
     }
     .btn-register-pill {
-        background: #0095da !important;
+        background: #164E3F !important;
         color: #ffffff !important;
         font-size: 0.9rem !important;
         font-weight: 700 !important;
         padding: 0.55rem 1.4rem !important;
         border-radius: 9999px !important;
         border: none !important;
-        box-shadow: 0 3px 10px rgba(0, 149, 218, 0.3) !important;
+        box-shadow: 0 3px 10px rgba(22, 78, 63, 0.25) !important;
         display: inline-flex !important;
         align-items: center !important;
         gap: 6px !important;
@@ -382,8 +382,8 @@
         cursor: pointer !important;
     }
     .btn-register-pill:hover {
-        background: #0081be !important;
-        box-shadow: 0 5px 14px rgba(0, 149, 218, 0.4) !important;
+        background: #0e342a !important;
+        box-shadow: 0 5px 14px rgba(14, 52, 42, 0.35) !important;
         transform: translateY(-1px);
     }
 
@@ -442,8 +442,16 @@
     <!-- 1. TOP BAR (WARNA ATAS) -->
     <div class="top-header-bar">
         <div class="top-header-container">
-           
-            <div class="top-header-right">              
+            <div class="top-header-left">
+                <span>Taman Sains Teknologi Herbal &amp; Hortikultura Indonesia &bull; Kemenristek &amp; IT Del</span>
+            </div>
+            
+            <div class="top-header-right">
+                <a href="{{ $urlPengunjung }}/#kontak" class="top-nav-link">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <span>Hubungi Kami</span>
+                </a>
+                
                 <span class="top-nav-divider">|</span>
 
                 <!-- Language Switcher dengan Bendera & Dropdown (Persis seperti gambar ITB) -->

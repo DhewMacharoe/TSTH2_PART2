@@ -363,14 +363,14 @@
         flex-shrink: 0;
     }
     .btn-register-pill {
-        background: #0095da !important; /* Biru terang khas tombol action ITB */
+        background: #164E3F !important;
         color: #ffffff !important;
         font-size: 0.9rem !important;
         font-weight: 700 !important;
         padding: 0.55rem 1.4rem !important;
         border-radius: 9999px !important;
         border: none !important;
-        box-shadow: 0 3px 10px rgba(0, 149, 218, 0.3) !important;
+        box-shadow: 0 3px 10px rgba(22, 78, 63, 0.25) !important;
         display: inline-flex !important;
         align-items: center !important;
         gap: 6px !important;
@@ -380,8 +380,8 @@
         cursor: pointer !important;
     }
     .btn-register-pill:hover {
-        background: #0081be !important;
-        box-shadow: 0 5px 14px rgba(0, 149, 218, 0.4) !important;
+        background: #0e342a !important;
+        box-shadow: 0 5px 14px rgba(14, 52, 42, 0.35) !important;
         transform: translateY(-1px);
     }
     .btn-logout-pill {
