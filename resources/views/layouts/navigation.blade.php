@@ -744,7 +744,7 @@
                     target="_blank"
                     class="block px-4 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50 transition"
                 >
-                    🌐 Portal Pengunjung (:8000)
+                    🌐 Portal Pengunjung 
                 </a>
                 <a
                     href="{{ config('app.url_gudang', env('URL_GUDANG', 'http://localhost:8002')) }}"
