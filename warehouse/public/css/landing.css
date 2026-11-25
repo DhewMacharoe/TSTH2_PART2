@@ -79,25 +79,25 @@
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 0;
+  left: 0;
+  transform: none;
   width: 0%;
-  height: 2px;
+  height: 2.5px;
   background: var(--color-primary);
-  border-radius: 4px;
-  transition: width 0.3s ease;
+  border-radius: 99px;
+  transition: width 0.25s ease;
 }
 
 .nav-link:hover,
 .nav-link.active {
   color: var(--color-primary);
-  background: rgba(22, 78, 63, 0.06);
+  background: transparent;
 }
 
 .nav-link:hover::after,
 .nav-link.active::after {
-  width: 60%;
+  width: 100%;
 }
 
 .nav-dropdown-menu {
