@@ -16,7 +16,7 @@
 <body style="background: var(--color-bg-light);">
     @include('partials.navbar')
 
-    <main style="padding-top: 110px;">
+    <main>
         <!-- Page Banner Konsisten -->
         @hasSection('hero_title')
         <section style="background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%); padding: 5rem 1rem; text-align: center; color: white; position: relative; overflow: hidden; border-bottom: 1px solid rgba(255,255,255,0.1);">

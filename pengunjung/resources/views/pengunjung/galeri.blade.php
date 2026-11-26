@@ -110,7 +110,7 @@
         {!! json_encode($galeri->keyBy('id')) !!}
     </script>
 
-    <main style="padding-top: 110px;" x-data="{ 
+    <main x-data="{ 
         open: false, 
         albums: JSON.parse(document.getElementById('galeri-albums-data')?.textContent || '{}'),
         activeAlbum: {}, 

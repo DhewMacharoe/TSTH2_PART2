@@ -14,7 +14,14 @@
         border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
         position: relative !important;
         overflow: hidden !important;
-        font-family: 'Outfit', 'DM Sans', sans-serif !important;
+        font-family: 'Inter', sans-serif !important;
+        line-height: 1.65 !important;
+        box-sizing: border-box !important;
+    }
+    footer.tsth2-public-footer *,
+    footer.tsth2-public-footer *::before,
+    footer.tsth2-public-footer *::after {
+        box-sizing: border-box !important;
     }
     footer.tsth2-public-footer::before {
         content: '' !important;
@@ -110,6 +117,10 @@
         text-decoration: none !important;
         font-family: 'Outfit', sans-serif !important;
     }
+    footer.tsth2-public-footer .footer-col ul li a::before {
+        display: none !important;
+        content: none !important;
+    }
     footer.tsth2-public-footer .footer-col ul li a:hover {
         color: #ffffff !important;
         transform: translateX(4px) !important;
@@ -120,7 +131,7 @@
         border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
         color: rgba(255, 255, 255, 0.4) !important;
         font-size: 0.85rem !important;
-        font-family: 'Inter', 'DM Sans', sans-serif !important;
+        font-family: 'Inter', sans-serif !important;
     }
 
     @media (max-width: 900px) {
@@ -156,7 +167,7 @@
                     <li><a href="{{ $urlPengunjung }}/penelitian">{{ __('site.nav_research') }}</a></li>
                     <li><a href="{{ $urlPengunjung }}/berita">{{ __('site.nav_news') }}</a></li>
                     <li><a href="{{ $urlPengunjung }}/galeri">{{ __('site.nav_gallery') }}</a></li>
-                    <li><a href="{{ route('home') }}">{{ __('site.nav_catalog') }}</a></li>
+                    <li><a href="{{ route('collection') }}">{{ __('site.nav_catalog') }}</a></li>
                 </ul>
             </div>
 

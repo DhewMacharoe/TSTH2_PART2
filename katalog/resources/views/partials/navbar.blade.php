@@ -17,25 +17,36 @@
        2-TIER NAVBAR SYSTEM (PERSIS SEPERTI GAMBAR)
        ═══════════════════════════════════════════════ */
     .tsth2-navbar-wrapper {
+        --font-heading: 'Outfit', sans-serif;
+        --font-body: 'Inter', sans-serif;
         position: sticky !important;
         top: 0 !important;
         left: 0 !important;
         width: 100% !important;
         z-index: 1000 !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        font-family: 'Inter', sans-serif !important;
+        line-height: 1.65 !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
         transition: all 0.3s ease;
+    }
+    .tsth2-navbar-wrapper *,
+    .tsth2-navbar-wrapper *::before,
+    .tsth2-navbar-wrapper *::after {
+        box-sizing: border-box !important;
     }
 
     /* ── 1. TOP BAR (WARNA ATAS: HIJAU TUA BOTANIK #0e342a) ── */
     .top-header-bar {
-        background: #0e342a;
-        color: #ffffff;
-        font-size: 0.825rem;
-        font-weight: 500;
-        height: 38px;
-        display: flex;
-        align-items: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        background: #0e342a !important;
+        color: #ffffff !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.825rem !important;
+        font-weight: 500 !important;
+        line-height: 1.5 !important;
+        height: 38px !important;
+        display: flex !important;
+        align-items: center !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
     }
     .top-header-container {
         width: 100%;
@@ -163,86 +174,97 @@
     }
 
     /* ── 2. MAIN BAR (WARNA BAWAH: WHITE #ffffff) ── */
-    .main-header {
-        background: #ffffff;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-        padding: 0.65rem 0;
-        transition: all 0.3s ease;
+    .main-header,
+    .main-header.scrolled {
+        background: #ffffff !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+        padding: 0.65rem 0 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        transition: none !important;
     }
     .header-container {
-        width: 100%;
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-sizing: border-box;
-        gap: 1.5rem;
+        width: 100% !important;
+        max-width: 1280px !important;
+        margin: 0 auto !important;
+        padding: 0 1.5rem !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
+        gap: 1.5rem !important;
         flex-wrap: nowrap !important;
     }
 
     /* Logo & Institutional Title */
     .logo-container {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        text-decoration: none;
-        flex-shrink: 0;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+        text-decoration: none !important;
+        flex-shrink: 0 !important;
     }
-    .logo-container img {
-        height: 44px;
-        width: auto;
-        object-fit: contain;
-        flex-shrink: 0;
+    .logo-container img,
+    .logo-container:hover img {
+        height: 44px !important;
+        width: auto !important;
+        display: block !important;
+        object-fit: contain !important;
+        flex-shrink: 0 !important;
+        transform: none !important;
     }
     .logo-title-wrap {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        min-width: 0;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        min-width: 0 !important;
     }
     .logo-text {
-        color: #0f172a;
-        font-size: 1.25rem;
-        line-height: 1.15;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        font-family: var(--font-heading, sans-serif);
+        color: #0f172a !important;
+        font-size: 1.25rem !important;
+        line-height: 1.15 !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.02em !important;
+        font-family: 'Outfit', sans-serif !important;
     }
     .logo-subtext {
-        color: #64748b;
-        font-size: 0.72rem;
-        font-weight: 600;
-        line-height: 1.2;
-        letter-spacing: 0.2px;
-        display: block;
-        white-space: nowrap;
+        color: #64748b !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.72rem !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
+        letter-spacing: 0.2px !important;
+        display: block !important;
+        white-space: nowrap !important;
     }
 
     /* ── MENU NAVIGASI: TIDAK SEMUA HURUF KAPITAL & HARUS SEBARIS ── */
     .nav-menu {
-        display: flex;
-        align-items: center;
-        gap: 1.35rem;
+        display: flex !important;
+        align-items: center !important;
+        gap: 1.35rem !important;
         flex-wrap: nowrap !important;
-        margin: 0;
-        padding: 0;
+        margin: 0 !important;
+        padding: 0 !important;
     }
     .nav-link {
-        color: #1e293b;
-        font-family: var(--font-heading, sans-serif);
-        font-weight: 600;
-        font-size: 0.925rem;
+        color: #1e293b !important;
+        font-family: 'Outfit', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 0.925rem !important;
+        line-height: 1.5 !important;
+        letter-spacing: 0px !important;
         text-transform: none !important;
         white-space: nowrap !important;
-        text-decoration: none;
-        padding: 0.45rem 0.25rem;
-        position: relative;
-        transition: color 0.2s ease;
-        flex-shrink: 0;
+        text-decoration: none !important;
+        padding: 0.45rem 0.25rem !important;
+        position: relative !important;
+        transition: color 0.2s ease !important;
+        flex-shrink: 0 !important;
         background: transparent !important;
         border-radius: 0 !important;
+        display: inline-block !important;
     }
     .nav-link::after {
         content: '';
@@ -367,8 +389,10 @@
     .btn-register-pill {
         background: #164E3F !important;
         color: #ffffff !important;
+        font-family: 'Inter', sans-serif !important;
         font-size: 0.9rem !important;
         font-weight: 700 !important;
+        line-height: 1.4 !important;
         padding: 0.55rem 1.4rem !important;
         border-radius: 9999px !important;
         border: none !important;
@@ -432,6 +456,69 @@
         .logo-subtext {
             display: none !important;
         }
+    }
+
+    /* Mobile Menu Drawer Styling */
+    .mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 35, 65, 0.5);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 99999;
+        display: none;
+        justify-content: flex-end;
+    }
+    .mobile-menu-content {
+        background: #ffffff;
+        width: 85%;
+        max-width: 320px;
+        height: 100%;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+        box-sizing: border-box;
+    }
+    .mobile-menu-close {
+        align-self: flex-end;
+        background: #f1f5f9;
+        border: none;
+        cursor: pointer;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-bottom: 1rem;
+    }
+    .mobile-nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        margin-bottom: 2rem;
+    }
+    .mobile-nav-links a {
+        font-family: 'Outfit', sans-serif !important;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1e293b;
+        text-decoration: none;
+        padding: 0.65rem 0.5rem;
+        border-radius: 8px;
+        text-transform: none;
+    }
+    .mobile-nav-links a.active, .mobile-nav-links a:hover {
+        background: #f0fdf4;
+        color: #164E3F;
     }
 </style>
 
@@ -527,7 +614,7 @@
                 <a href="{{ $urlPengunjung }}/galeri" class="nav-link">{{ __('site.nav_gallery') }}</a>
                 
                 <!-- Link Katalog (langsung ke koleksi greenhouse, tanpa dropdown) -->
-                <a href="{{ route('collection') }}" class="nav-link {{ request()->routeIs('collection') ? 'active' : '' }}">{{ __('site.nav_catalog') }}</a>
+                <a href="{{ route('collection') }}" class="nav-link {{ request()->routeIs('home', 'collection', 'plant.*') ? 'active' : '' }}">{{ __('site.nav_catalog') }}</a>
             </nav>
 
             <!-- Action Button di Kanan (Pill Button seperti tombol Register di gambar ITB) -->
@@ -544,6 +631,50 @@
             </button>
         </div>
     </header>
+</div>
+
+<!-- Mobile Menu Overlay Drawer -->
+<div class="mobile-menu-overlay" id="mobileMenu" style="display: none;">
+    <div class="mobile-menu-content">
+        <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        
+        <div style="margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem;">
+            <div style="font-weight: 800; color: #164E3F; font-size: 1.25rem;">TSTH2 Hub</div>
+            <div style="font-size: 0.75rem; color: #64748b;">Taman Sains Teknologi Herbal &amp; Hortikultura</div>
+        </div>
+
+        <!-- Mobile Language Switcher -->
+        <div class="notranslate" translate="no" style="margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid #f1f5f9;">
+            <div style="font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.5rem;">Pilih Bahasa / Language:</div>
+            <div style="display: flex; gap: 0.5rem;">
+                <button type="button" onclick="setSiteLanguage('id')" style="flex: 1; padding: 0.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; {{ $currentLocale !== 'en' ? 'background: #164E3F; color: white;' : 'background: #f1f5f9; color: #475569;' }}">
+                    <span>ID · Indonesia</span>
+                </button>
+                <button type="button" onclick="setSiteLanguage('en')" style="flex: 1; padding: 0.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; {{ $currentLocale === 'en' ? 'background: #164E3F; color: white;' : 'background: #f1f5f9; color: #475569;' }}">
+                    <span>EN · English</span>
+                </button>
+            </div>
+        </div>
+
+        <nav class="mobile-nav-links">
+            <a href="{{ $urlPengunjung }}">{{ __('site.nav_home') }}</a>
+            <a href="{{ $urlPengunjung }}/profil-tsth2">{{ __('site.nav_profile') }}</a>
+            <a href="{{ $urlPengunjung }}/penelitian">{{ __('site.nav_research') }}</a>
+            <a href="{{ $urlPengunjung }}/berita">{{ __('site.nav_news') }}</a>
+            <a href="{{ $urlPengunjung }}/galeri">{{ __('site.nav_gallery') }}</a>
+            <a href="{{ route('collection') }}" class="{{ request()->routeIs('home', 'collection', 'plant.*') ? 'active' : '' }}">{{ __('site.nav_catalog') }}</a>
+            <a href="#kontak" onclick="document.getElementById('mobileMenu').style.display='none'; document.body.style.overflow='';">Hubungi Kami</a>
+        </nav>
+        
+        <div class="mobile-nav-actions" style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #f1f5f9;">
+            <a href="{{ $urlPengunjung }}/login" class="btn-register-pill" style="width: 100%; justify-content: center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                <span>{{ __('site.nav_portal_login') }}</span>
+            </a>
+        </div>
+    </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════
@@ -621,5 +752,27 @@
                 langTopDropdown.classList.remove('is-open');
             }
         });
+
+        // Mobile Drawer
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        if (mobileMenuBtn && mobileMenu && mobileMenuClose) {
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+            mobileMenuClose.addEventListener('click', function() {
+                mobileMenu.style.display = 'none';
+                document.body.style.overflow = '';
+            });
+            mobileMenu.addEventListener('click', function(e) {
+                if (e.target === mobileMenu) {
+                    mobileMenu.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+            });
+        }
     });
 </script>

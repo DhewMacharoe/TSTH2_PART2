@@ -15,25 +15,36 @@
        2-TIER NAVBAR SYSTEM (PERSIS SEPERTI GAMBAR)
        ═══════════════════════════════════════════════ */
     .tsth2-navbar-wrapper {
+        --font-heading: 'Outfit', sans-serif;
+        --font-body: 'Inter', sans-serif;
         position: sticky !important;
         top: 0 !important;
         left: 0 !important;
         width: 100% !important;
         z-index: 1000 !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        font-family: 'Inter', sans-serif !important;
+        line-height: 1.65 !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
         transition: all 0.3s ease;
+    }
+    .tsth2-navbar-wrapper *,
+    .tsth2-navbar-wrapper *::before,
+    .tsth2-navbar-wrapper *::after {
+        box-sizing: border-box !important;
     }
 
     /* ── 1. TOP BAR (WARNA ATAS: HIJAU TUA BOTANIK #0e342a) ── */
     .top-header-bar {
-        background: #0e342a;
-        color: #ffffff;
-        font-size: 0.825rem;
-        font-weight: 500;
-        height: 38px;
-        display: flex;
-        align-items: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        background: #0e342a !important;
+        color: #ffffff !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.825rem !important;
+        font-weight: 500 !important;
+        line-height: 1.5 !important;
+        height: 38px !important;
+        display: flex !important;
+        align-items: center !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
     }
     .top-header-container {
         width: 100%;
@@ -161,86 +172,97 @@
     }
 
     /* ── 2. MAIN BAR (WARNA BAWAH: WHITE #ffffff) ── */
-    .main-header {
-        background: #ffffff;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-        padding: 0.65rem 0;
-        transition: all 0.3s ease;
+    .main-header,
+    .main-header.scrolled {
+        background: #ffffff !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+        padding: 0.65rem 0 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        transition: none !important;
     }
     .header-container {
-        width: 100%;
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-sizing: border-box;
-        gap: 1.5rem;
+        width: 100% !important;
+        max-width: 1280px !important;
+        margin: 0 auto !important;
+        padding: 0 1.5rem !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
+        gap: 1.5rem !important;
         flex-wrap: nowrap !important; /* JANGAN TURUN KEBAWAH */
     }
 
     /* Logo & Institutional Title */
     .logo-container {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        text-decoration: none;
-        flex-shrink: 0;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+        text-decoration: none !important;
+        flex-shrink: 0 !important;
     }
-    .logo-container img {
-        height: 44px;
-        width: auto;
-        object-fit: contain;
-        flex-shrink: 0;
+    .logo-container img,
+    .logo-container:hover img {
+        height: 44px !important;
+        width: auto !important;
+        display: block !important;
+        object-fit: contain !important;
+        flex-shrink: 0 !important;
+        transform: none !important;
     }
     .logo-title-wrap {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        min-width: 0;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        min-width: 0 !important;
     }
     .logo-text {
-        color: #0f172a;
-        font-size: 1.25rem;
-        line-height: 1.15;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        font-family: var(--font-heading, sans-serif);
+        color: #0f172a !important;
+        font-size: 1.25rem !important;
+        line-height: 1.15 !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.02em !important;
+        font-family: 'Outfit', sans-serif !important;
     }
     .logo-subtext {
-        color: #64748b;
-        font-size: 0.72rem;
-        font-weight: 600;
-        line-height: 1.2;
-        letter-spacing: 0.2px;
-        display: block;
-        white-space: nowrap;
+        color: #64748b !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.72rem !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
+        letter-spacing: 0.2px !important;
+        display: block !important;
+        white-space: nowrap !important;
     }
 
     /* ── MENU NAVIGASI: TIDAK SEMUA HURUF KAPITAL & HARUS SEBARIS ── */
     .nav-menu {
-        display: flex;
-        align-items: center;
-        gap: 1.35rem; /* Gap proporsional agar muat 1 baris */
+        display: flex !important;
+        align-items: center !important;
+        gap: 1.35rem !important; /* Gap proporsional agar muat 1 baris */
         flex-wrap: nowrap !important; /* DIJAMIN SEBARIS */
-        margin: 0;
-        padding: 0;
+        margin: 0 !important;
+        padding: 0 !important;
     }
     .nav-link {
-        color: #1e293b;
-        font-family: var(--font-heading, sans-serif);
-        font-weight: 600;
-        font-size: 0.925rem; /* Ukuran terbaca, proporsional */
+        color: #1e293b !important;
+        font-family: 'Outfit', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 0.925rem !important; /* Ukuran terbaca, proporsional */
+        line-height: 1.5 !important;
+        letter-spacing: 0px !important;
         text-transform: none !important; /* JANGAN SEMUA HURUF KAPITAL */
         white-space: nowrap !important; /* SEBARIS */
-        text-decoration: none;
-        padding: 0.45rem 0.25rem;
-        position: relative;
-        transition: color 0.2s ease;
-        flex-shrink: 0;
+        text-decoration: none !important;
+        padding: 0.45rem 0.25rem !important;
+        position: relative !important;
+        transition: color 0.2s ease !important;
+        flex-shrink: 0 !important;
         background: transparent !important;
         border-radius: 0 !important;
+        display: inline-block !important;
     }
     .nav-link::after {
         content: '';
@@ -365,8 +387,10 @@
     .btn-register-pill {
         background: #164E3F !important;
         color: #ffffff !important;
+        font-family: 'Inter', sans-serif !important;
         font-size: 0.9rem !important;
         font-weight: 700 !important;
+        line-height: 1.4 !important;
         padding: 0.55rem 1.4rem !important;
         border-radius: 9999px !important;
         border: none !important;
@@ -498,7 +522,7 @@
         margin-bottom: 2rem;
     }
     .mobile-nav-links a {
-        font-family: var(--font-heading, sans-serif);
+        font-family: 'Outfit', sans-serif !important;
         font-size: 1rem;
         font-weight: 600;
         color: #1e293b;
