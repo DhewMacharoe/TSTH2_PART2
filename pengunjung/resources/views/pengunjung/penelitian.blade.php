@@ -419,7 +419,7 @@
 <body style="background: #f8faf9;">
     @include('partials.navbar')
 
-    <main>
+    <main style="padding-top: 110px;">
         <!-- Hero Section -->
         @php
             $heroBg = isset($konten['penelitian_hero_bg']) && $konten['penelitian_hero_bg']->image_path

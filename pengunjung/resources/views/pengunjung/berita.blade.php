@@ -38,7 +38,7 @@
 <body style="background: #f8faf9;">
     @include('partials.navbar')
 
-    <main>
+    <main style="padding-top: 110px;">
         <!-- Executive News Hero Banner -->
         <section style="background: linear-gradient(135deg, #0d342a 0%, #164E3F 50%, #1c5e4d 100%); padding: 5.5rem 1rem; text-align: center; color: white; position: relative; overflow: hidden;">
             <div class="container" style="position: relative; z-index: 2;">

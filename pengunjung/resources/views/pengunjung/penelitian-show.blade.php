@@ -247,7 +247,7 @@
         }
     @endphp
 
-    <main>
+    <main style="padding-top: 110px;">
         {{-- Hero --}}
         @php
             $heroBg = isset($konten['penelitian_hero_bg']) && $konten['penelitian_hero_bg']->image_path

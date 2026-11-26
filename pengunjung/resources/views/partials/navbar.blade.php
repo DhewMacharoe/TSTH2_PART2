@@ -632,21 +632,8 @@
                 <a href="{{ route('berita') }}" class="nav-link {{ request()->routeIs('berita') ? 'active' : '' }}">{{ __('site.nav_news') }}</a>
                 <a href="{{ route('galeri') }}" class="nav-link {{ request()->routeIs('galeri') ? 'active' : '' }}">{{ __('site.nav_gallery') }}</a>
                 
-                <!-- Dropdown Katalog -->
-                <div class="nav-dropdown">
-                    <button type="button" class="nav-dropdown-btn-clean" id="katalogDropdownBtn">
-                        <span>{{ __('site.nav_catalog') }}</span>
-                        <svg class="dropdown-arrow-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
-                    </button>
-                    <div class="tsth2-dropdown-menu" id="katalogDropdownMenu">
-                        <a href="{{ config('app.url_katalog', env('URL_KATALOG', 'http://localhost:8003')) }}" class="dropdown-plain-item">
-                            {{ __('site.nav_greenhouse') }}
-                        </a>
-                        <a href="{{ config('app.url_katalog', env('URL_KATALOG', 'http://localhost:8003')) }}/collection" class="dropdown-plain-item">
-                            {{ __('site.nav_outdoor') }}
-                        </a>
-                    </div>
-                </div>
+                <!-- Link Katalog (langsung ke koleksi greenhouse) -->
+                <a href="{{ config('app.url_katalog', env('URL_KATALOG', 'http://localhost:8003')) }}/collection" class="nav-link">{{ __('site.nav_catalog') }}</a>
             </nav>
 
             <!-- Action Button di Kanan (Pill Button seperti tombol Register di gambar ITB) -->
@@ -706,7 +693,7 @@
             <a href="{{ route('penelitian') }}" class="{{ request()->routeIs('penelitian') ? 'active' : '' }}">{{ __('site.nav_research') }}</a>
             <a href="{{ route('berita') }}" class="{{ request()->routeIs('berita') ? 'active' : '' }}">{{ __('site.nav_news') }}</a>
             <a href="{{ route('galeri') }}" class="{{ request()->routeIs('galeri') ? 'active' : '' }}">{{ __('site.nav_gallery') }}</a>
-            <a href="{{ config('app.url_katalog', env('URL_KATALOG', 'http://localhost:8003')) }}">{{ __('site.nav_catalog') }}</a>
+            <a href="{{ config('app.url_katalog', env('URL_KATALOG', 'http://localhost:8003')) }}/collection">{{ __('site.nav_catalog') }}</a>
             <a href="#kontak" onclick="document.getElementById('mobileMenu').style.display='none';">Hubungi Kami</a>
         </nav>
         
@@ -804,44 +791,13 @@
                 e.preventDefault();
                 e.stopPropagation();
                 langTopDropdown.classList.toggle('is-open');
-                
-                // Tutup katalog dropdown jika terbuka
-                if (katalogMenu) katalogMenu.classList.remove('is-active');
-                if (katalogContainer) katalogContainer.classList.remove('is-open');
             });
         }
 
-        // Toggle Dropdown Katalog di Main Bar
-        const katalogContainer = document.querySelector('.nav-dropdown');
-        const katalogBtn = document.getElementById('katalogDropdownBtn');
-        const katalogMenu = document.getElementById('katalogDropdownMenu');
-
-        if (katalogContainer && katalogBtn && katalogMenu) {
-            katalogBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const willOpen = !katalogMenu.classList.contains('is-active');
-                
-                if (langTopDropdown) langTopDropdown.classList.remove('is-open');
-
-                if (willOpen) {
-                    katalogMenu.classList.add('is-active');
-                    katalogContainer.classList.add('is-open');
-                } else {
-                    katalogMenu.classList.remove('is-active');
-                    katalogContainer.classList.remove('is-open');
-                }
-            });
-        }
-
-        // Click outside closes dropdowns
+        // Click outside closes language dropdown
         document.addEventListener('click', function(e) {
             if (langTopDropdown && !langTopDropdown.contains(e.target)) {
                 langTopDropdown.classList.remove('is-open');
-            }
-            if (katalogContainer && !katalogContainer.contains(e.target)) {
-                katalogMenu.classList.remove('is-active');
-                katalogContainer.classList.remove('is-open');
             }
         });
 
