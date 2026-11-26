@@ -67,11 +67,10 @@
                 <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <p class="text-sm text-gray-500 font-bold mb-1">Total Stok Saat Ini</p>
-                        <div class="flex items-center gap-2" title="{{ $barang->stok_breakdown }}">
-                            <span class="text-3xl font-bold text-gray-900">{{ $barang->formatted_stok_main }}</span>
-                            @if($barang->has_multiple_satuan)
-                                <span class="inline-flex items-center justify-center px-2 py-0.5 text-base font-extrabold text-emerald-700 bg-emerald-100 border border-emerald-200 rounded-lg cursor-help" title="Rincian: {{ $barang->stok_breakdown }}">+</span>
-                            @endif
+                        <div class="flex items-center" title="{{ $barang->has_multiple_satuan ? 'Rincian: ' . $barang->stok_breakdown : $barang->stok_breakdown }}">
+                            <span class="text-3xl font-bold text-gray-900 {{ $barang->has_multiple_satuan ? 'cursor-help' : '' }}">
+                                {{ $barang->formatted_stok_main }}@if($barang->has_multiple_satuan)<span class="text-emerald-600 font-extrabold">+</span>@endif
+                            </span>
                         </div>
                         @if($barang->has_multiple_satuan)
                             <p class="text-xs text-gray-500 mt-1 font-medium">Rincian stok: <span class="font-bold text-gray-700">{{ $barang->stok_breakdown }}</span></p>
@@ -127,11 +126,8 @@
                             <span>#{{ $fullBatchCode }}</span>
                         </a>
                         @if($firstBatch)
-                            <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-bold rounded-md border border-gray-200" title="{{ $firstBatch->stok_breakdown }}">
-                                <span>{{ $firstBatch->stock_info['formatted_main'] }}</span>
-                                @if($firstBatch->has_multiple_satuan)
-                                    <span class="text-emerald-600 font-black">+</span>
-                                @endif
+                            <span class="inline-flex items-center px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-bold rounded-md border border-gray-200 {{ $firstBatch->has_multiple_satuan ? 'cursor-help' : '' }}" title="{{ $firstBatch->stok_breakdown }}">
+                                <span>{{ $firstBatch->stock_info['formatted_main'] }}@if($firstBatch->has_multiple_satuan)<span class="text-emerald-600 font-black">+</span>@endif</span>
                             </span>
                         @endif
                     </div>
