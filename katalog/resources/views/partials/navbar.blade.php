@@ -526,21 +526,8 @@
                 <a href="{{ $urlPengunjung }}/berita" class="nav-link">{{ __('site.nav_news') }}</a>
                 <a href="{{ $urlPengunjung }}/galeri" class="nav-link">{{ __('site.nav_gallery') }}</a>
                 
-                <!-- Dropdown Katalog -->
-                <div class="nav-dropdown">
-                    <button type="button" class="nav-dropdown-btn-clean" id="katalogDropdownBtn">
-                        <span>{{ __('site.nav_catalog') }}</span>
-                        <svg class="dropdown-arrow-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
-                    </button>
-                    <div class="tsth2-dropdown-menu" id="katalogDropdownMenu">
-                        <a href="{{ route('home') }}" class="dropdown-plain-item {{ request()->routeIs('home') ? 'style=color:#164E3F;font-weight:700;' : '' }}">
-                            {{ __('site.nav_greenhouse') }}
-                        </a>
-                        <a href="{{ route('collection') }}" class="dropdown-plain-item {{ request()->routeIs('collection') ? 'style=color:#164E3F;font-weight:700;' : '' }}">
-                            {{ __('site.nav_outdoor') }}
-                        </a>
-                    </div>
-                </div>
+                <!-- Link Katalog (langsung ke koleksi greenhouse, tanpa dropdown) -->
+                <a href="{{ route('collection') }}" class="nav-link {{ request()->routeIs('collection') ? 'active' : '' }}">{{ __('site.nav_catalog') }}</a>
             </nav>
 
             <!-- Action Button di Kanan (Pill Button seperti tombol Register di gambar ITB) -->
@@ -626,39 +613,12 @@
                 e.preventDefault();
                 e.stopPropagation();
                 langTopDropdown.classList.toggle('is-open');
-                if (katalogMenu) katalogMenu.classList.remove('is-active');
-                if (katalogContainer) katalogContainer.classList.remove('is-open');
-            });
-        }
-
-        const katalogContainer = document.querySelector('.nav-dropdown');
-        const katalogBtn = document.getElementById('katalogDropdownBtn');
-        const katalogMenu = document.getElementById('katalogDropdownMenu');
-
-        if (katalogContainer && katalogBtn && katalogMenu) {
-            katalogBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const willOpen = !katalogMenu.classList.contains('is-active');
-                if (langTopDropdown) langTopDropdown.classList.remove('is-open');
-
-                if (willOpen) {
-                    katalogMenu.classList.add('is-active');
-                    katalogContainer.classList.add('is-open');
-                } else {
-                    katalogMenu.classList.remove('is-active');
-                    katalogContainer.classList.remove('is-open');
-                }
             });
         }
 
         document.addEventListener('click', function(e) {
             if (langTopDropdown && !langTopDropdown.contains(e.target)) {
                 langTopDropdown.classList.remove('is-open');
-            }
-            if (katalogContainer && !katalogContainer.contains(e.target)) {
-                katalogMenu.classList.remove('is-active');
-                katalogContainer.classList.remove('is-open');
             }
         });
     });
