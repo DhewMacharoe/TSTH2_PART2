@@ -1,14 +1,11 @@
 @php
     $urlPengunjung = rtrim(config('app.url_pengunjung', env('URL_PENGUNJUNG', 'http://localhost:8000')), '/');
     $urlKatalog    = rtrim(config('app.url_katalog',    env('URL_KATALOG',    'http://localhost:8003')), '/');
-    $headerStyle   = 'background: #ffffff; border-bottom: 1px solid rgba(22, 78, 63, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.04);';
-    $textColor     = 'color: #0f172a;';
-    $logoColor     = 'color: #164E3F;';
     $currentLocale = app()->getLocale();
 @endphp
 
 <style>
-    /* Prevent overflow-x and guarantee scrollbar stability so navbar never shifts */
+    /* Prevent overflow-x and guarantee scrollbar stability */
     html {
         overflow-y: scroll;
     }
@@ -16,27 +13,177 @@
         overflow-x: clip !important;
     }
 
-    /* Material Symbols */
-    .material-symbols-rounded { font-family: 'Material Symbols Rounded'; font-style: normal; font-weight: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-
-    .main-header {
+    /* ═══════════════════════════════════════════════
+       2-TIER NAVBAR SYSTEM (PERSIS SEPERTI GAMBAR)
+       ═══════════════════════════════════════════════ */
+    .tsth2-navbar-wrapper {
+        --font-heading: 'Outfit', sans-serif;
+        --font-body: 'Inter', sans-serif;
         position: sticky !important;
         top: 0 !important;
         left: 0 !important;
         width: 100% !important;
         z-index: 1000 !important;
-        padding: 0.9rem 0 !important;
-        background: rgba(255, 255, 255, 0.98) !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
-        transition: all 0.3s ease;
-        box-sizing: border-box !important;
         font-family: 'Inter', sans-serif !important;
-        font-size: 16px !important;
-        line-height: 26.4px !important;
+        line-height: 1.65 !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+        transition: all 0.3s ease;
+    }
+    .tsth2-navbar-wrapper *,
+    .tsth2-navbar-wrapper *::before,
+    .tsth2-navbar-wrapper *::after {
+        box-sizing: border-box !important;
     }
 
+    /* ── 1. TOP BAR (WARNA ATAS: HIJAU TUA BOTANIK #0e342a) ── */
+    .top-header-bar {
+        background: #0e342a !important;
+        color: #ffffff !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.825rem !important;
+        font-weight: 500 !important;
+        line-height: 1.5 !important;
+        height: 38px !important;
+        display: flex !important;
+        align-items: center !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+    }
+    .top-header-container {
+        width: 100%;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-sizing: border-box;
+    }
+    .top-header-left {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.775rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .top-header-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-left: auto;
+    }
+    .top-nav-link {
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: opacity 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+    }
+    .top-nav-link:hover {
+        opacity: 0.85;
+        text-decoration: underline;
+    }
+    .top-nav-divider {
+        color: rgba(255, 255, 255, 0.35);
+        font-size: 0.8rem;
+    }
+
+    /* Top Language Dropdown with Flag (Seperti di gambar) */
+    .lang-top-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .lang-top-btn {
+        background: rgba(255, 255, 255, 0.12);
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 6px;
+        padding: 3px 8px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+        line-height: 1;
+    }
+    .lang-top-btn:hover,
+    .lang-top-dropdown.is-open .lang-top-btn {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.45);
+    }
+    .lang-top-caret {
+        transition: transform 0.2s ease;
+        stroke-width: 2.5;
+    }
+    .lang-top-dropdown.is-open .lang-top-caret {
+        transform: rotate(180deg);
+    }
+    .lang-top-menu {
+        position: absolute;
+        top: calc(100% + 6px);
+        right: 0;
+        background: #ffffff;
+        color: #1e293b;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.2), 0 4px 8px -2px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+        padding: 5px;
+        min-width: 175px;
+        z-index: 1050;
+        display: none;
+        box-sizing: border-box;
+    }
+    .lang-top-dropdown.is-open .lang-top-menu {
+        display: block !important;
+        animation: dropFadeIn 0.2s ease-out;
+    }
+    .lang-top-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 8px 12px;
+        background: none;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.825rem;
+        font-weight: 600;
+        color: #334155;
+        cursor: pointer;
+        text-align: left;
+        transition: background 0.15s, color 0.15s;
+        box-sizing: border-box;
+    }
+    .lang-top-item:hover {
+        background: #f0fdf4;
+        color: #164E3F;
+    }
+    .lang-top-item.active {
+        background: #f0fdf4;
+        color: #164E3F;
+        font-weight: 700;
+    }
+
+    /* ── 2. MAIN BAR (WARNA BAWAH: WHITE #ffffff) ── */
+    .main-header,
+    .main-header.scrolled {
+        background: #ffffff !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+        padding: 0.65rem 0 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        transition: none !important;
+    }
     .header-container {
         width: 100% !important;
         max-width: 1280px !important;
@@ -46,275 +193,265 @@
         justify-content: space-between !important;
         align-items: center !important;
         box-sizing: border-box !important;
-        height: 46px !important;
+        gap: 1.5rem !important;
+        flex-wrap: nowrap !important;
     }
 
+    /* Logo & Institutional Title */
     .logo-container {
         display: flex !important;
         align-items: center !important;
         gap: 0.75rem !important;
         text-decoration: none !important;
-        min-width: 0 !important;
-        height: 46px !important;
-    }
-    .logo-container img {
-        height: 46px !important;
-        width: auto !important;
-        object-fit: contain !important;
         flex-shrink: 0 !important;
     }
+    .logo-container img,
+    .logo-container:hover img {
+        height: 44px !important;
+        width: auto !important;
+        display: block !important;
+        object-fit: contain !important;
+        flex-shrink: 0 !important;
+        transform: none !important;
+    }
+    .logo-title-wrap {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        min-width: 0 !important;
+    }
     .logo-text {
-        font-family: 'Outfit', sans-serif !important;
-        font-size: 1.35rem !important;
-        line-height: 1.1 !important;
+        color: #0f172a !important;
+        font-size: 1.25rem !important;
+        line-height: 1.15 !important;
         font-weight: 800 !important;
         letter-spacing: -0.02em !important;
-        color: #164E3F !important;
+        font-family: 'Outfit', sans-serif !important;
     }
     .logo-subtext {
-        color: #475569 !important;
+        color: #64748b !important;
         font-family: 'Inter', sans-serif !important;
         font-size: 0.72rem !important;
         font-weight: 600 !important;
         line-height: 1.2 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.4px !important;
+        letter-spacing: 0.2px !important;
         display: block !important;
+        white-space: nowrap !important;
     }
 
-    /* Desktop Navigation Menu (Persis Port 8000) */
+    /* ── MENU NAVIGASI: TIDAK SEMUA HURUF KAPITAL & HARUS SEBARIS ── */
     .nav-menu {
         display: flex !important;
         align-items: center !important;
-        gap: 0.25rem !important;
+        gap: 1.35rem !important;
+        flex-wrap: nowrap !important;
         margin: 0 !important;
         padding: 0 !important;
-        list-style: none !important;
     }
     .nav-link {
-        color: #0f172a !important;
+        color: #1e293b !important;
         font-family: 'Outfit', sans-serif !important;
         font-weight: 600 !important;
-        font-size: 0.875rem !important;
-        line-height: 23.1px !important;
-        position: relative !important;
-        padding: 0.5rem 0.85rem !important;
-        border-radius: 8px !important;
-        transition: all 0.25s ease !important;
-        letter-spacing: 0.3px !important;
+        font-size: 0.925rem !important;
+        line-height: 1.5 !important;
+        letter-spacing: 0px !important;
+        text-transform: none !important;
+        white-space: nowrap !important;
         text-decoration: none !important;
-        text-transform: uppercase !important;
-        box-sizing: border-box !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        height: 39.1px !important;
+        padding: 0.45rem 0.25rem !important;
+        position: relative !important;
+        transition: color 0.2s ease !important;
+        flex-shrink: 0 !important;
+        background: transparent !important;
+        border-radius: 0 !important;
+        display: inline-block !important;
     }
     .nav-link::after {
-        content: '' !important;
-        position: absolute !important;
-        bottom: 4px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        width: 0% !important;
-        height: 2px !important;
-        background: #164E3F !important;
-        border-radius: 4px !important;
-        transition: width 0.3s ease !important;
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 2.5px;
+        background: #164E3F;
+        border-radius: 99px;
+        transition: width 0.25s ease;
+        transform: none !important;
     }
-    .nav-link:hover, .nav-link.active {
+    .nav-link:hover::after,
+    .nav-link.active::after {
+        width: 100% !important;
+    }
+    .nav-link:hover,
+    .nav-link.active {
         color: #164E3F !important;
-        background: rgba(22, 78, 63, 0.06) !important;
-    }
-    .nav-link:hover::after, .nav-link.active::after {
-        width: 60% !important;
+        background: transparent !important;
     }
 
-    /* Clean Trigger Dropdown Button (Katalog) — Ukuran & Padding Identik Persis Port 8000 */
+    /* Katalog dropdown */
     .nav-dropdown {
-        position: relative !important;
-        display: inline-block !important;
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
     }
     .nav-dropdown-btn-clean {
         background: none !important;
-        border: none !important;
-        cursor: pointer !important;
-        font-family: 'Outfit', sans-serif !important;
-        font-size: 0.875rem !important;
-        font-weight: 600 !important;
-        line-height: 23.1px !important;
-        letter-spacing: inherit !important;
-        text-transform: uppercase !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 5px !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        position: relative !important;
-        color: #0f172a !important;
-        transition: color 0.2s !important;
-        box-sizing: border-box !important;
-        height: 23.1px !important;
+        border: none;
+        cursor: pointer;
+        font-family: var(--font-heading, sans-serif);
+        font-size: 0.925rem;
+        font-weight: 600;
+        text-transform: none !important;
+        white-space: nowrap !important;
+        color: #1e293b;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0.45rem 0.25rem;
+        position: relative;
+        transition: color 0.2s ease;
+        flex-shrink: 0;
+        border-radius: 0 !important;
     }
     .nav-dropdown-btn-clean::after {
-        content: '' !important;
-        position: absolute !important;
-        bottom: -4px !important;
-        left: 0 !important;
-        width: 0% !important;
-        height: 2px !important;
-        background-color: #164E3F !important;
-        transition: width 0.3s !important;
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 2.5px;
+        background: #164E3F;
+        border-radius: 99px;
+        transition: width 0.25s ease;
+        transform: none !important;
     }
     .nav-dropdown-btn-clean:hover::after,
-    .nav-dropdown.is-open .nav-dropdown-btn-clean::after,
-    .nav-dropdown-btn-clean.active::after {
+    .nav-dropdown.is-open .nav-dropdown-btn-clean::after {
         width: 100% !important;
     }
     .nav-dropdown-btn-clean:hover,
-    .nav-dropdown.is-open .nav-dropdown-btn-clean,
-    .nav-dropdown-btn-clean.active {
+    .nav-dropdown.is-open .nav-dropdown-btn-clean {
         color: #164E3F !important;
+        background: transparent !important;
     }
     .dropdown-arrow-icon {
-        transition: transform 0.25s ease !important;
-        display: inline-block !important;
-        vertical-align: middle !important;
+        transition: transform 0.25s ease;
     }
     .nav-dropdown.is-open .dropdown-arrow-icon {
-        transform: rotate(180deg) !important;
+        transform: rotate(180deg);
     }
 
-    /* Dropdown Menu Box */
     .tsth2-dropdown-menu {
-        position: absolute !important;
-        top: calc(100% + 8px) !important;
-        left: 0 !important;
-        background: #ffffff !important;
-        border: 1px solid #cbd5e1 !important;
-        border-radius: 12px !important;
-        box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.15), 0 4px 10px -2px rgba(15, 23, 42, 0.08) !important;
-        padding: 6px 0 !important;
-        z-index: 1050 !important;
-        display: none !important;
-        min-width: 250px !important;
-        box-sizing: border-box !important;
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.15), 0 4px 10px -2px rgba(15, 23, 42, 0.08);
+        padding: 6px 0;
+        z-index: 1050;
+        display: none;
+        min-width: 220px;
+        box-sizing: border-box;
     }
     .tsth2-dropdown-menu.is-active {
         display: block !important;
+        animation: dropFadeIn 0.2s ease-out;
     }
     .dropdown-plain-item {
-        display: block !important;
-        padding: 13px 20px !important;
-        font-family: 'Outfit', sans-serif !important;
-        font-size: 0.95rem !important;
-        font-weight: 600 !important;
-        color: #1e293b !important;
-        text-decoration: none !important;
-        transition: background-color 0.15s ease, color 0.15s ease !important;
-        line-height: 1.4 !important;
-        cursor: pointer !important;
-        background: #ffffff !important;
+        display: block;
+        padding: 11px 18px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #1e293b;
+        text-decoration: none;
+        transition: background-color 0.15s ease, color 0.15s ease;
+        text-transform: none;
+        white-space: nowrap;
     }
     .dropdown-plain-item:not(:last-child) {
-        border-bottom: 1px solid #f1f5f9 !important;
+        border-bottom: 1px solid #f1f5f9;
     }
-    .dropdown-plain-item:hover,
-    .dropdown-plain-item:focus {
-        background-color: #f1f5f9 !important;
-        color: #164E3F !important;
+    .dropdown-plain-item:hover {
+        background-color: #f0fdf4;
+        color: #164E3F;
     }
 
-    /* Actions Desktop Wrapper */
+    /* Action button di kanan (Pill button seperti tombol Register di gambar ITB) */
     .nav-actions-desktop {
-        display: flex !important;
-        gap: 0.75rem !important;
-        align-items: center !important;
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-shrink: 0;
     }
-
-    .lang-switcher {
-        display: inline-flex !important;
-        align-items: center !important;
-        background: #f1f5f9 !important;
-        border-radius: 999px !important;
-        padding: 3px !important;
-        border: 1px solid #e2e8f0 !important;
-        box-sizing: border-box !important;
-        width: 82.1px !important;
-        height: 35px !important;
-    }
-    .lang-switcher button {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 4px !important;
-        padding: 4px 10px !important;
-        border-radius: 999px !important;
-        border: none !important;
-        cursor: pointer !important;
-        transition: all 0.2s !important;
-        font-family: Arial, sans-serif !important;
-        font-size: 13.3333px !important;
-        line-height: normal !important;
-        box-sizing: border-box !important;
-    }
-    #lang-btn-en {
-        width: 38.53px !important;
-        height: 23px !important;
-    }
-    #lang-btn-id {
-        width: 35.56px !important;
-        height: 27px !important;
-    }
-
-    /* Portal Login Button — Ukuran, Font, dan Padding Persis Port 8000 */
-    .btn-portal-trigger {
+    .btn-register-pill {
         background: #164E3F !important;
         color: #ffffff !important;
         font-family: 'Inter', sans-serif !important;
-        font-size: 0.875rem !important;
+        font-size: 0.9rem !important;
         font-weight: 700 !important;
-        line-height: 23.1px !important;
-        letter-spacing: normal !important;
-        padding: 0.6rem 1.35rem !important;
-        border-radius: 999px !important;
+        line-height: 1.4 !important;
+        padding: 0.55rem 1.4rem !important;
+        border-radius: 9999px !important;
         border: none !important;
-        box-shadow: 0 4px 12px rgba(22, 78, 63, 0.25) !important;
+        box-shadow: 0 3px 10px rgba(22, 78, 63, 0.25) !important;
         display: inline-flex !important;
         align-items: center !important;
-        justify-content: center !important;
-        gap: 8px !important;
-        cursor: pointer !important;
-        transition: all 0.2s ease !important;
+        gap: 6px !important;
         text-decoration: none !important;
-        box-sizing: border-box !important;
-        width: 148px !important;
-        height: 42.3px !important;
+        white-space: nowrap !important;
+        transition: all 0.2s ease !important;
+        cursor: pointer !important;
     }
-    .btn-portal-trigger:hover {
-        background: #0d382d !important;
-        box-shadow: 0 6px 16px rgba(22, 78, 63, 0.35) !important;
-    }
-    .btn-portal-trigger span {
-        font-family: 'Inter', sans-serif !important;
-        font-size: 0.875rem !important;
-        font-weight: 700 !important;
-        line-height: 23.1px !important;
-        width: 81.8px !important;
-    }
-    .btn-portal-trigger svg {
-        width: 15px !important;
-        height: 15px !important;
-        display: block !important;
-        flex-shrink: 0 !important;
+    .btn-register-pill:hover {
+        background: #0e342a !important;
+        box-shadow: 0 5px 14px rgba(14, 52, 42, 0.35) !important;
+        transform: translateY(-1px);
     }
 
-    /* Responsive */
-    @media (max-width: 900px) {
-        .nav-menu, .nav-actions-desktop {
+    @keyframes dropFadeIn {
+        from { opacity: 0; transform: translateY(-6px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .mobile-menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #1e293b;
+        padding: 6px;
+    }
+
+    @media (max-width: 1024px) {
+        .top-header-left {
+            display: none !important;
+        }
+        .nav-menu {
+            display: none !important;
+        }
+        .nav-actions-desktop {
             display: none !important;
         }
         .mobile-menu-toggle {
             display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .top-header-bar {
+            height: 34px;
+            font-size: 0.75rem;
+        }
+        .logo-container img {
+            height: 36px;
+        }
+        .logo-text {
+            font-size: 1.1rem !important;
         }
         .logo-subtext {
             display: none !important;
@@ -330,7 +467,7 @@
         bottom: 0;
         width: 100%;
         height: 100%;
-        background: rgba(5, 68, 57, 0.4);
+        background: rgba(0, 35, 65, 0.5);
         backdrop-filter: blur(6px);
         -webkit-backdrop-filter: blur(6px);
         z-index: 99999;
@@ -354,9 +491,6 @@
         align-self: flex-end;
         background: #f1f5f9;
         border: none;
-        font-size: 1.5rem;
-        line-height: 1;
-        color: #475569;
         cursor: pointer;
         width: 36px;
         height: 36px;
@@ -364,116 +498,162 @@
         align-items: center;
         justify-content: center;
         border-radius: 50%;
-        transition: background 0.2s;
+        margin-bottom: 1rem;
     }
     .mobile-nav-links {
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        gap: 0.35rem;
         margin-bottom: 2rem;
     }
     .mobile-nav-links a {
-        font-family: 'Outfit', sans-serif;
-        font-size: 1.05rem;
+        font-family: 'Outfit', sans-serif !important;
+        font-size: 1rem;
         font-weight: 600;
         color: #1e293b;
         text-decoration: none;
         padding: 0.65rem 0.5rem;
         border-radius: 8px;
-        transition: background 0.2s, color 0.2s;
+        text-transform: none;
     }
     .mobile-nav-links a.active, .mobile-nav-links a:hover {
         background: #f0fdf4;
-        color: #054439;
+        color: #164E3F;
     }
 </style>
 
-<header class="main-header" id="header" style="{{ $headerStyle }}">
-    <div class="header-container">
-        {{-- Logo TSTH2 --}}
-        <a href="{{ $urlPengunjung }}" class="logo-container">
-            <img src="{{ asset('assets/logo.png') }}" alt="TSTH2 Logo" onerror="this.src='{{ $urlPengunjung }}/assets/logo.png'">
-            <div style="display: flex; flex-direction: column; justify-content: center; min-width: 0;">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span class="logo-text" style="{{ $logoColor }}; font-size: 1.35rem; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em;">TSTH2</span>
-                </div>
-                <span class="logo-subtext">Taman Sains Teknologi Herbal dan Hortikultura</span>
-            </div>
-        </a>
-        
-        {{-- Desktop Navigation (Persis Port 8000) --}}
-        <nav class="nav-menu" style="text-transform: uppercase;">
-            <a href="{{ $urlPengunjung }}" class="nav-link" style="{{ $textColor }}">{{ __('site.nav_home') }}</a>
-            <a href="{{ $urlPengunjung }}/profil-tsth2" class="nav-link" style="{{ $textColor }}">{{ __('site.nav_profile') }}</a>
-            <a href="{{ $urlPengunjung }}/penelitian" class="nav-link" style="{{ $textColor }}">{{ __('site.nav_research') }}</a>
-            <a href="{{ $urlPengunjung }}/berita" class="nav-link" style="{{ $textColor }}">{{ __('site.nav_news') }}</a>
-            <a href="{{ $urlPengunjung }}/galeri" class="nav-link" style="{{ $textColor }}">{{ __('site.nav_gallery') }}</a>
-            
-            <div class="nav-dropdown" style="position: relative; display: inline-block;">
-                <button type="button" class="nav-dropdown-btn-clean active" id="katalogDropdownBtn" style="{{ $textColor }}">
-                    <span>{{ __('site.nav_catalog') }}</span>
-                    <svg class="dropdown-arrow-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                </button>
-                <div class="tsth2-dropdown-menu" id="katalogDropdownMenu" style="left: 0; min-width: 220px;">
-                    <a href="{{ route('home') }}" class="dropdown-plain-item {{ request()->routeIs('home') ? 'style=color:#164E3F;font-weight:700;' : '' }}">
-                        {{ __('site.nav_greenhouse') }}
-                    </a>
-                    <a href="{{ route('collection') }}" class="dropdown-plain-item {{ request()->routeIs('collection') ? 'style=color:#164E3F;font-weight:700;' : '' }}">
-                        {{ __('site.nav_outdoor') }}
-                    </a>
-                </div>
-            </div>
-        </nav>
+<!-- ═══════════════════════════════════════════════════════════════
+     HEADER 2-WARNA (TOP BAR BIRU TUA + MAIN BAR PUTIH)
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="tsth2-navbar-wrapper">
+    <!-- 1. TOP BAR (WARNA ATAS) -->
+    <div class="top-header-bar">
+        <div class="top-header-container">
+            <div class="top-header-right">
+                <!-- Language Switcher dengan Bendera & Dropdown (Persis seperti gambar ITB) -->
+                <div class="lang-top-dropdown notranslate" translate="no" id="langTopDropdown">
+                    <button type="button" class="lang-top-btn" id="langTopBtn" aria-label="Pilih Bahasa / Select Language">
+                        @if($currentLocale === 'en')
+                            <!-- Bendera UK SVG -->
+                            <svg class="flag-icon" width="18" height="13" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="border-radius: 2px; box-shadow: 0 0 1px rgba(0,0,0,0.5); flex-shrink: 0;">
+                                <clipPath id="uk-flag-top-k"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
+                                <g clip-path="url(#uk-flag-top-k)">
+                                    <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+                                    <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+                                    <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4"/>
+                                    <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+                                    <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+                                </g>
+                            </svg>
+                        @else
+                            <!-- Bendera Indonesia SVG -->
+                            <svg class="flag-icon" width="18" height="13" viewBox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 2px; box-shadow: 0 0 1px rgba(0,0,0,0.5); flex-shrink: 0;">
+                                <rect width="20" height="7.5" fill="#e11d48"/>
+                                <rect y="7.5" width="20" height="7.5" fill="#ffffff"/>
+                            </svg>
+                        @endif
+                        <svg class="lang-top-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
 
-        {{-- Desktop Actions (Persis Port 8000) --}}
-        <div class="nav-actions-desktop" style="display: flex; gap: 0.75rem; align-items: center;">
-            <!-- Language Switcher Pill -->
-            <div class="lang-switcher notranslate" translate="no" style="display: inline-flex; align-items: center; background: #f1f5f9; border-radius: 999px; padding: 3px; border: 1px solid #e2e8f0; font-size: 0.75rem; font-weight: 700;">
-                <button type="button" onclick="setSiteLanguage('en')" id="lang-btn-en" title="English" style="display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; border: none; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; font-size: 0.75rem; {{ $currentLocale === 'en' ? 'background: #164E3F; color: #ffffff; box-shadow: 0 2px 6px rgba(22,78,63,0.3); font-weight: 800;' : 'background: transparent; color: #64748b; font-weight: 600;' }}">
-                    <span>EN</span>
-                </button>
-                <button type="button" onclick="setSiteLanguage('id')" id="lang-btn-id" title="Bahasa Indonesia" style="display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; border: none; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; font-size: 0.75rem; {{ $currentLocale === 'id' ? 'background: #164E3F; color: #ffffff; box-shadow: 0 2px 6px rgba(22,78,63,0.3); font-weight: 800;' : 'background: transparent; color: #64748b; font-weight: 600;' }}">
-                    <span>ID</span>
-                </button>
-            </div>
+                    <div class="lang-top-menu" id="langTopMenu">
+                        <button type="button" onclick="setSiteLanguage('id')" class="lang-top-item {{ $currentLocale !== 'en' ? 'active' : '' }}">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <svg width="18" height="13" viewBox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 2px; box-shadow: 0 0 1px rgba(0,0,0,0.4);">
+                                    <rect width="20" height="7.5" fill="#e11d48"/>
+                                    <rect y="7.5" width="20" height="7.5" fill="#ffffff"/>
+                                </svg>
+                                <span>Bahasa Indonesia</span>
+                            </div>
+                            @if($currentLocale !== 'en')
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#164E3F" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            @endif
+                        </button>
 
-            {{-- Portal Login (Tombol Hijau Bulat Identik Port 8000) --}}
-            <a href="{{ $urlPengunjung }}/login" class="btn-portal-trigger" style="text-decoration: none;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                <span>{{ __('site.nav_portal_login') }}</span>
-            </a>
+                        <button type="button" onclick="setSiteLanguage('en')" class="lang-top-item {{ $currentLocale === 'en' ? 'active' : '' }}">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <svg width="18" height="13" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="border-radius: 2px; box-shadow: 0 0 1px rgba(0,0,0,0.4);">
+                                    <clipPath id="uk-flag-menu-k"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
+                                    <g clip-path="url(#uk-flag-menu-k)">
+                                        <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+                                        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+                                        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4"/>
+                                        <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+                                        <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+                                    </g>
+                                </svg>
+                                <span>English</span>
+                            </div>
+                            @if($currentLocale === 'en')
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#164E3F" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            @endif
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Hamburger Button for Mobile & Smartwatch -->
-        <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Menu" style="background: none; border: none; cursor: pointer; display: none; {{ $textColor }}; padding: 4px;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
     </div>
-</header>
 
-<!-- Mobile Menu Overlay Drawer (Identik Port 8000) -->
+    <!-- 2. MAIN BAR (WARNA BAWAH: PUTIH) -->
+    <header class="main-header" id="header">
+        <div class="header-container">
+            <!-- Brand Logo -->
+            <a href="{{ $urlPengunjung }}" class="logo-container">
+                <img src="{{ asset('assets/logo.png') }}" alt="TSTH2 Logo" onerror="this.src='{{ $urlPengunjung }}/assets/logo.png'">
+                <div class="logo-title-wrap">
+                    <span class="logo-text">TSTH2</span>
+                    <span class="logo-subtext">Taman Sains Teknologi Herbal dan Hortikultura</span>
+                </div>
+            </a>
+            
+            <!-- Menu Navigasi: Sebaris & Bukan Huruf Kapital Semua -->
+            <nav class="nav-menu">
+                <a href="{{ $urlPengunjung }}" class="nav-link">{{ __('site.nav_home') }}</a>
+                <a href="{{ $urlPengunjung }}/profil-tsth2" class="nav-link">{{ __('site.nav_profile') }}</a>
+                <a href="{{ $urlPengunjung }}/penelitian" class="nav-link">{{ __('site.nav_research') }}</a>
+                <a href="{{ $urlPengunjung }}/berita" class="nav-link">{{ __('site.nav_news') }}</a>
+                <a href="{{ $urlPengunjung }}/galeri" class="nav-link">{{ __('site.nav_gallery') }}</a>
+                
+                <!-- Link Katalog (langsung ke koleksi greenhouse, tanpa dropdown) -->
+                <a href="{{ route('collection') }}" class="nav-link {{ request()->routeIs('home', 'collection', 'plant.*') ? 'active' : '' }}">{{ __('site.nav_catalog') }}</a>
+            </nav>
+
+            <!-- Action Button di Kanan (Pill Button seperti tombol Register di gambar ITB) -->
+            <div class="nav-actions-desktop">
+                <a href="{{ $urlPengunjung }}/login" class="btn-register-pill">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                    <span>{{ __('site.nav_portal_login') }}</span>
+                </a>
+            </div>
+
+            <!-- Hamburger Button for Mobile -->
+            <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+        </div>
+    </header>
+</div>
+
+<!-- Mobile Menu Overlay Drawer -->
 <div class="mobile-menu-overlay" id="mobileMenu" style="display: none;">
     <div class="mobile-menu-content">
         <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close Menu">
-            <span class="material-symbols-rounded" style="font-size: 20px;">close</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
         
-        <div style="margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <div style="font-weight: 800; color: #164E3F; font-size: 1.2rem;">TSTH2 Hub</div>
-                <div style="font-size: 0.75rem; color: #64748b;">Taman Sains Teknologi Herbal &amp; Hortikultura</div>
-            </div>
+        <div style="margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem;">
+            <div style="font-weight: 800; color: #164E3F; font-size: 1.25rem;">TSTH2 Hub</div>
+            <div style="font-size: 0.75rem; color: #64748b;">Taman Sains Teknologi Herbal &amp; Hortikultura</div>
         </div>
 
         <!-- Mobile Language Switcher -->
         <div class="notranslate" translate="no" style="margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid #f1f5f9;">
-            <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.5px;">Language / Bahasa:</div>
+            <div style="font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.5rem;">Pilih Bahasa / Language:</div>
             <div style="display: flex; gap: 0.5rem;">
-                <button type="button" onclick="setSiteLanguage('en')" id="m-lang-btn-en" style="flex: 1; text-align: center; padding: 0.45rem 0.75rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; {{ $currentLocale === 'en' ? 'background: #164E3F; color: white;' : 'background: #f1f5f9; color: #475569;' }}">
-                    EN · English
+                <button type="button" onclick="setSiteLanguage('id')" style="flex: 1; padding: 0.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; {{ $currentLocale !== 'en' ? 'background: #164E3F; color: white;' : 'background: #f1f5f9; color: #475569;' }}">
+                    <span>ID · Indonesia</span>
                 </button>
-                <button type="button" onclick="setSiteLanguage('id')" id="m-lang-btn-id" style="flex: 1; text-align: center; padding: 0.45rem 0.75rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; {{ $currentLocale === 'id' ? 'background: #164E3F; color: white;' : 'background: #f1f5f9; color: #475569;' }}">
-                    ID · Indonesia
+                <button type="button" onclick="setSiteLanguage('en')" style="flex: 1; padding: 0.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; {{ $currentLocale === 'en' ? 'background: #164E3F; color: white;' : 'background: #f1f5f9; color: #475569;' }}">
+                    <span>EN · English</span>
                 </button>
             </div>
         </div>
@@ -484,205 +664,115 @@
             <a href="{{ $urlPengunjung }}/penelitian">{{ __('site.nav_research') }}</a>
             <a href="{{ $urlPengunjung }}/berita">{{ __('site.nav_news') }}</a>
             <a href="{{ $urlPengunjung }}/galeri">{{ __('site.nav_gallery') }}</a>
-            
-            <div style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem;">
-                <button type="button" id="mobileKatalogBtn" style="background: none; border: none; width: 100%; text-align: left; font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 600; color: #1e293b; text-transform: uppercase; padding: 0.65rem 0.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-radius: 8px;">
-                    {{ __('site.nav_catalog') }}
-                    <svg id="mobileKatalogArrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.2s;"><path d="m6 9 6 6 6-6"/></svg>
-                </button>
-                <div id="mobileKatalogSubmenu" style="display: none; flex-direction: column; gap: 0.5rem; padding-left: 1rem; margin-top: 0.25rem;">
-                    <a href="{{ route('home') }}" style="font-size: 0.95rem; font-weight: 500; text-decoration: none; color: #64748b;">{{ __('site.nav_greenhouse') }}</a>
-                    <a href="{{ route('collection') }}" style="font-size: 0.95rem; font-weight: 500; text-decoration: none; color: #64748b;">{{ __('site.nav_outdoor') }}</a>
-                </div>
-            </div>
+            <a href="{{ route('collection') }}" class="{{ request()->routeIs('home', 'collection', 'plant.*') ? 'active' : '' }}">{{ __('site.nav_catalog') }}</a>
+            <a href="#kontak" onclick="document.getElementById('mobileMenu').style.display='none'; document.body.style.overflow='';">Hubungi Kami</a>
         </nav>
         
         <div class="mobile-nav-actions" style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #f1f5f9;">
-            <a href="{{ $urlPengunjung }}/login" class="btn btn-primary" style="width: 100%; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; font-size: 0.95rem; padding: 0.75rem 1rem; font-weight: 700; text-decoration: none; background: #164E3F; color: white; border-radius: 999px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            <a href="{{ $urlPengunjung }}/login" class="btn-register-pill" style="width: 100%; justify-content: center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                 <span>{{ __('site.nav_portal_login') }}</span>
             </a>
         </div>
     </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════════
+     SCRIPT: INTERAKSI DROPDOWN & TRANSLATE ENGINE
+     ═══════════════════════════════════════════════════════════════ -->
 <script>
+    function clearAllGoogleTranslateCookies() {
+        const hostname = window.location.hostname;
+        const paths = ['/', ''];
+        const domainList = ['', hostname, '.' + hostname];
+        
+        const parts = hostname.split('.');
+        for (let i = 0; i < parts.length - 1; i++) {
+            const d = parts.slice(i).join('.');
+            domainList.push('.' + d);
+            domainList.push(d);
+        }
+
+        const cookieNames = ['googtrans'];
+        paths.forEach(function(p) {
+            domainList.forEach(function(d) {
+                const domainStr = d ? '; domain=' + d : '';
+                const pathStr = '; path=' + (p || '/');
+                cookieNames.forEach(function(name) {
+                    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; max-age=0' + pathStr + domainStr + ';';
+                    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; max-age=0' + pathStr + domainStr + '; SameSite=Lax;';
+                    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; max-age=0' + pathStr + domainStr + '; SameSite=None; Secure;';
+                });
+            });
+        });
+    }
+
+    @if($currentLocale !== 'en')
+        clearAllGoogleTranslateCookies();
+    @endif
+
+    function setSiteLanguage(lang) {
+        const expires = new Date(Date.now() + 365 * 864e5).toUTCString();
+        const isHttps = window.location.protocol === 'https:' ? '; Secure' : '';
+        const host = window.location.hostname;
+        
+        document.cookie = "site_pref_lang=" + lang + "; expires=" + expires + "; path=/; SameSite=Lax" + isHttps;
+        localStorage.setItem('site_pref_lang', lang);
+        
+        if (lang === 'en') {
+            document.cookie = "googtrans=/id/en; expires=" + expires + "; path=/; SameSite=Lax" + isHttps;
+            if (host.includes('.')) {
+                const parts = host.split('.');
+                if (parts.length > 2) {
+                    const rootDomain = parts.slice(-2).join('.');
+                    document.cookie = "googtrans=/id/en; expires=" + expires + "; path=/; domain=." + rootDomain + "; SameSite=Lax" + isHttps;
+                }
+            }
+        } else {
+            clearAllGoogleTranslateCookies();
+        }
+        
+        window.location.href = "{{ url('/lang') }}/" + lang;
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
-        // Mobile menu drawer
+        const langTopDropdown = document.getElementById('langTopDropdown');
+        const langTopBtn = document.getElementById('langTopBtn');
+        
+        if (langTopBtn && langTopDropdown) {
+            langTopBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                langTopDropdown.classList.toggle('is-open');
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (langTopDropdown && !langTopDropdown.contains(e.target)) {
+                langTopDropdown.classList.remove('is-open');
+            }
+        });
+
+        // Mobile Drawer
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileMenuClose = document.getElementById('mobileMenuClose');
         const mobileMenu = document.getElementById('mobileMenu');
         
-        if(mobileMenuBtn && mobileMenu && mobileMenuClose) {
+        if (mobileMenuBtn && mobileMenu && mobileMenuClose) {
             mobileMenuBtn.addEventListener('click', function() {
                 mobileMenu.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
             });
-            
             mobileMenuClose.addEventListener('click', function() {
                 mobileMenu.style.display = 'none';
                 document.body.style.overflow = '';
             });
-            
             mobileMenu.addEventListener('click', function(e) {
-                if(e.target === mobileMenu) {
+                if (e.target === mobileMenu) {
                     mobileMenu.style.display = 'none';
                     document.body.style.overflow = '';
                 }
             });
         }
-
-        // Desktop Katalog Dropdown (STRICT CLICK TO OPEN & STAY OPEN)
-        const dropdownContainer = document.querySelector('.nav-dropdown');
-        const dropdownToggle = document.getElementById('katalogDropdownBtn');
-        const dropdownMenu = document.getElementById('katalogDropdownMenu');
-
-        if (dropdownContainer && dropdownToggle && dropdownMenu) {
-            dropdownToggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const willOpen = !dropdownMenu.classList.contains('is-active');
-
-                if (willOpen) {
-                    dropdownMenu.classList.add('is-active');
-                    dropdownContainer.classList.add('is-open');
-                } else {
-                    dropdownMenu.classList.remove('is-active');
-                    dropdownContainer.classList.remove('is-open');
-                }
-            });
-        }
-
-        // Click outside closes the dropdown
-        document.addEventListener('click', function(e) {
-            if (dropdownContainer && !dropdownContainer.contains(e.target)) {
-                dropdownMenu.classList.remove('is-active');
-                dropdownContainer.classList.remove('is-open');
-            }
-        });
-
-        // Mobile Katalog Submenu Accordion
-        const mobileKatalogBtn = document.getElementById('mobileKatalogBtn');
-        const mobileKatalogSubmenu = document.getElementById('mobileKatalogSubmenu');
-        const mobileKatalogArrow = document.getElementById('mobileKatalogArrow');
-
-        if (mobileKatalogBtn && mobileKatalogSubmenu) {
-            mobileKatalogBtn.addEventListener('click', function() {
-                const isOpen = mobileKatalogSubmenu.style.display === 'flex';
-                mobileKatalogSubmenu.style.display = isOpen ? 'none' : 'flex';
-                if (mobileKatalogArrow) {
-                    mobileKatalogArrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-                }
-            });
-        }
     });
 </script>
-
-<!-- Google Translate Element & Automatic Translation Logic -->
-<div id="google_translate_element" style="display:none;" aria-hidden="true"></div>
-<style>
-    /* Complete suppression of Google Translate top banner, toolbar, and iframes */
-    .goog-te-banner-frame,
-    .goog-te-banner-frame.skiptranslate,
-    iframe.goog-te-banner-frame,
-    .VIpgJd-ZVi9od-ORHb-OEVmcb,
-    .VIpgJd-ZVi9od-ORHb-OEVmcb-ti6hGc,
-    .VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
-    .VIpgJd-ZVi9od-l4eHX-hSRGPd,
-    iframe.VIpgJd-ZVi9od-ORHb-OEVmcb,
-    body > .skiptranslate,
-    body > iframe[src*="translate"],
-    body > iframe[id*="goog"],
-    #goog-gt-tt,
-    .goog-tooltip,
-    .goog-tooltip:hover,
-    .goog-te-balloon-frame {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
-        width: 0 !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-    }
-    .goog-text-highlight {
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-    #google_translate_element {
-        display: none !important;
-    }
-    font > font {
-        font-family: inherit !important;
-        color: inherit !important;
-    }
-</style>
-
-<script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'id',
-            includedLanguages: 'en,id',
-            autoDisplay: false
-        }, 'google_translate_element');
-    }
-
-    function setSiteLanguage(lang) {
-        if (lang === 'en') {
-            document.cookie = "googtrans=/id/en; path=/";
-            document.cookie = "googtrans=/id/en; path=/; domain=" + window.location.hostname;
-            document.cookie = "site_pref_lang=en; path=/; max-age=31536000";
-            localStorage.setItem('site_pref_lang', 'en');
-            window.location.href = "{{ route('lang.switch', 'en') }}";
-        } else {
-            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
-            document.cookie = "googtrans=/id/id; path=/";
-            document.cookie = "googtrans=/id/id; path=/; domain=" + window.location.hostname;
-            document.cookie = "site_pref_lang=id; path=/; max-age=31536000";
-            localStorage.setItem('site_pref_lang', 'id');
-            window.location.href = "{{ route('lang.switch', 'id') }}";
-        }
-    }
-
-    (function() {
-        var currentLocale = '{{ app()->getLocale() }}';
-
-        if (currentLocale === 'en') {
-            if (!document.cookie.includes('googtrans=/id/en')) {
-                document.cookie = "googtrans=/id/en; path=/";
-                document.cookie = "googtrans=/id/en; path=/; domain=" + window.location.hostname;
-            }
-            localStorage.setItem('site_pref_lang', 'en');
-        } else {
-            if (document.cookie.includes('googtrans=/id/en')) {
-                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
-            }
-            localStorage.setItem('site_pref_lang', 'id');
-        }
-
-        function killTranslateBanner() {
-            if (document.body && document.body.style.top && document.body.style.top !== '0px') {
-                document.body.style.top = '0px';
-            }
-            if (document.documentElement && document.documentElement.style.top && document.documentElement.style.top !== '0px') {
-                document.documentElement.style.top = '0px';
-            }
-            const banners = document.querySelectorAll('.goog-te-banner-frame, .VIpgJd-ZVi9od-ORHb-OEVmcb, body > .skiptranslate, body > iframe');
-            banners.forEach(function(el) {
-                if (el.tagName === 'IFRAME' || el.classList.contains('skiptranslate') || el.classList.contains('VIpgJd-ZVi9od-ORHb-OEVmcb')) {
-                    el.style.display = 'none';
-                    el.style.visibility = 'hidden';
-                    el.style.height = '0';
-                    el.style.width = '0';
-                    el.style.position = 'absolute';
-                    el.style.top = '-9999px';
-                }
-            });
-        }
-        setInterval(killTranslateBanner, 100);
-        window.addEventListener('load', killTranslateBanner);
-    })();
-</script>
-<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>

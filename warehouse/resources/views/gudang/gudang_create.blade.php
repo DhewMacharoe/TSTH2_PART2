@@ -105,16 +105,6 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2" for="kode_barang">
-                                Kode Barang <span class="text-gray-400 font-normal">(Opsional - Otomatis dibuat sistem jika kosong)</span>
-                            </label>
-                            <input type="text" id="kode_barang" name="kode_barang"
-                                class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-primary focus:border-primary p-3 font-mono font-bold uppercase"
-                                placeholder="Contoh: 1111 (Kategori + Blok + Rak + Urutan, otomatis jika kosong)" value="{{ old('kode_barang') }}">
-                            <p class="text-xs text-gray-400 mt-1">Format cerdas: <code>[1=Pupuk][1=Blok 1][1=Rak 1][1=Barang Ke-1]</code>. Contoh: <strong>1111</strong>.</p>
-                        </div>
-
-                        <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2" for="nama_barang">Nama Barang <span
                                     class="text-red-500">*</span></label>
                             <input type="text" id="nama_barang" name="nama_barang"
@@ -173,28 +163,20 @@
 
                     <div class="space-y-5">
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2" for="lokasi_blok">Lokasi Penyimpanan
-                                <span class="text-red-500">*</span></label>
-                            <input type="text" id="lokasi_blok" name="lokasi_blok" list="lokasi_list"
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-sm font-bold text-gray-700" for="lokasi_blok">Lokasi Penyimpanan <span class="text-red-500">*</span></label>
+                                <button type="button" onclick="document.getElementById('modalTambahLokasiCreate').classList.remove('hidden')" class="text-xs text-primary hover:underline font-bold inline-flex items-center gap-1">
+                                    <span class="material-symbols-rounded text-sm">add_location_alt</span> + Lokasi Baru
+                                </button>
+                            </div>
+                            <select id="lokasi_blok" name="lokasi_blok"
                                 class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-primary focus:border-primary p-3 font-medium"
-                                required placeholder="{{ auth()->user()->isPicLab() ? 'Contoh: Lemari Asam B3, Kulkas Reagen 4°C, Rak Alat Kaca' : 'Contoh: Blok A - Rak 01, Lahan Percobaan' }}" value="{{ old('lokasi_blok') }}">
-                            <datalist id="lokasi_list">
-                                @if(auth()->user()->isPicLab())
-                                    <option value="Lemari Asam B3">
-                                    <option value="Kulkas Reagen 4°C">
-                                    <option value="Freezer -20°C">
-                                    <option value="Rak Alat Kaca L-1">
-                                    <option value="Rak Alat Kaca L-2">
-                                    <option value="Meja Preparasi Lab 1">
-                                    <option value="Desikator Kimia">
-                                @else
-                                    <option value="Blok A - Rak 1">
-                                    <option value="Blok B - Rak 2">
-                                    <option value="Blok C - Rak 1">
-                                    <option value="Area Pembibitan Utara">
-                                    <option value="Lahan Percobaan Timur">
-                                @endif
-                            </datalist>
+                                required>
+                                <option value="" disabled {{ old('lokasi_blok') ? '' : 'selected' }}>Pilih Lokasi Penyimpanan...</option>
+                                @foreach($lokasiList ?? [] as $lok)
+                                    <option value="{{ $lok }}" {{ old('lokasi_blok') == $lok ? 'selected' : '' }}>{{ $lok }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
@@ -265,7 +247,7 @@
                     <select id="existing_barang_id" name="existing_barang_id" class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-primary focus:border-primary p-3 font-medium" required onchange="updateRestockAction(this.value)">
                         <option value="" disabled selected>Pilih Barang yang ingin di-restock...</option>
                         @foreach($existingBarangs as $b)
-                            <option value="{{ $b->id }}" data-kategori="{{ $b->kategori }}">{{ $b->nama_barang }} (Blok {{ $b->lokasi_blok }} | Total Stok: {{ $b->batches->sum('stok') }})</option>
+                            <option value="{{ $b->id }}" data-kategori="{{ $b->kategori }}">{{ $b->nama_barang }} (Blok {{ $b->lokasi_blok }} | Total Stok: {{ $b->formatted_stok }})</option>
                         @endforeach
                     </select>
                 </div>
@@ -357,6 +339,51 @@
                 <div class="flex justify-end gap-2 pt-2 border-t border-gray-100">
                     <button type="button" class="px-4 py-2 border border-gray-200 text-gray-600 rounded-xl text-xs font-bold hover:bg-gray-50" onclick="document.getElementById('modalTambahKategoriCreate').classList.add('hidden')">Batal</button>
                     <button type="submit" id="btnSubmitQuickKat" class="px-4 py-2 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary-light flex items-center gap-1 shadow-sm">
+                        <span class="material-symbols-rounded text-base">save</span>
+                        Simpan & Gunakan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Lokasi Baru Cepat -->
+    <div id="modalTambahLokasiCreate" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-gray-100">
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/80">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                        <span class="material-symbols-rounded text-lg">add_location_alt</span>
+                    </span>
+                    <h3 class="font-bold text-gray-900 text-sm">Tambah Lokasi Penyimpanan</h3>
+                </div>
+                <button type="button" class="text-gray-400 hover:text-gray-600 rounded-lg p-1" onclick="document.getElementById('modalTambahLokasiCreate').classList.add('hidden')">
+                    <span class="material-symbols-rounded text-base">close</span>
+                </button>
+            </div>
+            <form id="formQuickTambahLokasi" class="p-6 space-y-4">
+                @csrf
+                @if(auth()->user()->isPicLab())
+                    <input type="hidden" name="jenis_barang" value="lab">
+                @elseif(auth()->user()->isPicGudang())
+                    <input type="hidden" name="jenis_barang" value="lapangan">
+                @else
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Peruntukan Warehouse</label>
+                        <select name="jenis_barang" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 text-xs font-semibold focus:ring-1 focus:ring-primary focus:border-primary">
+                            <option value="lapangan">🌾 Gudang GA (Lapangan)</option>
+                            <option value="lab">🔬 Lab RdI (Laboratorium)</option>
+                        </select>
+                    </div>
+                @endif
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1" for="quick_nama_lokasi">Nama Lokasi <span class="text-red-500">*</span></label>
+                    <input type="text" id="quick_nama_lokasi" name="nama_lokasi" required placeholder="Contoh: Blok D - Rak 2, Kulkas Reagen 2" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 text-xs font-medium focus:ring-1 focus:ring-primary focus:border-primary">
+                    <p id="quick_lokasi_error_msg" class="text-red-600 text-xs mt-1 hidden"></p>
+                </div>
+                <div class="flex justify-end gap-2 pt-2 border-t border-gray-100">
+                    <button type="button" class="px-4 py-2 border border-gray-200 text-gray-600 rounded-xl text-xs font-bold hover:bg-gray-50" onclick="document.getElementById('modalTambahLokasiCreate').classList.add('hidden')">Batal</button>
+                    <button type="submit" id="btnSubmitQuickLok" class="px-4 py-2 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary-light flex items-center gap-1 shadow-sm">
                         <span class="material-symbols-rounded text-base">save</span>
                         Simpan & Gunakan
                     </button>
@@ -573,6 +600,69 @@
                 btnSubmit.disabled = false;
                 btnSubmit.innerHTML = '<span class="material-symbols-rounded text-base">save</span> Simpan & Gunakan';
                 errP.textContent = 'Terjadi kesalahan saat menyimpan kategori.';
+                errP.classList.remove('hidden');
+            });
+        });
+    }
+
+    // Quick Add Lokasi via AJAX
+    const formQuickLok = document.getElementById('formQuickTambahLokasi');
+    if (formQuickLok) {
+        formQuickLok.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const inputNama = document.getElementById('quick_nama_lokasi');
+            const errP = document.getElementById('quick_lokasi_error_msg');
+            const btnSubmit = document.getElementById('btnSubmitQuickLok');
+
+            errP.classList.add('hidden');
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = 'Menyimpan...';
+
+            const formData = new FormData(this);
+
+            fetch('{{ route("gudang.lokasi.store") }}', {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<span class="material-symbols-rounded text-base">save</span> Simpan & Gunakan';
+
+                if (data.success && data.lokasi) {
+                    const selectLok = document.getElementById('lokasi_blok');
+                    const newLokName = data.lokasi.nama_lokasi;
+
+                    let exists = false;
+                    for (let i = 0; i < selectLok.options.length; i++) {
+                        if (selectLok.options[i].value === newLokName) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        const opt = document.createElement('option');
+                        opt.value = newLokName;
+                        opt.textContent = newLokName;
+                        selectLok.appendChild(opt);
+                    }
+                    selectLok.value = newLokName;
+
+                    inputNama.value = '';
+                    document.getElementById('modalTambahLokasiCreate').classList.add('hidden');
+                } else {
+                    errP.textContent = data.message || 'Gagal menambahkan lokasi.';
+                    errP.classList.remove('hidden');
+                }
+            })
+            .catch(() => {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<span class="material-symbols-rounded text-base">save</span> Simpan & Gunakan';
+                errP.textContent = 'Terjadi kesalahan saat menyimpan lokasi.';
                 errP.classList.remove('hidden');
             });
         });

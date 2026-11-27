@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\BarangBatch;
+use App\Models\LokasiBarang;
 use App\Models\SatuanBarang;
 use App\Models\AktivitasGudang;
 use App\Services\AktivitasLogger;
@@ -81,6 +82,11 @@ class GudangController extends Controller
         $kategoriModels = $kategoriListQuery->get();
         $kategoriList   = $kategoriModels->pluck('nama_kategori')->unique();
 
+        $lokasiListQuery = ($selectedJenis === 'all')
+            ? LokasiBarang::orderBy('nama_lokasi')
+            : LokasiBarang::where('jenis_barang', $selectedJenis)->orderBy('nama_lokasi');
+        $lokasiModels = $lokasiListQuery->get();
+
         $satuanByKategori = [];
         foreach ($kategoriList as $kat) {
             $satuanByKategori[$kat] = SatuanBarang::forKategori($kat)->orderBy('nama_satuan')->pluck('nama_satuan')->toArray();
@@ -90,7 +96,7 @@ class GudangController extends Controller
             'allBarangs', 'barangsPaginated', 'totalBarang', 'totalKategori',
             'totalBarangLapangan', 'totalBarangLab', 'countItemsLapangan', 'countItemsLab',
             'totalSatuanLapangan', 'totalSatuanLab',
-            'barangsByCategory', 'barangsByBlock', 'kategoriModels', 'satuanByKategori', 'selectedJenis'
+            'barangsByCategory', 'barangsByBlock', 'kategoriModels', 'lokasiModels', 'satuanByKategori', 'selectedJenis'
         ));
     }
 
@@ -102,11 +108,14 @@ class GudangController extends Controller
         if ($user->role === 'pic_gudang') {
             $queryBarangs->where('jenis_barang', 'lapangan');
             $kategoriList = \App\Models\KategoriBarang::lapangan()->orderBy('nama_kategori')->pluck('nama_kategori');
+            $lokasiList   = LokasiBarang::lapangan()->orderBy('nama_lokasi')->pluck('nama_lokasi');
         } elseif ($user->role === 'pic_lab') {
             $queryBarangs->where('jenis_barang', 'lab');
             $kategoriList = \App\Models\KategoriBarang::lab()->orderBy('nama_kategori')->pluck('nama_kategori');
+            $lokasiList   = LokasiBarang::lab()->orderBy('nama_lokasi')->pluck('nama_lokasi');
         } else {
             $kategoriList = \App\Models\KategoriBarang::orderBy('nama_kategori')->pluck('nama_kategori')->unique();
+            $lokasiList   = LokasiBarang::orderBy('nama_lokasi')->pluck('nama_lokasi')->unique();
         }
 
         if ($kategoriList->isEmpty()) {
@@ -122,13 +131,12 @@ class GudangController extends Controller
             $kondisiByKategori[$kat] = SatuanBarang::kondisiByKategori($kat);
         }
 
-        return view('gudang.gudang_create', compact('existingBarangs', 'satuanByKategori', 'kondisiByKategori'));
+        return view('gudang.gudang_create', compact('existingBarangs', 'satuanByKategori', 'kondisiByKategori', 'lokasiList'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'kode_barang'        => 'nullable|string|max:50|unique:barangs,kode_barang',
             'nama_barang' => [
                 'required', 'string', 'max:255',
                 Rule::unique('barangs')->where(fn($query) => empty($request->merk) ? $query->whereNull('merk') : $query->where('merk', $request->merk))
@@ -157,9 +165,7 @@ class GudangController extends Controller
         $barangData = $validated;
         unset($barangData['tanggal_kedatangan'], $barangData['tanggal_kadaluarsa'], $barangData['stok_jumlah'], $barangData['stok_satuan'], $barangData['stok_kondisi']);
 
-        if (empty($barangData['kode_barang'])) {
-            $barangData['kode_barang'] = Barang::generateKodeBarang($barangData['kategori'], $barangData['lokasi_blok']);
-        }
+        $barangData['kode_barang'] = Barang::generateKodeBarang($barangData['kategori'], $barangData['lokasi_blok']);
 
         // Kunci jenis_barang sesuai wewenang PIC
         $user = Auth::user();
@@ -237,7 +243,12 @@ class GudangController extends Controller
             $kategoriList->push($barang->kategori);
         }
 
-        return view('gudang.gudang_edit', compact('barang', 'kategoriList'));
+        $lokasiList = LokasiBarang::where('jenis_barang', $jenis)->orderBy('nama_lokasi')->pluck('nama_lokasi');
+        if (!$lokasiList->contains($barang->lokasi_blok) && $barang->lokasi_blok) {
+            $lokasiList->push($barang->lokasi_blok);
+        }
+
+        return view('gudang.gudang_edit', compact('barang', 'kategoriList', 'lokasiList'));
     }
 
     public function update(Request $request, $id)

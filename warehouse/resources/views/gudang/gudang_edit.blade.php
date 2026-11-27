@@ -134,30 +134,21 @@
                     <div class="space-y-5">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2" for="lokasi_blok">Lokasi Penyimpanan <span class="text-red-500">*</span></label>
-                            <input type="text" id="lokasi_blok" name="lokasi_blok" list="lokasi_list_edit" class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-primary focus:border-primary p-3 font-medium" required value="{{ old('lokasi_blok', $barang->lokasi_blok) }}">
-                            <datalist id="lokasi_list_edit">
-                                @if($barang->jenis_barang === 'lab')
-                                    <option value="Lemari Asam B3">
-                                    <option value="Kulkas Reagen 4°C">
-                                    <option value="Freezer -20°C">
-                                    <option value="Rak Alat Kaca L-1">
-                                    <option value="Rak Alat Kaca L-2">
-                                    <option value="Meja Preparasi Lab 1">
-                                    <option value="Desikator Kimia">
-                                @else
-                                    <option value="Blok A - Rak 1">
-                                    <option value="Blok B - Rak 2">
-                                    <option value="Blok C - Rak 1">
-                                    <option value="Area Pembibitan Utara">
-                                    <option value="Lahan Percobaan Timur">
-                                @endif
-                            </datalist>
+                            <select id="lokasi_blok" name="lokasi_blok" class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-primary focus:border-primary p-3 font-medium" required>
+                                @foreach($lokasiList ?? [] as $lok)
+                                    <option value="{{ $lok }}" {{ old('lokasi_blok', $barang->lokasi_blok) == $lok ? 'selected' : '' }}>{{ $lok }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2" for="stok">Total Stok Saat Ini <span class="text-gray-400 font-normal">(Auto)</span></label>
-                            <input type="number" id="stok" name="stok" class="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-lg p-3 font-medium text-lg font-mono cursor-not-allowed" readonly required min="0" value="{{ old('stok', $barang->batches->sum('stok')) }}">
-                            <p class="text-xs text-gray-500 mt-1">Stok hanya bisa ditambah melalui fitur Restock.</p>
+                            <input type="text" id="stok" name="stok" class="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-lg p-3 font-medium text-lg font-mono cursor-not-allowed" readonly required value="{{ old('stok', $barang->formatted_stok) }}" title="{{ $barang->stok_breakdown }}">
+                            @if($barang->has_multiple_satuan)
+                                <p class="text-xs text-emerald-700 font-semibold mt-1">Rincian stok: {{ $barang->stok_breakdown }}</p>
+                            @else
+                                <p class="text-xs text-gray-500 mt-1">Stok hanya bisa ditambah melalui fitur Restock.</p>
+                            @endif
                         </div>
 
                         <div>

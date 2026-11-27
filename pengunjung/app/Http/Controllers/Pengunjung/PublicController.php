@@ -99,13 +99,25 @@ class PublicController extends Controller
         return view('pengunjung.galeri', compact('konten', 'galeri'));
     }
 
-    public function switchLanguage(string $locale)
+    public function switchLanguage(Request $request, string $locale)
     {
         if (in_array($locale, ['id', 'en'])) {
             session(['locale' => $locale]);
             cookie()->queue(cookie('site_pref_lang', $locale, 60 * 24 * 365, '/'));
+
+            if ($locale === 'id') {
+                cookie()->queue(cookie()->forget('googtrans', '/'));
+                $host = $request->getHost();
+                cookie()->queue(cookie()->forget('googtrans', '/', $host));
+                cookie()->queue(cookie()->forget('googtrans', '/', '.' . $host));
+                $parts = explode('.', $host);
+                if (count($parts) > 2) {
+                    $rootDomain = '.' . implode('.', array_slice($parts, -2));
+                    cookie()->queue(cookie()->forget('googtrans', '/', $rootDomain));
+                }
+            }
         }
 
-        return back();
+        return redirect()->back(fallback: route('home'));
     }
 }

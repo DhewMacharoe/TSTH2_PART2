@@ -15,25 +15,31 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Dual language is strictly for public visitor pages
+        // Dual language is for public visitor pages.
         // Internal dashboards, admin panels, warehouse, and management remain exclusively in Bahasa Indonesia
-        $isPublicVisitorPage = $request->is(
-            '/',
-            'profil-tsth2*',
-            'layanan*',
-            'penelitian*',
-            'berita*',
-            'galeri*',
-            'katalog-tanaman*'
+        $isPublicVisitorPage = !$request->is(
+            'admin*',
+            'dasbor*',
+            'warehouse*',
+            'gudang*',
+            'inventory*',
+            'stok*',
+            'barang*',
+            'supplier*',
+            'transaksi*',
+            'permintaan*',
+            'penerimaan*',
+            'penyesuaian*',
+            'laporan*',
+            'audit*'
         );
 
         if ($isPublicVisitorPage) {
-            // Cek session terlebih dahulu, jika belum ada cek cookie site_pref_lang atau googtrans
+            // Cek session terlebih dahulu, jika belum ada cek cookie site_pref_lang
             $locale = Session::get('locale');
             if (!$locale) {
                 $cookiePref = $request->cookie('site_pref_lang');
-                $googTrans = $request->cookie('googtrans', '');
-                if ($cookiePref === 'en' || str_contains($googTrans, '/id/en') || str_contains($googTrans, '/en')) {
+                if ($cookiePref === 'en') {
                     $locale = 'en';
                 } else {
                     $locale = 'id';

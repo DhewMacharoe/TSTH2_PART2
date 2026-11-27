@@ -147,7 +147,7 @@
                 <div class="mt-8 text-center pt-6 border-t border-gray-100 flex flex-col gap-2">
                     <a href="{{ config('app.url_pengunjung', env('URL_PENGUNJUNG', 'http://localhost:8000')) }}" class="text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors inline-flex items-center justify-center gap-1.5">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                        Buka Portal Publik TSTH2 (:8000)
+                        Buka Portal Publik TSTH2 
                     </a>
                 </div>
             </div>

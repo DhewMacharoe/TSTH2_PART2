@@ -330,10 +330,6 @@
 
                     {{-- Portal Badge Indikator Pembatas Jelas --}}
                     @if(auth()->user()->role === 'web_admin')
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-xs">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            PORTAL UTAMA :8000
-                        </span>
                     @elseif(auth()->user()->isPicGudang())
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200 shadow-xs">
                             <span class="w-2 h-2 rounded-full bg-amber-500"></span>

@@ -18,7 +18,7 @@
 <body style="background: #f8faf9;">
     @include('partials.navbar')
 
-    <main style="padding-top: 90px;">
+    <main>
         <article class="article-container">
             <!-- Back navigation -->
             <div style="margin-bottom: 2rem;">

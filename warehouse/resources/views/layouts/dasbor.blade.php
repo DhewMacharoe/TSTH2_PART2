@@ -301,10 +301,6 @@
                           LAB (RdI)
                         </span>
                     @elseif(auth()->user()->role === 'web_admin')
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-xs">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            PORTAL UTAMA :8000
-                        </span>
                     @elseif(auth()->user()->role === 'pimpinan')
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-purple-50 text-purple-800 border border-purple-200 shadow-xs">
                             <span class="w-2 h-2 rounded-full bg-purple-500"></span>

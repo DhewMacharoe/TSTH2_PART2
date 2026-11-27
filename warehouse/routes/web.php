@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DasborController;
 use App\Http\Controllers\Admin\GudangBatchController;
 use App\Http\Controllers\Admin\GudangController;
 use App\Http\Controllers\Admin\KategoriBarangController;
+use App\Http\Controllers\Admin\LokasiBarangController;
 use App\Http\Controllers\Admin\AktivitasGudangController;
 use App\Http\Controllers\Admin\PermintaanChatController;
 use App\Http\Controllers\Admin\PermintaanController;
@@ -19,7 +20,7 @@ use App\Http\Controllers\Pengunjung\PublicController;
 use App\Http\Controllers\PlantController;
 use Illuminate\Support\Facades\Route;
 
-// Rute Autentikasi SSO Terpadu dari Portal Hub (:8000)
+// Rute Autentikasi SSO Terpadu dari Portal Hub 
 Route::get('/hub-auth', function (\Illuminate\Http\Request $request) {
     $email = $request->query('email');
     $ts = $request->query('ts');
@@ -88,7 +89,7 @@ Route::get('/', function () {
     return auth()->check() ? redirect()->route('gudang') : redirect()->route('login');
 })->name('home');
 
-// Pengalihan Halaman Publik Pengunjung ke Portal Utama (:8000)
+// Pengalihan Halaman Publik Pengunjung ke Portal Utama 
 Route::get('/profil-tsth2', fn() => redirect()->away(rtrim(config('app.url_pengunjung', env('URL_PENGUNJUNG', 'http://localhost:8000')), '/') . '/profil-tsth2'))->name('profil-public');
 Route::get('/layanan', fn() => redirect()->away(rtrim(config('app.url_pengunjung', env('URL_PENGUNJUNG', 'http://localhost:8000')), '/') . '/layanan'))->name('layanan');
 Route::get('/penelitian', fn() => redirect()->away(rtrim(config('app.url_pengunjung', env('URL_PENGUNJUNG', 'http://localhost:8000')), '/') . '/penelitian'))->name('penelitian');
@@ -148,6 +149,9 @@ Route::middleware(['auth', 'role:web_admin'])->group(function () {
 Route::middleware(['auth', 'role:pic_gudang|pic_lab|web_admin'])->group(function () {
     Route::post('/gudang/kategori',              [KategoriBarangController::class, 'store'])->name('gudang.kategori.store');
     Route::delete('/gudang/kategori/{id}',       [KategoriBarangController::class, 'destroy'])->name('gudang.kategori.destroy');
+
+    Route::post('/gudang/lokasi',                [LokasiBarangController::class, 'store'])->name('gudang.lokasi.store');
+    Route::delete('/gudang/lokasi/{id}',         [LokasiBarangController::class, 'destroy'])->name('gudang.lokasi.destroy');
 
     Route::get('/gudang/satuan',                 [SatuanController::class, 'index'])->name('satuan.index');
     Route::post('/gudang/satuan',                [SatuanController::class, 'store'])->name('satuan.store');

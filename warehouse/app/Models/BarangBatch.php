@@ -78,4 +78,25 @@ class BarangBatch extends Model
             }
         }
     }
+
+    // ─── Format Stok & Satuan ───────────────────────────────────────────────
+    public function getStockInfoAttribute(): array
+    {
+        return \App\Services\StockFormatter::formatBatch($this);
+    }
+
+    public function getFormattedStokAttribute(): string
+    {
+        return $this->stock_info['formatted'];
+    }
+
+    public function getStokBreakdownAttribute(): string
+    {
+        return $this->stock_info['breakdown'];
+    }
+
+    public function getHasMultipleSatuanAttribute(): bool
+    {
+        return $this->stock_info['has_multiple'];
+    }
 }

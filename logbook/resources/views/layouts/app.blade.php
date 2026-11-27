@@ -354,12 +354,6 @@
                         <span class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm animate-pulse">{{ $pendingPermintaan }}</span>
                     @endif
                 </a>
-
-                <p class="px-4 text-xs font-bold text-white/40 uppercase tracking-widest mb-1 mt-6">Logbook Karyawan</p>
-                <a href="{{ route('dashboard') }}" class="sidebar-link active">
-                    <span class="material-symbols-rounded">assignment</span>
-                    <span>Logbook Saya</span>
-                </a>
             @endif
         </nav>
     </aside>

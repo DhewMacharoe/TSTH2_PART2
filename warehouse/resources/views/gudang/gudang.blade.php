@@ -304,6 +304,12 @@
                     Export CSV
                 </a>
                 @if(auth()->user()->canManageWarehouse())
+                <button type="button" onclick="document.getElementById('modalKelolaLokasi').classList.remove('hidden')" 
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg text-xs font-semibold shadow-sm transition-colors"
+                        title="Tambah atau Hapus Lokasi Penyimpanan">
+                    <span class="material-symbols-rounded text-base text-primary">location_on</span>
+                    Kelola Lokasi
+                </button>
                 <button type="button" onclick="document.getElementById('modalKelolaKategori').classList.remove('hidden')" 
                         class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg text-xs font-semibold shadow-sm transition-colors"
                         title="Tambah atau Hapus Kategori Warehouse">
@@ -418,10 +424,9 @@
                         </td>
                         <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none font-bold text-gray-900 whitespace-nowrap">
                             <span class="md:hidden font-bold text-gray-400 text-xs shrink-0">Stok</span>
-                            @php
-                                $stokTotal = $barang->batches->sum('stok');
-                            @endphp
-                            <span class="text-sm font-bold text-gray-900">{{ $stokTotal }}</span>
+                            <span class="text-sm font-bold {{ $barang->has_positive_stock ? 'text-gray-900' : 'text-gray-400' }} {{ $barang->has_multiple_satuan ? 'cursor-help' : '' }}" title="{{ $barang->has_multiple_satuan ? 'Rincian: ' . $barang->stok_breakdown : $barang->stok_breakdown }}">
+                                {{ $barang->formatted_stok_main }}@if($barang->has_multiple_satuan)<span class="text-emerald-600 font-extrabold">+</span>@endif
+                            </span>
                         </td>
                         
                         <td class="flex justify-between items-center gap-4 md:table-cell px-0 md:px-6 py-2 md:py-4 border-b border-gray-50 md:border-none text-right md:text-left whitespace-nowrap">
@@ -718,6 +723,117 @@
         </div>
     </div>
 
+    <!-- Modal Kelola Lokasi Penyimpanan (Tambah / Hapus) -->
+    <div id="modalKelolaLokasi" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-xl overflow-hidden border border-gray-100 flex flex-col max-h-[90vh]">
+            {{-- Modal Header --}}
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/80">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                        <span class="material-symbols-rounded text-lg">location_on</span>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-gray-900 text-base">Kelola Lokasi Penyimpanan</h3>
+                        <p class="text-xs text-gray-500">
+                            @if(auth()->user()->isPicLab())
+                                Master lokasi penyimpanan Warehouse Laboratorium (RdI)
+                            @elseif(auth()->user()->isPicGudang())
+                                Master lokasi penyimpanan Warehouse Gudang General Affair (GA)
+                            @else
+                                Master lokasi penyimpanan Warehouse Terpadu (GA & Lab)
+                            @endif
+                        </p>
+                    </div>
+                </div>
+                <button type="button" class="text-gray-400 hover:text-gray-600 rounded-lg p-1.5 hover:bg-gray-100 transition-colors" onclick="document.getElementById('modalKelolaLokasi').classList.add('hidden')">
+                    <span class="material-symbols-rounded text-lg">close</span>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-6 flex-1">
+                {{-- Form Tambah Lokasi Baru --}}
+                <div class="bg-primary/[0.03] border border-primary/20 rounded-xl p-4">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-primary mb-3 flex items-center gap-1.5">
+                        <span class="material-symbols-rounded text-base">add_location_alt</span>
+                        Tambah Lokasi Penyimpanan Baru
+                    </h4>
+                    <form action="{{ route('gudang.lokasi.store') }}" method="POST" class="space-y-3">
+                        @csrf
+                        @if(auth()->user()->isWebAdmin())
+                            <div>
+                                <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">Peruntukan Warehouse</label>
+                                <select name="jenis_barang" class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs font-semibold focus:ring-1 focus:ring-primary focus:border-primary text-gray-800" required>
+                                    <option value="lapangan">🌾 Gudang GA (Lapangan)</option>
+                                    <option value="lab">🔬 Lab RdI (Laboratorium)</option>
+                                </select>
+                            </div>
+                        @else
+                            <input type="hidden" name="jenis_barang" value="{{ auth()->user()->isPicLab() ? 'lab' : 'lapangan' }}">
+                        @endif
+
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <input type="text" name="nama_lokasi" required
+                                   placeholder="Nama lokasi baru (cth: Blok D - Rak 1, Kulkas Sampel 2)"
+                                   class="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-2 text-xs font-medium focus:ring-1 focus:ring-primary focus:border-primary text-gray-800">
+                            <button type="submit" class="px-4 py-2 bg-primary hover:bg-primary-light text-white rounded-lg text-xs font-bold transition-all shadow-sm shrink-0 flex items-center justify-center gap-1">
+                                <span class="material-symbols-rounded text-sm">add</span>
+                                Simpan Lokasi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                {{-- List Lokasi yang Ada --}}
+                <div>
+                    <div class="flex items-center justify-between mb-2.5">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-600">Daftar Lokasi Terdaftar</h4>
+                        <span class="text-[11px] text-gray-400 font-semibold">{{ count($lokasiModels ?? []) }} Lokasi</span>
+                    </div>
+
+                    <div class="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden bg-white">
+                        @forelse($lokasiModels ?? [] as $lokModel)
+                            <div class="p-3 flex items-center justify-between hover:bg-gray-50/80 transition-colors">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-7 h-7 rounded-md {{ $lokModel->jenis_barang === 'lab' ? 'bg-purple-50 text-purple-700' : 'bg-emerald-50 text-emerald-700' }} flex items-center justify-center shrink-0">
+                                        <span class="material-symbols-rounded text-sm">{{ $lokModel->jenis_barang === 'lab' ? 'science' : 'warehouse' }}</span>
+                                    </span>
+                                    <div>
+                                        <span class="text-xs font-bold text-gray-800 block">{{ $lokModel->nama_lokasi }}</span>
+                                        <span class="text-[10px] text-gray-400">
+                                            {{ $lokModel->jenis_barang === 'lab' ? 'Lab RdI' : 'Gudang GA' }} &bull; {{ $lokModel->barangs_count }} barang terkait
+                                        </span>
+                                    </div>
+                                </div>
+                                <form action="{{ route('gudang.lokasi.destroy', $lokModel->id) }}" method="POST"
+                                      onsubmit="return konfirmasiHapusLokasi(event, this, '{{ addslashes($lokModel->nama_lokasi) }}', {{ $lokModel->barangs_count }})">
+                                    @csrf @method('DELETE')
+                                    <input type="hidden" name="pindahkan_ke_umum" value="0">
+                                    <button type="submit" 
+                                            class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1 text-[11px] font-semibold"
+                                            title="Hapus Lokasi">
+                                        <span class="material-symbols-rounded text-base">delete</span>
+                                        <span class="hidden sm:inline">Hapus</span>
+                                    </button>
+                                </form>
+                            </div>
+                        @empty
+                            <div class="p-6 text-center text-xs text-gray-400 font-medium">
+                                Belum ada lokasi penyimpanan terdaftar.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            {{-- Modal Footer --}}
+            <div class="px-6 py-3 border-t border-gray-100 bg-gray-50 flex justify-end">
+                <button type="button" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 rounded-xl text-xs font-bold transition-colors" onclick="document.getElementById('modalKelolaLokasi').classList.add('hidden')">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('scripts')
@@ -913,5 +1029,21 @@
                 }
             };
         });
+
+        function konfirmasiHapusLokasi(e, form, namaLokasi, barangsCount) {
+            if (barangsCount > 0) {
+                const lanjut = confirm(
+                    `Lokasi '${namaLokasi}' saat ini masih digunakan oleh ${barangsCount} data barang!\n\n` +
+                    `Apakah Anda ingin mengalihkan ${barangsCount} barang tersebut ke lokasi default dan menghapus lokasi '${namaLokasi}'?`
+                );
+                if (!lanjut) {
+                    e.preventDefault();
+                    return false;
+                }
+                form.querySelector('input[name="pindahkan_ke_umum"]').value = '1';
+                return true;
+            }
+            return confirm(`Yakin ingin menghapus lokasi penyimpanan '${namaLokasi}'?`);
+        }
     </script>
 @endpush
