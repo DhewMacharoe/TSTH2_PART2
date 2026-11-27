@@ -2,7 +2,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800">
-            Tambah Division
+            Tambah Divisi
         </h2>
     </x-slot>
 
@@ -13,11 +13,11 @@
 
                 <div class="mb-6">
                     <h3 class="text-lg font-semibold text-gray-800">
-                        Tambah Division Baru
+                        Tambah Divisi Baru
                     </h3>
 
                     <p class="text-sm text-gray-500 mt-1">
-                        Tambahkan Division ke Department
+                        Tambahkan Divisi ke Departemen
                         <span class="font-medium text-gray-700">
                             {{ $department->name }}
                         </span>.
@@ -36,7 +36,7 @@
                             for="department"
                             class="block text-sm font-medium text-gray-700 mb-2"
                         >
-                            Department
+                            Departemen
                         </label>
 
                         <input
@@ -54,7 +54,7 @@
                             for="name"
                             class="block text-sm font-medium text-gray-700 mb-2"
                         >
-                            Nama Division
+                            Nama Divisi
                         </label>
 
                         <input
@@ -87,7 +87,7 @@
                                 bg-blue-600 hover:bg-blue-700
                                 text-white rounded-lg font-medium transition"
                         >
-                            Kembali ke Manajemen Department
+                            Kembali ke Manajemen Departemen
                         </a>
 
                         <button
@@ -96,7 +96,7 @@
                                 bg-blue-600 hover:bg-blue-700
                                 text-white rounded-lg font-medium transition"
                         >
-                            Simpan Division
+                            Simpan Divisi
                         </button>
 
                     </div>

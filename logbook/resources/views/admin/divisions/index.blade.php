@@ -5,11 +5,11 @@
 
             <div>
                 <h2 class="font-semibold text-xl text-gray-800">
-                    Manajemen Division
+                    Manajemen Divisi
                 </h2>
 
                 <p class="text-sm text-gray-500 mt-1">
-                    Department: {{ $department->name }}
+                    Departemen: {{ $department->name }}
                 </p>
             </div>
 
@@ -17,7 +17,7 @@
                 href="{{ route('admin.departments.divisions.create', $department) }}"
                 class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
             >
-                + Tambah Division
+                + Tambah Divisi
             </a>
 
         </div>
@@ -128,7 +128,7 @@
                     <div>
 
                         <p class="text-sm text-gray-500">
-                            Department
+                            Departemen
                         </p>
 
                         <h3 class="text-xl font-semibold text-gray-800">
@@ -136,7 +136,7 @@
                         </h3>
 
                         <p class="text-sm text-gray-500 mt-1">
-                            Kelola Division yang berada di dalam Department ini.
+                            Kelola Divisi yang berada di dalam Departemen ini.
                         </p>
 
                     </div>
@@ -152,11 +152,11 @@
                 <div class="px-6 py-4 border-b border-gray-100">
 
                     <h3 class="text-lg font-semibold text-gray-800">
-                        Daftar Division
+                        Daftar Divisi
                     </h3>
 
                     <p class="text-sm text-gray-500 mt-1">
-                        Division yang terdaftar pada {{ $department->name }}.
+                        Divisi yang terdaftar pada {{ $department->name }}.
                     </p>
 
                 </div>
@@ -175,7 +175,7 @@
                                 </th>
 
                                 <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                                    Nama Division
+                                    Nama Divisi
                                 </th>
 
                                 <th class="text-center px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
@@ -282,7 +282,7 @@
                                                         'admin.departments.divisions.destroy',
                                                         [$department, $division]
                                                     ) }}"
-                                                    onsubmit="return confirm('Hapus Division {{ addslashes($division->name) }}?')"
+                                                    onsubmit="return confirm('Hapus Divisi {{ addslashes($division->name) }}?')"
                                                 >
 
                                                     @csrf
@@ -318,7 +318,7 @@
                                                 <button
                                                     type="button"
                                                     disabled
-                                                    title="Division masih digunakan oleh {{ $division->users_count }} user"
+                                                    title="Divisi masih digunakan oleh {{ $division->users_count }} user"
                                                     class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-400 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed"
                                                 >
 
@@ -357,7 +357,7 @@
                                         />
 
                                         <p class="text-gray-400 text-sm">
-                                            Belum ada Division pada Department ini.
+                                            Belum ada Divisi pada Departemen ini.
                                         </p>
 
                                         <a
@@ -367,7 +367,7 @@
                                             ) }}"
                                             class="inline-block mt-3 text-blue-600 hover:text-blue-700 font-medium text-sm"
                                         >
-                                            + Tambahkan Division
+                                            + Tambahkan Divisi
                                         </a>
 
                                     </td>
@@ -405,7 +405,7 @@
                         bg-blue-600 hover:bg-blue-700
                         text-white rounded-lg font-medium transition"
                 >
-                     Kembali ke Manajemen Department
+                     Kembali ke Manajemen Departemen
                 </a>
             </div>
 

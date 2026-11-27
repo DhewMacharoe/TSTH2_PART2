@@ -197,7 +197,8 @@
                     <span class="material-symbols-rounded">folder_special</span>
                     <span>Manajemen Project</span>
                 </a>
-                <a href="{{ route('admin.targets.index') }}" class="sidebar-link {{ request()->routeIs('admin.targets*') ? 'active' : '' }}">
+                <a href="{{ route('kepala_departemen.targets.index') }}"
+                class="sidebar-link {{ request()->routeIs('kepala_departemen.targets*') ? 'active' : '' }}">
                     <span class="material-symbols-rounded">flag</span>
                     <span>Target & Sasaran</span>
                 </a>
@@ -302,15 +303,6 @@
                     <span class="material-symbols-rounded">corporate_fare</span>
                     <span>Departemen & Divisi</span>
                 </a>
-                <a href="{{ route('admin.targets.index') }}" class="sidebar-link {{ request()->routeIs('admin.targets*') ? 'active' : '' }}">
-                    <span class="material-symbols-rounded">flag</span>
-                    <span>Target & Sasaran</span>
-                </a>
-                <a href="{{ route('kepala_departemen.logbooks.index') }}" class="sidebar-link {{ request()->routeIs('kepala_departemen.logbooks*') ? 'active' : '' }}">
-                    <span class="material-symbols-rounded">rate_review</span>
-                    <span>Review Logbook</span>
-                </a>
-
                 <p class="px-4 text-[11px] font-bold text-white/40 uppercase tracking-wider mb-1 mt-6">Sistem Lain</p>
                 <a href="{{ route('sso.jump', ['portal' => 'pengunjung', 'target' => '/web-management/home']) }}" target="_blank" class="sidebar-link justify-between">
                     <div class="flex items-center gap-2.5">
@@ -353,6 +345,12 @@
                     @if($pendingPermintaan > 0)
                         <span class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm animate-pulse">{{ $pendingPermintaan }}</span>
                     @endif
+                </a>
+
+                <p class="px-4 text-xs font-bold text-white/40 uppercase tracking-widest mb-1 mt-6">Logbook Karyawan</p>
+                <a href="{{ route('dashboard') }}" class="sidebar-link active">
+                    <span class="material-symbols-rounded">assignment</span>
+                    <span>Logbook Saya</span>
                 </a>
             @endif
         </nav>

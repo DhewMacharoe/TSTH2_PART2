@@ -2,7 +2,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800">
-            Edit Department
+            Edit Departemen
         </h2>
     </x-slot>
 
@@ -13,11 +13,11 @@
 
                 <div class="mb-6">
                     <h3 class="text-lg font-semibold text-gray-800">
-                        Edit Data Department
+                        Edit Data Departemen
                     </h3>
 
                     <p class="text-sm text-gray-500 mt-1">
-                        Perbarui nama department yang digunakan dalam struktur organisasi.
+                        Perbarui nama departemen yang digunakan dalam struktur organisasi.
                     </p>
                 </div>
 
@@ -38,7 +38,7 @@
                             for="name"
                             class="block mb-2 font-medium text-gray-700"
                         >
-                            Nama Department
+                            Nama Departemen
                         </label>
 
                         <input
@@ -64,14 +64,14 @@
                     <div class="mb-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
 
                         <p class="text-sm font-medium text-gray-700 mb-2">
-                            Informasi Department
+                            Informasi Departemen
                         </p>
 
                         <div class="grid grid-cols-2 gap-4">
 
                             <div>
                                 <p class="text-xs text-gray-500">
-                                    Jumlah Division
+                                    Jumlah Divisi
                                 </p>
 
                                 <p class="text-lg font-semibold text-gray-800">
@@ -108,7 +108,7 @@
                             type="submit"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
                         >
-                            Update Department
+                            Update Departemen
                         </button>
 
                     </div>

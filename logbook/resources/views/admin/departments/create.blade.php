@@ -2,7 +2,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800">
-            Tambah Department
+            Tambah Departemen
         </h2>
     </x-slot>
 
@@ -13,11 +13,11 @@
 
                 <div class="mb-6">
                     <h3 class="text-lg font-semibold text-gray-800">
-                        Data Department
+                        Data Departemen
                     </h3>
 
                     <p class="text-sm text-gray-500 mt-1">
-                        Tambahkan department baru ke dalam struktur organisasi.
+                        Tambahkan departemen baru ke dalam struktur organisasi.
                     </p>
                 </div>
 
@@ -35,7 +35,7 @@
                             for="name"
                             class="block mb-2 font-medium text-gray-700"
                         >
-                            Nama Department
+                            Nama Departemen
                         </label>
 
                         <input
@@ -72,7 +72,7 @@
                             type="submit"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
                         >
-                            Simpan Department
+                            Simpan Departemen
                         </button>
 
                     </div>
