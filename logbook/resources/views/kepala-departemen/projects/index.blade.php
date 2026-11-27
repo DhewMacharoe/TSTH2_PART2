@@ -301,8 +301,6 @@
 
         <p class="mt-2 text-sm text-center text-gray-500">
             Apakah kamu yakin ingin menghapus project
-            <span id="deleteProjectName" class="font-semibold text-gray-800"></span>?
-            Tindakan ini tidak dapat dibatalkan.
         </p>
 
         <div class="mt-6 flex justify-center gap-3">

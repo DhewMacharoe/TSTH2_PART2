@@ -21,7 +21,7 @@
         </h2>
 
         <p class="mt-1 text-sm text-gray-500">
-            Masukkan email Anda dan kami akan mengirimkan link untuk reset password.
+            Masukkan email Anda dan kami akan mengirimkan kode OTP untuk reset password.
         </p>
 
     </div>
@@ -64,7 +64,7 @@
                 type="submit"
                 class="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors duration-200"
             >
-                Kirim Link Reset Password
+                Kirim Kode OTP
             </button>
         </div>
 

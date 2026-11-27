@@ -115,10 +115,10 @@
 
                         <div>
                             <p class="text-xs font-medium text-gray-500 mb-1">
-                                Asal Daerah
+                                Alamat
                             </p>
                             <p class="text-sm font-medium text-gray-800">
-                                {{ $user->asal ?: '-' }}
+                                {{ $user->alamat ?: '-' }}
                             </p>
                         </div>
 

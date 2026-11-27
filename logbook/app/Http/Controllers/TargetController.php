@@ -64,7 +64,7 @@ class TargetController extends Controller
             ->paginate(10);
 
         return view(
-            'admin.targets.index',
+            'kepala-departemen.targets.index',
             compact('targets')
         );
     }
@@ -256,7 +256,7 @@ class TargetController extends Controller
 
 
         return view(
-            'admin.targets.create',
+            'kepala-departemen.targets.create',
             compact(
                 'departments',
                 'projects',

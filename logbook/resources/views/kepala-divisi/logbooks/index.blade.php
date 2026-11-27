@@ -9,13 +9,6 @@
                     Pantau dan periksa laporan pekerjaan dari karyawan di divisi Anda.
                 </p>
             </div>
-            <a
-                href="{{ route('kepala_divisi.my_logbooks.create') }}"
-                class="inline-flex items-center gap-2 bg-[#054439] hover:bg-[#032e26] text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition whitespace-nowrap"
-            >
-                <span class="material-symbols-rounded" style="font-size:20px;">edit_note</span>
-                <span>Isi Logbook</span>
-            </a>
         </div>
     </x-slot>
 

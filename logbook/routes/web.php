@@ -7,6 +7,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EmailOtpController;
 use App\Http\Controllers\LeaderLogbookController;
 use App\Http\Controllers\LogbookController;
 use App\Http\Controllers\ProjectController;
@@ -113,6 +114,41 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [\App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');
 
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | OTP PROFIL
+    |--------------------------------------------------------------------------
+    */
+
+    // Verifikasi email baru
+    Route::post('/profile/email-otp/send', [EmailOtpController::class, 'sendNewEmailOtp'])
+        ->name('profile.email-otp.send');
+
+    Route::get('/profile/email-otp', [EmailOtpController::class, 'showNewEmailOtp'])
+        ->name('profile.email-otp.form');
+
+    Route::post('/profile/email-otp/verify', [EmailOtpController::class, 'verifyNewEmailOtp'])
+        ->name('profile.email-otp.verify');
+
+    // Ubah password melalui Profil
+    Route::post('/profile/password-otp/send', [EmailOtpController::class, 'sendProfilePasswordOtp'])
+        ->name('profile.password-otp.send');
+
+    Route::get('/profile/password-otp', [EmailOtpController::class, 'showProfilePasswordOtp'])
+        ->name('profile.password-otp.form');
+
+    Route::post('/profile/password-otp/verify', [EmailOtpController::class, 'verifyProfilePasswordOtp'])
+        ->name('profile.password-otp.verify');
+
+    Route::get('/profile/password/change', [EmailOtpController::class, 'showProfilePasswordChange'])
+        ->name('profile.password.change.form');
+
+    Route::put('/profile/password/change', [EmailOtpController::class, 'updateProfilePassword'])
+        ->name('profile.password.change');
+
+
     /*
     |--------------------------------------------------------------------------
     | ADMIN
@@ -166,47 +202,6 @@ Route::middleware(['auth'])->group(function () {
         )->name('admin.departments.divisions.destroy');
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | TARGET DAN SUB-TARGET
-    |--------------------------------------------------------------------------
-    */
-
-    Route::middleware(['role:admin,kepala_departemen'])->group(function () {
-
-        Route::resource('/admin/targets', TargetController::class)
-            ->names('admin.targets');
-
-        Route::get(
-            '/admin/targets/{target}/sub-targets',
-            [SubTargetController::class, 'index']
-        )->name('admin.targets.sub-targets.index');
-
-        Route::get(
-            '/admin/targets/{target}/sub-targets/create',
-            [SubTargetController::class, 'create']
-        )->name('admin.targets.sub-targets.create');
-
-        Route::post(
-            '/admin/targets/{target}/sub-targets',
-            [SubTargetController::class, 'store']
-        )->name('admin.targets.sub-targets.store');
-
-        Route::get(
-            '/admin/targets/{target}/sub-targets/{subTarget}/edit',
-            [SubTargetController::class, 'edit']
-        )->name('admin.targets.sub-targets.edit');
-
-        Route::put(
-            '/admin/targets/{target}/sub-targets/{subTarget}',
-            [SubTargetController::class, 'update']
-        )->name('admin.targets.sub-targets.update');
-
-        Route::delete(
-            '/admin/targets/{target}/sub-targets/{subTarget}',
-            [SubTargetController::class, 'destroy']
-        )->name('admin.targets.sub-targets.destroy');
-    });
 
     /*
     |--------------------------------------------------------------------------
@@ -284,6 +279,59 @@ Route::middleware(['auth'])->group(function () {
             '/kepala-departemen/projects/{project}',
             [ProjectController::class, 'destroy']
         )->name('kepala_departemen.projects.destroy');
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TARGET DAN SUB-TARGET KEPALA DEPARTEMEN
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware(['role:kepala_departemen'])->group(function () {
+
+        // Manajemen Scope & Target
+        Route::resource(
+            '/kepala-departemen/targets',
+            TargetController::class
+        )->names('kepala_departemen.targets');
+
+        // Daftar SubTarget
+        Route::get(
+            '/kepala-departemen/targets/{target}/sub-targets',
+            [SubTargetController::class, 'index']
+        )->name('kepala_departemen.targets.sub-targets.index');
+
+        // Form Tambah SubTarget
+        Route::get(
+            '/kepala-departemen/targets/{target}/sub-targets/create',
+            [SubTargetController::class, 'create']
+        )->name('kepala_departemen.targets.sub-targets.create');
+
+        // Simpan SubTarget
+        Route::post(
+            '/kepala-departemen/targets/{target}/sub-targets',
+            [SubTargetController::class, 'store']
+        )->name('kepala_departemen.targets.sub-targets.store');
+
+        // Form Edit SubTarget
+        Route::get(
+            '/kepala-departemen/targets/{target}/sub-targets/{subTarget}/edit',
+            [SubTargetController::class, 'edit']
+        )->name('kepala_departemen.targets.sub-targets.edit');
+
+        // Update SubTarget
+        Route::put(
+            '/kepala-departemen/targets/{target}/sub-targets/{subTarget}',
+            [SubTargetController::class, 'update']
+        )->name('kepala_departemen.targets.sub-targets.update');
+
+        // Hapus SubTarget
+        Route::delete(
+            '/kepala-departemen/targets/{target}/sub-targets/{subTarget}',
+            [SubTargetController::class, 'destroy']
+        )->name('kepala_departemen.targets.sub-targets.destroy');
+    });
 
     
     /*

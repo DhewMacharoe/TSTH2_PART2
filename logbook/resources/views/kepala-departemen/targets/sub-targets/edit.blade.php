@@ -15,7 +15,7 @@
         </div>
 
         <a
-            href="{{ route('admin.targets.sub-targets.index', $target) }}"
+            href="{{ route('kepala_departemen.targets.sub-targets.index', $target) }}"
             class="inline-flex items-center justify-center px-4 py-2.5
                    bg-gray-100 hover:bg-gray-200 text-gray-700
                    rounded-xl font-semibold text-sm transition"
@@ -298,7 +298,7 @@
 
             <form
                 method="POST"
-                action="{{ route('admin.targets.sub-targets.update', [$target, $subTarget]) }}"
+                action="{{ route('kepala_departemen.targets.sub-targets.update', [$target, $subTarget]) }}"
             >
 
                 @csrf
@@ -605,7 +605,7 @@
                             flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
 
                     <a
-                        href="{{ route('admin.targets.sub-targets.index', $target) }}"
+                        href="{{ route('kepala_departemen.targets.sub-targets.index', $target) }}"
                         class="inline-flex items-center justify-center
                                px-5 py-2.5 rounded-xl
                                bg-white border border-gray-300

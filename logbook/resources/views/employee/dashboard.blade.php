@@ -83,22 +83,12 @@
                         Logbook Terbaru
                     </h3>
 
-                    <div class="flex items-center gap-3">
-                        <a
-                            href="{{ route('employee.logbooks.create') }}"
-                            class="inline-flex items-center gap-1.5 bg-[#054439] hover:bg-[#032e26] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition"
-                        >
-                            <span class="material-symbols-rounded" style="font-size:16px;">edit_note</span>
-                            <span>Isi Logbook</span>
-                        </a>
-
-                        <a
-                            href="{{ route('employee.logbooks.index') }}"
-                            class="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline"
-                        >
-                            Lihat Semua &rarr;
-                        </a>
-                    </div>
+                    <a
+                        href="{{ route('employee.logbooks.index') }}"
+                        class="text-xs font-semibold text-[#054439] hover:text-[#032e26] hover:underline transition"
+                    >
+                        Lihat Semua
+                    </a>
 
                 </div>
 

@@ -1065,13 +1065,18 @@
 
                         // Garis temu presisi: bar hijau menempel tepat di sisi kanan bar biru pada bidang depan
                         const midX = (right0 + left1) / 2;
-                        const left_b = left0;
+
+                        // Batasi lebar bar agar saat data hanya 1 atau sedikit, ukuran bar tetap proporsional (sama seperti saat ada banyak data)
+                        const MAX_BAR_WIDTH = 28;
+                        const raw_w_b = midX - left0;
+                        const raw_w_g = right1 - midX;
+                        const w_b = Math.min(raw_w_b, MAX_BAR_WIDTH);
+                        const w_g = Math.min(raw_w_g, MAX_BAR_WIDTH);
+
+                        const left_b = midX - w_b;
                         const right_b = midX;
                         const left_g = midX;
-                        const right_g = right1;
-
-                        const w_b = right_b - left_b;
-                        const w_g = right_g - left_g;
+                        const right_g = midX + w_g;
 
                         const dx = Math.max(5, Math.min(Math.round(w_b * 0.32), 10));
                         const dy = -Math.round(dx * 0.65);

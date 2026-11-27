@@ -27,7 +27,7 @@
             {{-- EDIT --}}
 
             <a
-                href="{{ route('admin.targets.edit', $target) }}"
+                href="{{ route('kepala_departemen.targets.edit', $target) }}"
                 class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 transition"
             >
                 Edit Target
@@ -37,7 +37,7 @@
             {{-- KEMBALI --}}
 
             <a
-                href="{{ route('admin.targets.index') }}"
+                href="{{ route('kepala_departemen.targets.index') }}"
                 class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-50 transition"
             >
                 Kembali
@@ -586,7 +586,7 @@
                     {{-- TAMBAH SUB TARGET --}}
 
                     <a
-                        href="{{ route('admin.targets.sub-targets.create', $target) }}"
+                        href="{{ route('kepala_departemen.targets.sub-targets.create', $target) }}"
                         class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 transition"
                     >
                         + Tambah Sub Target
@@ -849,7 +849,7 @@
                             <div class="flex items-center gap-2">
 
                                 <a
-                                    href="{{ route('admin.targets.sub-targets.edit', [$target, $subTarget]) }}"
+                                    href="{{ route('kepala_departemen.targets.sub-targets.edit', [$target, $subTarget]) }}"
                                     class="inline-flex items-center px-3 py-2 bg-white border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-50 transition"
                                 >
                                     Edit
@@ -857,7 +857,7 @@
 
 
                                 <form
-                                    action="{{ route('admin.targets.sub-targets.destroy', [$target, $subTarget]) }}"
+                                    action="{{ route('kepala_departemen.targets.sub-targets.destroy', [$target, $subTarget]) }}"
                                     method="POST"
                                     onsubmit="return confirm('Yakin ingin menghapus Sub Target ini?')"
                                 >

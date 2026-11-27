@@ -41,7 +41,7 @@
                 {{-- FORM --}}
                 <form
                     method="POST"
-                    action="{{ route('admin.targets.store') }}"
+                    action="{{ route('kepala_departemen.targets.store') }}"
                 >
 
                     @csrf
@@ -388,7 +388,7 @@
                     <div class="flex items-center justify-end gap-3">
 
                         <a
-                            href="{{ route('admin.targets.index') }}"
+                            href="{{ route('kepala_departemen.targets.index') }}"
                             class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition"
                         >
                             Batal

@@ -21,7 +21,7 @@
             </div>
 
             <a
-                href="{{ route('admin.targets.index') }}"
+                href="{{ route('kepala_departemen.targets.index') }}"
                 class="inline-flex items-center justify-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition"
             >
                 Kelola Target
@@ -2157,13 +2157,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Garis temu presisi: bar hijau menempel tepat di sisi kanan bar biru pada bidang depan
                 const midX = (right0 + left1) / 2;
-                const left_b = left0;
+
+                // Batasi lebar bar agar saat task hanya 1 atau sedikit, ukuran bar tetap proporsional (sama seperti saat ada banyak task)
+                const MAX_BAR_WIDTH = 28;
+                const raw_w_b = midX - left0;
+                const raw_w_g = right1 - midX;
+                const w_b = Math.min(raw_w_b, MAX_BAR_WIDTH);
+                const w_g = Math.min(raw_w_g, MAX_BAR_WIDTH);
+
+                const left_b = midX - w_b;
                 const right_b = midX;
                 const left_g = midX;
-                const right_g = right1;
-
-                const w_b = right_b - left_b;
-                const w_g = right_g - left_g;
+                const right_g = midX + w_g;
 
                 const dx = Math.max(5, Math.min(Math.round(w_b * 0.32), 10));
                 const dy = -Math.round(dx * 0.65);
@@ -2353,21 +2358,42 @@ document.addEventListener('DOMContentLoaded', function () {
                 onClick: function (evt, activeElements) {
                     if (activeElements && activeElements.length > 0) {
                         const index = activeElements[0].index;
-                        const clickedItem = taskItems[index];
-                        if (clickedItem) {
-                            showWeeklyLineChart(clickedItem);
+                        const meta0 = barChart?.getDatasetMeta(0);
+                        const meta1 = barChart?.getDatasetMeta(1);
+                        if (meta0 && meta0.data && meta0.data[index]) {
+                            const b0 = meta0.data[index];
+                            const b1 = meta1 && meta1.data ? meta1.data[index] : null;
+                            const mX = b1 ? (b0.x + b1.x) / 2 : b0.x;
+                            const mouseX = evt.x !== undefined ? evt.x : (evt.native ? evt.native.offsetX : null);
+                            if (mouseX === null || Math.abs(mouseX - mX) <= 45) {
+                                const clickedItem = taskItems[index];
+                                if (clickedItem) {
+                                    showWeeklyLineChart(clickedItem);
+                                }
+                            }
                         }
                     }
                 },
                 onHover: function (evt, activeElements) {
-                    barCanvas.style.cursor = (activeElements && activeElements.length > 0) ? 'pointer' : 'default';
+                    let isOver = false;
+                    let hoveredItem = null;
                     if (activeElements && activeElements.length > 0) {
                         const index = activeElements[0].index;
-                        const item = taskItems[index];
-                        highlightDeptTaskCard(item);
-                    } else {
-                        highlightDeptTaskCard(null);
+                        const meta0 = barChart?.getDatasetMeta(0);
+                        const meta1 = barChart?.getDatasetMeta(1);
+                        if (meta0 && meta0.data && meta0.data[index]) {
+                            const b0 = meta0.data[index];
+                            const b1 = meta1 && meta1.data ? meta1.data[index] : null;
+                            const mX = b1 ? (b0.x + b1.x) / 2 : b0.x;
+                            const mouseX = evt.x !== undefined ? evt.x : (evt.native ? evt.native.offsetX : null);
+                            if (mouseX === null || Math.abs(mouseX - mX) <= 45) {
+                                isOver = true;
+                                hoveredItem = taskItems[index];
+                            }
+                        }
                     }
+                    barCanvas.style.cursor = isOver ? 'pointer' : 'default';
+                    highlightDeptTaskCard(hoveredItem);
                 },
                 scales: {
                     x: {

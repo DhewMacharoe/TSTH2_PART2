@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +34,7 @@ class ProfileController extends Controller
 
     /**
      * Menyimpan data profil.
+     * Email tidak boleh diubah melalui fungsi ini.
      */
     public function store(Request $request): RedirectResponse
     {
@@ -42,13 +42,6 @@ class ProfileController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                \Illuminate\Validation\Rule::unique('users')->ignore($user->id),
-            ],
             'phone' => ['nullable', 'string', 'max:20'],
             'asal' => ['nullable', 'string', 'max:255'],
             'birth_date' => ['nullable', 'date'],
@@ -62,105 +55,124 @@ class ProfileController extends Controller
 
         $user->fill([
             'name' => $validated['name'],
-            'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
             'asal' => $validated['asal'] ?? null,
             'birth_date' => $validated['birth_date'] ?? null,
         ]);
 
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
-    if ($request->hasFile('profile_photo')) {
         $oldPhoto = $user->profile_photo;
+        $newPhotoPath = null;
 
-        // Simpan foto baru terlebih dahulu
-        $path = $request->file('profile_photo')
-            ->store('profile-photos', 'public');
+        if ($request->hasFile('profile_photo')) {
+            $newPhotoPath = $request->file('profile_photo')
+                ->store('profile-photos', 'public');
 
-        $user->profile_photo = $path;
-
-        // Hapus foto lama setelah foto baru tersimpan
-        if (
-            $oldPhoto &&
-            Storage::disk('public')->exists($oldPhoto)
-        ) {
-            Storage::disk('public')->delete($oldPhoto);
+            $user->profile_photo = $newPhotoPath;
         }
-    }
 
-        $user->save();
+        try {
+            $user->save();
+
+            if (
+                $newPhotoPath &&
+                $oldPhoto &&
+                Storage::disk('public')->exists($oldPhoto)
+            ) {
+                Storage::disk('public')->delete($oldPhoto);
+            }
+        } catch (\Throwable $e) {
+            if ($newPhotoPath) {
+                Storage::disk('public')->delete($newPhotoPath);
+            }
+
+            throw $e;
+        }
 
         return Redirect::route('profile.edit')
             ->with('status', 'profile-created');
     }
 
-
-
-
     /**
-     * Display the user's profile form.
+     * Menampilkan halaman Edit Profil.
      */
     public function edit(Request $request): View
     {
-        $user = $request->user()->load(['department', 'divisionRelation']);
+        $user = $request->user()->load([
+            'department',
+            'divisionRelation',
+        ]);
+
         $stats = [
             'total_logbooks' => $user->logbooks()->count(),
-            'total_tasks'    => $user->assignedTasks()->count(),
+            'total_tasks' => $user->assignedTasks()->count(),
         ];
 
         return view('profile.edit', [
-            'user'  => $user,
+            'user' => $user,
             'stats' => $stats,
         ]);
     }
 
     /**
-     * Update the user's profile information.
+     * Memperbarui data profil.
+     * Perubahan email hanya boleh melalui verifikasi OTP.
      */
     public function update(Request $request): RedirectResponse
     {
         $user = $request->user();
 
         $validated = $request->validate([
-            'name'          => ['required', 'string', 'max:255'],
-            'email'         => ['required', 'string', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($user->id)],
-            'phone'         => ['nullable', 'string', 'max:20'],
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:20'],
             'asal' => ['nullable', 'string', 'max:255'],
-            'birth_date'    => ['nullable', 'date'],
-            'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'birth_date' => ['nullable', 'date'],
+            'profile_photo' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:5120',
+            ],
         ]);
 
         $user->fill([
-            'name'       => $validated['name'],
-            'email'      => $validated['email'],
-            'phone'      => $validated['phone'] ?? null,
+            'name' => $validated['name'],
+            'phone' => $validated['phone'] ?? null,
+            'asal' => $validated['asal'] ?? null,
             'birth_date' => $validated['birth_date'] ?? null,
-            'asal'       => $validated['asal'] ?? null,
         ]);
 
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
+        $oldPhoto = $user->profile_photo;
+        $newPhotoPath = null;
+
+        if ($request->hasFile('profile_photo')) {
+            $newPhotoPath = $request->file('profile_photo')
+                ->store('profile-photos', 'public');
+
+            $user->profile_photo = $newPhotoPath;
         }
 
-        // Handle profile photo upload
-        if ($request->hasFile('profile_photo')) {
-            // Delete old photo if exists
-            if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
-                Storage::disk('public')->delete($user->profile_photo);
+        try {
+            $user->save();
+
+            if (
+                $newPhotoPath &&
+                $oldPhoto &&
+                Storage::disk('public')->exists($oldPhoto)
+            ) {
+                Storage::disk('public')->delete($oldPhoto);
+            }
+        } catch (\Throwable $e) {
+            if ($newPhotoPath) {
+                Storage::disk('public')->delete($newPhotoPath);
             }
 
-            $path = $request->file('profile_photo')->store('profile-photos', 'public');
-            $user->profile_photo = $path;
+            throw $e;
         }
 
-        $user->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit')
+            ->with('status', 'profile-updated');
     }
 
-        // TAMBAHKAN METHOD SHOW DI SINI
     /**
      * Menampilkan detail profil pengguna.
      */
@@ -183,7 +195,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Delete the user's account.
+     * Menghapus akun pengguna.
      */
     public function destroy(Request $request): RedirectResponse
     {

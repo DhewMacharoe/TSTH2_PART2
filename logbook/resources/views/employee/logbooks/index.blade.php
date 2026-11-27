@@ -1,77 +1,47 @@
 <x-app-layout>
 
     <x-slot name="header">
+        <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h2 class="text-xl font-semibold text-gray-800">
+                    Logbook Saya
+                </h2>
 
-        <div class="flex justify-between items-center">
+                <p class="text-sm text-gray-500 mt-1">
+                    Daftar kegiatan dan laporan harian kerja yang telah dikirim.
+                </p>
+            </div>
 
-            <h2 class="font-semibold text-xl text-gray-800">
-
-                Logbook Saya
-
-            </h2>
-
-
-            <a
-                href="{{ route('employee.logbooks.create') }}"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-            >
-
-                + Tambah Logbook
-
-            </a>
-
+            <div class="flex items-center gap-2.5">
+                <a
+                    href="{{ route('employee.logbooks.create') }}"
+                    class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#054439] hover:bg-[#032e26] text-white text-sm font-semibold rounded-xl transition shadow-sm"
+                >
+                    <span class="material-symbols-rounded" style="font-size:19px;">edit_note</span>
+                    <span>Tambah Logbook</span>
+                </a>
+            </div>
         </div>
-
     </x-slot>
 
-
     <div class="py-12">
-
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- SUCCESS MESSAGE --}}
-
             @if(session('success'))
-
                 <div class="mb-4 bg-green-100 text-green-700 p-4 rounded-lg">
-
                     {{ session('success') }}
-
                 </div>
-
             @endif
-
 
             {{-- ERROR MESSAGE --}}
-
             @if(session('error'))
-
                 <div class="mb-4 bg-red-100 text-red-700 p-4 rounded-lg">
-
                     {{ session('error') }}
-
                 </div>
-
             @endif
 
-
             <div class="bg-white shadow rounded-lg p-6">
-
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-4 border-b border-gray-100">
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-800">Logbook Saya</h3>
-                        <p class="text-xs text-gray-500 mt-1">Daftar kegiatan dan laporan harian kerja yang telah dikirim.</p>
-                    </div>
-                    <a
-                        href="{{ route('employee.logbooks.create') }}"
-                        class="inline-flex items-center gap-2 bg-[#054439] hover:bg-[#032e26] text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition"
-                    >
-                        <span class="material-symbols-rounded" style="font-size:20px;">edit_note</span>
-                        <span>Isi Logbook</span>
-                    </a>
-                </div>
-
                 <div class="overflow-x-auto">
                     <table class="w-full">
 
@@ -327,9 +297,6 @@
             <p class="text-gray-500 text-center mt-2 leading-relaxed">
                 Apakah kamu yakin ingin menghapus logbook ini?
                 <br>
-                <span class="text-sm text-red-500 font-medium">
-                    Tindakan ini tidak dapat dibatalkan.
-                </span>
             </p>
 
             {{-- BUTTONS --}}

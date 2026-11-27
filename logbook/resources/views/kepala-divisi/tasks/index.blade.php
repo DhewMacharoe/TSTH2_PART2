@@ -13,16 +13,8 @@
 
         <div class="flex items-center gap-2.5">
             <a
-                href="{{ route('kepala_divisi.my_logbooks.create') }}"
-                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#054439] hover:bg-[#032e26] text-white text-sm font-semibold rounded-xl transition shadow-sm"
-            >
-                <span class="material-symbols-rounded" style="font-size:19px;">edit_note</span>
-                <span>Isi Logbook</span>
-            </a>
-
-            <a
                 href="{{ route('kepala_divisi.tasks.create') }}"
-                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition"
+                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#054439] hover:bg-[#032e26] text-white text-sm font-semibold rounded-xl transition shadow-sm"
             >
                 <svg
                     class="w-4 h-4"

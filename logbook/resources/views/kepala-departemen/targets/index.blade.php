@@ -25,7 +25,7 @@
 
 
             <a
-                href="{{ route('admin.targets.create') }}"
+                href="{{ route('kepala_departemen.targets.create') }}"
                 class="inline-flex items-center justify-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition"
             >
                 + Tambah Target
@@ -120,7 +120,7 @@
 
                             {{-- DEPARTMENT --}}
 
-                            @if (auth()->user()->role === 'admin')
+                            @if (auth()->user()->role === 'kepala_departemen')
 
                                 <th class="px-6 py-4 text-left font-semibold text-gray-600">
                                     Departemen
@@ -293,7 +293,7 @@
                                 {{-- DEPARTMENT --}}
                                 {{-- ================================================= --}}
 
-                                @if (auth()->user()->role === 'admin')
+                                @if (auth()->user()->role === 'kepala_departemen')
 
                                     <td class="px-6 py-5 text-gray-600 align-top">
 
@@ -394,7 +394,7 @@
                                         {{-- LIHAT --}}
 
                                         <a
-                                            href="{{ route('admin.targets.show', $target) }}"
+                                            href="{{ route('kepala_departemen.targets.show', $target) }}"
                                             class="px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition"
                                         >
                                             Lihat
@@ -404,7 +404,7 @@
                                         {{-- SUB TARGET --}}
 
                                         <a
-                                            href="{{ route('admin.targets.sub-targets.index', $target) }}"
+                                            href="{{ route('kepala_departemen.targets.sub-targets.index', $target) }}"
                                             class="px-3 py-2 rounded-lg text-sm text-emerald-600 hover:bg-emerald-50 transition"
                                         >
                                             Sub Target
@@ -414,7 +414,7 @@
                                         {{-- EDIT --}}
 
                                         <a
-                                            href="{{ route('admin.targets.edit', $target) }}"
+                                            href="{{ route('kepala_departemen.targets.edit', $target) }}"
                                             class="px-3 py-2 rounded-lg text-sm text-blue-600 hover:bg-blue-50 transition"
                                         >
                                             Edit
@@ -445,7 +445,7 @@
                             <tr>
 
                                 <td
-                                    colspan="{{ auth()->user()->role === 'admin' ? 7 : 6 }}"
+                                    colspan="{{ auth()->user()->role === 'kepala_departemen' ? 7 : 6 }}"
                                     class="px-6 py-12 text-center"
                                 >
 
@@ -457,7 +457,7 @@
 
 
                                     <a
-                                        href="{{ route('admin.targets.create') }}"
+                                        href="{{ route('kepala_departemen.targets.create') }}"
                                         class="inline-block mt-3 text-sm font-medium text-emerald-600 hover:text-emerald-700"
                                     >
                                         Tambahkan Target pertama
@@ -635,7 +635,7 @@
 
 
         deleteForm.action =
-            "{{ url('/admin/targets') }}/" + targetId;
+            "{{ url('/kepala_departemen/targets') }}/" + targetId;
 
 
         modal.classList.remove('hidden');

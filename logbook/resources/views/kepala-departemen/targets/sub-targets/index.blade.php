@@ -13,7 +13,7 @@
         </div>
 
         <a
-            href="{{ route('admin.targets.index') }}"
+            href="{{ route('kepala_departemen.targets.index') }}"
             class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition"
         >
             Kembali
@@ -276,7 +276,7 @@
                 @if($remainingPercentage > 0)
 
                     <a
-                        href="{{ route('admin.targets.sub-targets.create', $target) }}"
+                        href="{{ route('kepala_departemen.targets.sub-targets.create', $target) }}"
                         class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition"
                     >
                         <span class="text-lg leading-none">+</span>
@@ -471,7 +471,7 @@
                                     <div class="flex items-center gap-2">
 
                                         <a
-                                            href="{{ route('admin.targets.sub-targets.edit', [$target, $subTarget]) }}"
+                                            href="{{ route('kepala_departemen.targets.sub-targets.edit', [$target, $subTarget]) }}"
                                             class="inline-flex items-center px-3 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition"
                                         >
                                             Edit
@@ -527,7 +527,7 @@
                     @if($remainingPercentage > 0)
 
                         <a
-                            href="{{ route('admin.targets.sub-targets.create', $target) }}"
+                            href="{{ route('kepala_departemen.targets.sub-targets.create', $target) }}"
                             class="inline-flex items-center gap-2 mt-5 px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition"
                         >
                             + Tambah Sub Target
@@ -675,7 +675,7 @@
         name.textContent = title;
 
         form.action =
-            "{{ url('/admin/targets/' . $target->id . '/sub-targets') }}/" + id;
+            "{{ url('/kepala_departemen/targets/' . $target->id . '/sub-targets') }}/" + id;
 
         modal.classList.remove('hidden');
 
